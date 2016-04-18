@@ -1,0 +1,52 @@
+body {
+    font-family: "微软雅黑";
+	font-size: 14px;
+}
+
+h2 {
+	margin-bottom: 5px;
+}
+
+.demo {
+	text-transform: uppercase;
+	font-size: 14px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-weight: bold;
+	padding: 6px;
+	color: #000000;
+	display: inline-table;
+	cursor: default;
+	border: 3px solid #FFFFFF;
+}
+
+.demo.showing {
+	border-color: #666666;
+}
+
+.demo.blue {
+	background: #0066DD;
+	color: #FFFFFF;
+}
+
+.demo.yellow {
+	background: #FFDD00;
+}
+
+pre {
+	white-space: pre-wrap;
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 12px;
+	line-height: 20px;
+	color: #555555;
+	background: #F8F8F8;
+	border: 1px solid #BBBBBB;
+	border-top-color: #444444;
+	border-left-color: #444444;
+	padding: 10px;
+}
+
+button {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	padding: 2px 4px;
+}

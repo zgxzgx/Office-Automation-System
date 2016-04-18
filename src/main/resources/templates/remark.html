@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>备注</title>
+
+</head>
+<body th:fragment="navbar(user)">
+
+<div class="navbar navbar-default" id="navbar">
+    <script type="text/javascript">
+        try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="remark-container" id="remark-container">
+
+        <div  style="height:200px; width: 450px;left: 30px;position: absolute;" >
+            <label class="control-label bolder blue"  >备注:</label>
+            <label   th:text="${remarkList}">备注:</label><br/>
+            <textarea  id="remark"  class="vali_textarea" name="remark" style="height:100px; width: 450px;"
+
+                    ></textarea>
+        </div>
+
+    </div><!-- /.container -->
+</div>
+<script th:inline="javascript">
+    var userName=/*[[${user.userName}]]*/null;
+    var userId=/*[[${user.id}]]*/null;
+    var currentTaskCount;
+    var currentNotifiCount;
+
+    $.ajax({
+        type:'post',
+        url:'/api/getTaskNum/'+userName,
+        success:function(taskCount) {
+            currentTaskCount = taskCount;
+            if(taskCount=="0"){
+                // $("#controlDiv").attr("class","icon-bell-alt");
+                $("#controlDiv").html('<i class="icon-bell-alt" ></i> <span class="badge badge-important" id="taskNum"></span>');
+            }else{
+                $("#controlDiv").html('<i class="icon-bell-alt icon-animated-bell" ></i> <span class="badge badge-important" id="taskNum"></span>');
+                //$("#controlDiv").attr("class","icon-bell-alt icon-animated-bell");
+            }
+
+            $('#taskNum').html(currentTaskCount);
+            $('#taskInfo').html("您还有"+currentTaskCount+"个任务未完成！<i class='icon-arrow-right'></i>");
+        }
+    })
+
+
+    $.ajax({
+        url:'/db/getNotiCount/'+userId,
+        success:function(unReadCount) {
+            currentNotifiCount = unReadCount;
+            if(unReadCount=="0"){
+                // $("#controlDiv").attr("class","icon-bell-alt");
+                $("#messageControlDiv").html('<i class="icon-envelope "></i> <span class="badge badge-success" id="notifiNum"></span>');
+            }else{
+                $("#messageControlDiv").html('<i class="icon-envelope icon-animated-vertical"></i> <span class="badge badge-success" id="notifiNum"></span>');
+                //$("#controlDiv").attr("class","icon-bell-alt icon-animated-bell");
+            }
+            $('#notifiNum').html(currentNotifiCount);
+            $('#notifiInfo').html("您还有"+currentNotifiCount+"个通知未阅读！ <i class='icon-arrow-right'></i>");
+        }
+    })
+
+</script>
+
+</body>
+</html>

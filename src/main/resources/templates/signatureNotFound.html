@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title th:text="${title}"></title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- basic styles -->
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
+    <![endif]-->
+
+    <!-- page specific plugin styles -->
+
+    <!-- fonts -->
+    <link rel="stylesheet" href="/css/font-awesome-4.3.0/css/font-awesome.min.css"/>
+
+
+    <!-- ace styles -->
+
+    <link rel="stylesheet" href="/assets/css/ace.min.css"/>
+    <link rel="stylesheet" href="/assets/css/ace-rtl.min.css"/>
+    <link rel="stylesheet" href="/assets/css/ace-skins.min.css"/>
+
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="/assets/css/ace-ie.min.css"/>
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- ace settings handler -->
+
+    <script src="/assets/js/ace-extra.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/styles/kendo.common.min.css" rel="stylesheet"/>
+    <link href="/styles/kendo.bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/kendo.dataviz.min.css" rel="stylesheet"/>
+    <link href="/styles/kendo.dataviz.default.min.css" rel="stylesheet"/>
+
+
+</head>
+
+<body style="background: none">
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+</script>
+<div class="">
+    <div>
+        <div class="alert alert-danger" style="text-align: center;margin: 0">
+            <label style="text-align: left;"><span style="font-size: large;">手写功能暂不能使用</span></label>
+        </div>
+        <div class="well" style=";margin: 0">
+            <h4 class="green smaller lighter">1.确认您使用的是Chrome浏览器</h4>
+            <span>如果您使用的是Chrome外的浏览器，</span><a href="/navigator/Chrome.exe"><span>点击这里下载Chrome浏览器</span><i
+                class="fa fa-2x fa-google-plus-square"></i></a>
+        </div>
+        <div class="well" style=";margin: 0">
+            <h4 class="green smaller lighter">2.确认您已安装好手写板签名插件</h4>
+            <span>如果您还未安装sync手写板签名插件，</span><a href="/navigator/chrome-sync-extension.crx"><span>点击这里下载签名插件</span><i
+                class="fa fa-2x fa-tablet"></i></a>
+        </div>
+        <div class="hide">
+            <label style="width:200px;text-align: center;">本提示将在<span id="closeSecond" style="font-size: large;margin: 5px"></span>秒后关闭！</label>
+        </div>
+
+    </div>
+</div>
+<script>
+    var secondCount=15;
+    setInterval(function(){
+        if(secondCount>0){
+            $("#closeSecond").html(secondCount);
+            secondCount--;
+        }
+        else{
+            this.window.close();
+        }
+    },1000)
+    $("div[class='hide']").attr("class","alert alert-info footStyle");
+</script>
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+<style>
+    .footStyle {
+        text-align: center;
+        margin: 2px 2px 0 2px;
+        padding: 2px
+    }
+</style>
+
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<!-- inline scripts related to this page -->
+</body>
+</html>

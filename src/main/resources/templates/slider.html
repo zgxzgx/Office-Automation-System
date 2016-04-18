@@ -1,0 +1,238 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="slidermenu(activeitem)">
+
+<div class="sidebar" id="sidebar">
+    <script type="text/javascript">
+        try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+        <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+            <button class="btn btn-success" title="我的任务" onclick="window.location.href='/dbzx/1'">
+                <i class="icon-list"></i>
+            </button>
+
+            <button class="btn btn-info" title="新建流程" onclick="window.location.href='/xjlc'">
+                <i class="icon-pencil"></i>
+            </button>
+
+            <button class="btn btn-warning" title="我的日程" onclick="window.location.href='/mydate'">
+                <i class="icon-group"></i>
+            </button>
+
+            <button class="btn btn-danger" title="通知公告" onclick="window.location.href='/tzgg'">
+                <i class="icon-cogs"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+            <span class="btn btn-success"></span>
+
+            <span class="btn btn-info"></span>
+
+            <span class="btn btn-warning"></span>
+
+            <span class="btn btn-danger"></span>
+        </div>
+    </div><!-- #sidebar-shortcuts -->
+
+    <div class="f-button" onclick="window.open('/user/feedback')"><label >反馈信息</label></div>
+
+
+    <ul class="nav nav-list">
+        <li th:class="${activeitem=='kzt'}?'active'">
+            <a href="/index">
+                <i class="icon-home"></i>
+                <span class="menu-text"> 首页 </span>
+            </a>
+        </li>
+
+        <li th:class="${activeitem.contains('dbzx')}?'active'">
+            <a href="#" class="dropdown-toggle">
+                <i class="icon-flag"></i>
+                <span class="menu-text"> 公文中心 </span>
+                <span class="badge badge-success" id="dbzx"></span>
+                <b class="arrow icon-angle-down"></b>
+            </a>
+
+            <ul class="submenu">
+                <li th:class="${activeitem==('dbzx-wdrw')}?'active'">
+                    <a href="/dbzx/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-bookmark"></i>
+                        我的任务
+                        <span class="badge badge-success" id="wdrw"></span>
+                    </a>
+                </li>
+                <li th:class="${activeitem==('dbzx-wdgw')}?'active'">
+                    <a href="/wdgw/ybgw/1/1/1/1/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-book"></i>
+                        我的公文
+                    </a>
+                </li>
+
+
+                <li th:class="${activeitem==('dbzx-xjgw')}?'active'">
+                    <a href="/xjlc">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-edit"></i>
+                        新建公文
+                    </a>
+                </li>
+                <li th:class="${activeitem==('dbzx-csrw')}?'active'">
+                    <a href="/csgw/ybgw/1/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-bookmark"></i>
+                        处室公文
+                        <span class="badge badge-success" id="csrw"></span>
+                    </a>
+                </li>
+
+                <!--<li  th:class="${activeitem==('dbzx-wbgw')}?'active'" th:if="${isLeader!=null}">-->
+                <li  th:class="${activeitem==('dbzx-wbgw')}?'active'" >
+                    <a href="/dbzx/wbgw/1/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-book"></i>
+                        查看公文
+                    </a>
+                </li>
+
+
+
+            </ul>
+
+        </li>
+
+        <li th:class="${activeitem=='wdrc'}?'active'">
+            <a href="/mydate" class="dropdown-toggle">
+                <i class="icon-user"></i>
+                <span class="menu-text"> 我的日程 </span>
+
+
+            </a>
+
+
+        </li>
+
+        <li th:class="${activeitem=='tzgg'}?'active'">
+            <a href="/tzgg" class="dropdown-toggle">
+                <i class="icon-envelope"></i>
+                <span class="menu-text"> 通知公告 </span>
+
+
+            </a>
+        </li>
+
+        <li th:class="${activeitem.contains('xtsz')}?'active'" th:style="${!session.user.isAdmin()}?'display:none'">
+            <a href="" class="dropdown-toggle">
+                <i class="icon-cog"></i>
+                <span class="menu-text" > 系统设置 </span>
+                <b class="arrow icon-angle-down"></b>
+
+            </a>
+            <ul class="submenu">
+                <li th:class="${activeitem=='xtsz-gwsc'}?'active'">
+                    <a href="/xtsz/wbgw/1/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-user"></i>
+                        流程管理
+                    </a>
+                </li>
+                <li th:class="${activeitem=='xtsz-yhgl'}?'active'">
+                    <a href="/user/groupTree">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-user"></i>
+                        用户管理
+                    </a>
+                </li>
+                <li th:class="${activeitem=='xtsz-rsdd'}?'active'">
+                    <a href="/user/transfer">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-user"></i>
+                        人事调动
+                    </a>
+                </li>
+                <li th:class="${activeitem=='xtsz-dbcb'}?'active'">
+                    <a href="/cbdb/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-tag"></i>
+                        催办督办
+                    </a>
+                </li>
+                <li th:class="${activeitem=='xtsz-analysis'}?'active'">
+                    <a href="/analysis/staff">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-tag"></i>
+                        任务统计
+                    </a>
+                </li>
+
+                <li th:class="${activeitem=='xtsz-InfoDisplay'}?'active'">
+                    <a href="/displayInfo/rollback/1/1/1">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-tag"></i>
+                        任务查看
+                    </a>
+                </li>
+
+                <li th:class="${activeitem=='xtsz-pzzx'}?'active'">
+                    <a href="/pzzx">
+                        <i class="icon-double-angle-right"></i>
+                        <i class="icon-dashboard"></i>
+                        配置中心
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li th:class="${activeitem=='help'}?'active'">
+            <a href="/help" class="dropdown-toggle">
+                <i class="icon-tag"></i>
+                <span class="menu-text"> 帮助 </span>
+
+
+            </a>
+        </li>
+    </ul><!-- /.nav-list -->
+
+    <div class="sidebar-collapse" id="sidebar-collapse">
+        <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+    </div>
+
+    <script type="text/javascript">
+        try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+    </script>
+
+    <style>
+        .f-button { height:35px; border:solid 3px #CCCCCC; background:#333; width:100px; line-height:32px; -webkit-transform:rotate(-90deg); font-weight:600; color:white; transform:rotate(-90deg);  -ms-transform:rotate(-90deg);  -moz-transform:rotate(-90deg); text-align:center; font-size:17px; position:fixed; right:-40px; top:45%; font-family:Arial, Helvetica, sans-serif; z-index:999; }
+        label{cursor: pointer;}
+    </style>
+
+    <script  th:inline="javascript">
+
+        var userName=/*[[${user.userName}]]*/null;
+        var currentTaskCounts;
+        var receiverUserName;
+        $.ajax({
+            type:'post',
+            url:'/api/getTaskNum/'+userName,
+            success:function(taskCount) {
+                currentTaskCounts = taskCount;
+                $('#dbzx').html(currentTaskCounts);
+                $('#wdrw').html(currentTaskCounts);
+            }
+        })
+
+
+    </script>
+
+
+</div>
+
+
+
+
+</body>
+
+</html>

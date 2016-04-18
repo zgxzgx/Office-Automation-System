@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>流程字段编辑</title>
+    <link href="kendo/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.silver.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
+    <script src="kendo/js/jquery.min.js"></script>
+    <script src="kendo/js/kendo.all.min.js"></script>
+    <script src="kendo/js/kendo.columnmenu.min.js"></script>
+
+</head>
+<body>
+
+<div id="grid" style="width: 720px"></div>
+
+  <script>
+
+  //dropdownlist
+      var data="";
+    $(function () {
+
+        //grid
+        $.ajax({
+            url: "http://localhost:8888/missivefield/read",    //请求的url地址
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            type: "GET",   //请求方式
+
+            success: function (result) {
+                //请求成功时处理
+                result = eval("("+result+")");
+                data=result;
+            },
+            error:function(){
+                alert("服务器端暂无数据");
+            }
+
+        });
+        $("#grid").kendoGrid({
+
+            dataSource:{
+                data:data,
+                schema:{
+                    id:"id",
+                    model: {
+                        id:"id",
+                        fields: {
+                            id:{editable:false,nullable:true},
+                            name: {type: "string", validation: { required: true } },
+                            taskName: { type: "string", validation: { required: true} },
+                            fieldName: { type: "string",validation: { required: true} }
+                        }
+                    }
+                }
+
+            },
+            height: 570,
+            sortable:true,
+            pageable:{
+                    //refresh:true,
+                        pageSize: 10,
+                        pageSizes:true,
+                        buttonCount:5,
+                messages: {
+                    display: "{0}-{1} 共 {2} 记录",
+                            empty: "无记录显示" ,
+                            itemsPerPage: "每页"
+                }
+
+            },
+            toolbar: [
+                {name:"create",text:"添加"}
+                 ],
+            save: function(e) {
+
+                console.log(e);
+
+                var id1=e.model.id;
+                var fieldName1=e.model.fieldName;
+                var name1=e.model.name;
+                var taskName1=e.model.taskName;
+
+                if(id1!=null){
+
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8888/missivefield/update",
+                        data: {id:id1,fieldName:fieldName1,name:name1,taskName:taskName1}
+
+                    });
+                }
+                else
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8888/missivefield/create",
+                        data: {fieldName:fieldName1,name:name1,taskName:taskName1}
+
+                    });
+                }
+
+
+
+            },
+            remove:function(e){
+                //alert("aa");
+
+                var id2=e.model.id;
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8888/missivefield/delete",
+                    data: {id:id2}
+
+                });
+
+            },
+
+            columns: [
+                { field:"name", title: "流程类型",width:"120px",editor: processDropDown, template: "#=name#",attributes: {style: "text-align: center" },headerAttributes: { style: "text-align: center"}},
+                { field: "taskName", title:"任务名称", width: "120px",editor: taskDropDown, template: "#=taskName#",attributes: {style: "text-align: center" },headerAttributes: { style: "text-align: center"}},
+                { field: "fieldName", title:"字段", width: "120px",editor: fieldDropDown, template: "#=fieldName#",attributes: {style: "text-align: center"},headerAttributes: { style: "text-align: center"}},
+                { command: [{name:"edit",text:{
+                                            edit:"编辑",
+                                            cancel:"取消",
+                                            update:"更新"
+                                        }
+                            }, {name:"destroy",text:"删除"}
+                           ], title: "&nbsp;", width: "120px",attributes: {style: "text-align: center"} }
+                       ],
+
+            editable  : {
+                 mode : "popup",
+                 //mode:"inline"
+                window : {
+                   title: "编辑"  // Localization for Edit in the popup window
+               },
+               confirmation: "您确定删除这条记录吗?"
+            }
+
+        });
+
+    });
+
+
+      //add dropdownlist event
+  function processDropDown(container, options) {
+
+      var processData=[];
+
+      $.ajax({
+          url: "http://localhost:8888/processType",    //请求的url地址http://demos.telerik.com/kendo-ui/service/Products
+          //dataType: "json",   //返回格式为json
+          async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+          type: "GET",   //请求方式
+
+          success:function(result){
+
+              result = eval("("+result+")");
+
+              //请求成功时处理
+              for(var i=0; i<result.length;i++)
+              {
+                  processData.push({
+                      nameID: i,
+                      name:result[i].name
+                  });
+
+              }
+
+              $('<input id="processTypeDP" required  name="' + options.field + '"/>')
+                      .appendTo(container)
+                      .kendoDropDownList({
+                          optionLabel: "请选择...",
+                          dataTextField: "name",
+                          dataValueField: "name",
+                          dataSource: processData,
+                          filterable: true
+                      });
+
+          },
+          error:function(){
+              //请求出错处理
+          }
+
+      });
+
+  }
+
+  function taskDropDown(container, options) {
+
+      var taskData=[];
+
+      $.ajax({
+          url: "http://localhost:8888/taskname",    //请求的url地址http://demos.telerik.com/kendo-ui/service/Products
+          //dataType: "json",   //返回格式为json
+          async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+          type: "GET",   //请求方式
+
+          success:function(result){
+
+              result = eval("("+result+")");
+
+              //请求成功时处理
+              for(var i=0; i<result.length;i++)
+              {
+                  taskData.push({
+                      taskID: i,
+                      taskName:result[i].taskName,
+                      name:result[i].name
+                  });
+
+              }
+
+              $('<input id="taskDP" disabled="disabled"  required  name="' + options.field + '"/>')
+                      .appendTo(container)
+                      .kendoDropDownList({
+                          optionLabel: "请选择...",
+                          autoBind: false,
+                          cascadeFrom: "processTypeDP",
+                          dataTextField: "taskName",
+                          dataValueField: "taskName",
+                          dataSource: taskData,
+                          filterable: true
+                      });
+
+          },
+          error:function(){
+              //请求出错处理
+          }
+
+      });
+
+  }
+
+    function fieldDropDown(container, options) {
+
+        var dataSource=[];
+
+        $.ajax({
+            url: "http://localhost:8888/missiveFieldAll",    //请求的url地址http://demos.telerik.com/kendo-ui/service/Products
+            //dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            type: "GET",   //请求方式
+
+            success:function(result){
+
+                result = eval("("+result+")");
+
+                //请求成功时处理
+                for(var i=0; i<result.length;i++)
+                {
+                    dataSource.push({
+                        fieldID: i,
+                        fieldName:result[i].fieldName,
+                        name:result[i].name
+                    });
+
+                }
+
+                $('<input id="fieldDP" disabled="disabled"  required  name="' + options.field + '"/>')
+                        .appendTo(container)
+                        .kendoDropDownList({
+                            optionLabel: "请选择...",
+                            autoBind: false,
+                            cascadeFrom: "processTypeDP",
+                            dataTextField: "fieldName",
+                            dataValueField: "fieldName",
+                            dataSource: dataSource,
+                            filterable: true
+                        });
+
+            },
+            error:function(){
+                //请求出错处理
+            }
+
+        });
+
+    }
+
+  </script>
+</body>
+</html>

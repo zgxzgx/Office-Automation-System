@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        收文流程
+    </title>
+    <link rel="icon" href="img/owl1.ico" type="image/x-icon">
+
+    <link rel="Bookmark" href="img/owl1.ico" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- basic styles -->
+    <script th:replace="header :: header"></script>
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- ace settings handler -->
+
+    <script src="/assets/js/ace-extra.min.js"></script>
+
+    <style scoped>
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/img/jpg.png)
+        }
+
+        .doc-file {
+            background-image: url(/img/doc.png)
+        }
+
+        .pdf-file {
+            background-image: url(/img/pdf.png)
+        }
+
+        .ppt-file {
+            background-image: url(/img/ppt.png)
+        }
+
+        .xls-file {
+            background-image: url(/img/xls.png)
+        }
+
+        .zip-file {
+            background-image: url(/img/zip.png)
+        }
+
+        .default-file {
+            background-image: url(/img/default.png)
+        }
+        .vali_textarea{
+            border-radius: 4px!important;
+            border-width: 1px;
+            box-shadow: none;
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+    </style>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+
+    <![endif]-->
+    <!-- <link rel="stylesheet" href="assets/css/myTableCSS/myTableCSS.css"/>-->
+</head>
+
+<body style="font-family: '微软雅黑'">
+<script type="text/javascript" th:inline="javascript">
+    var instanceId = [[${instanceId}]];//流程实例编号
+    var rightKeyValue="";//右键自定义属性值
+    var assignName=/*[[${currentTaskDealer}]]*/null;//当前任务执行人
+    var sessionUserName=/*[[${ud.userName}]]*/null;//登录用户名
+    if(assignName!=sessionUserName){
+        //swal({title:'错误提示',text:'您没有权限完成该公文！',type:'error',confirmButtonText:'确定'});
+        alert("您没有权限完成该公文！");
+        window.location.href="/";
+    }
+
+</script>
+<div th:replace="navbar :: navbar(${ud})"></div>
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try {
+        ace.settings.check('main-container', 'fixed')
+    } catch (e) {
+    }
+</script>
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+<div th:replace="slider :: slidermenu(${'dbzx'})"></div>
+<div class="main-content">
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('breadcrumbs', 'fixed')
+        } catch (e) {
+        }
+    </script>
+
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="/">首页</a>
+        </li>
+        <li class="active">收文流程</li>
+    </ul>
+    <!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+        <span class="input-icon">
+            <input type="text" placeholder="搜索..." class="nav-search-input"
+                   id="nav-search-input" autocomplete="off"/>
+            <i class="icon-search nav-search-icon"></i>
+        </span>
+    </div>
+    <!-- #nav-search -->
+</div>
+<div class="page-content">
+<div id="signatureDiv" class=""
+     style="position:absolute;left:5%;top:30%;height:1px;width:1px;"></div>
+
+<form id="receiveForm" style="position: absolute;">
+<!--办公室登记-->
+<div id="registerDiv" th:if="${#lists.contains(editControl,'registerDiv')}" class="row" style="min-width: 1200px;">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>办公室登记</h4>
+
+                    <span class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="icon-chevron-up"></i>
+                        </a>
+                    </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+
+
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <table>
+                        <tr style="height:45px">
+                            <td style="text-align: right;width:80px;min-width: 70px" class="blue" > 公文标题:</td>
+                            <td> <input style="width:40%;margin-left:30px;" id="missiveTitle" name="missiveTitle"
+                                        class="k-textbox" required validationMessage="请输入公文标题"/></td>
+                        </tr>
+                        <tr style="height:45px">
+                            <td style="text-align: right;width:80px;min-width: 70px" class="blue"> 公文种类:</td>
+                            <td>
+                                <select style="width:40%;margin-left:30px;" id="missiveType" name="missiveType"
+                                        required validationMessage="请选择公文种类"></select>
+                            </td>
+                        </tr>
+                        <tr style="height:45px">
+                            <td style="text-align: right;width:80px;min-width: 70px" class="blue"> 选择审核:</td>
+                            <td>
+                                <select style="width:40%;margin-left:30px;" id="selectChecker" name="taskDealPerson"
+                                        required validationMessage="请选择执行人"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;width:80px;min-width: 70px" class="blue" > <div id="modifyLabel" style="display: none">修改意见:</div></td>
+                            <td>
+                                <label id="modifyContentL" style="width:900px;border:1px;margin-left:30px;"></label>
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+</div>
+<!--办公室拟办及审核-->
+<div id="checkDiv" th:if="${#lists.contains(editControl,'checkDiv')}" class="row" style="min-width: 1200px">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>办公室拟办及审核</h4>
+
+                                                                        <span class="widget-toolbar">
+
+
+                                                                            <a href="#" data-action="collapse">
+                                                                                <i class="icon-chevron-up"></i>
+                                                                            </a>
+
+                                                                        </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main" style="height:200px;">
+                    <div style="width:150px;float:left">
+                        <label class="blue">
+                            <input name="passor"
+                                   onclick="$('#selectFirstLeader').data('kendoMultiFilterMultiSelect').enable(true);$('#selectDisposer').data('kendoMultiFilterMultiSelect').enable(true);$('#regModifyContent').attr('style','display:none;margin-left:160px');$('#regModifyContentT').val('  ')"
+                                   id="checkPass" checked value="CheckComp" type="radio" class="ace">
+                            <span class="lbl"> 通过审核</span>
+                        </label>
+                        <hr/>
+                        <label class="blue">
+                            <input id="modifyRegister" onclick="$('#selectFirstLeader').data('kendoMultiFilterMultiSelect').enable(false);$('#selectDisposer').data('kendoMultiFilterMultiSelect').enable(false);$('#regModifyContent').attr('style','position:absolute;top:127px;left:200px');" name="passor" value="BackRegiste" type="radio" class="ace">
+                            <span class="lbl"> 修改登记</span><br>
+                        </label>
+                        <hr/>
+
+                    </div>
+                    <div style="margin-left:180px;height:160px">
+
+                        <div id="shenhe" style="float:left">
+                            <select style="width:200px;float:left;margin-left:65px" id="selectFirstLeader"
+                                    name="taskDealPerson" required validationMessage="执行人不能为空！"></select>
+                            <select style="width:200px;margin-left:50px;float:left" id="selectDisposer"
+                                    name="taskDealPerson" required validationMessage="执行人不能为空"></select>
+
+                            <div></div>
+                        </div>
+
+                        <div style="display:none" id="regModifyContent">
+                            <label class="blue">修改意见:</label>
+                            <textarea style="resize: none;width:460px;height:105px" required validationMessage="修改意见不能为空！" name="regModifyContent"
+                                      id="regModifyContentT"> </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--领导批示-->
+<div id="leaderSignDiv" th:if="${#lists.contains(editControl,'leaderSignDiv')}" style="min-width: 1200px" class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>领导批示</h4>
+
+                                                                        <span class="widget-toolbar">
+
+
+                                                                            <a href="#" data-action="collapse">
+                                                                                <i class="icon-chevron-up"></i>
+                                                                            </a>
+
+                                                                        </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div>
+                        <label class="blue" style="float:left"></label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+</div>
+<!--办公室处理-->
+<div id="officeHandler" th:if="${#lists.contains(editControl,'officeHandler')}" style="min-width: 1200px" class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>办公室处理</h4>
+
+                                                                        <span class="widget-toolbar">
+
+
+                                                                            <a href="#" data-action="collapse">
+                                                                                <i class="icon-chevron-up"></i>
+                                                                            </a>
+
+                                                                        </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <table>
+                        <tr>
+                            <td style="min-width: 70px">
+                                <label class="blue" style="float:left">
+                                    <input name="passor" value="SignComp" type="radio" class="ace" checked
+                                           onclick="$('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(false);$('#selectFirstLooker').data('kendoMultiFilterMultiSelect').enable(true);"/>
+                                    <span class="lbl"> 转至阅办</span>
+                                </label>
+                            </td>
+                            <td>
+                                <select style="width:200px;margin-left:70px;float:left" id="selectFirstLooker"
+                                        name="taskDealPerson" required validationMessage="执行人不能为空！"></select>
+                                <!--<select style="width:200px;margin-left:45px;float:left" id="selectAfterLook"-->
+                                        <!--name="taskDealPerson" required validationMessage="执行人不能为空！"></select>-->
+                            </td>
+                        </tr>
+                        <tr></tr>
+                        <tr >
+                            <td style="min-width: 70px">
+                                <label class="blue" style="float:left">
+                                    <input name="passor" value="NeedSign" type="radio" class="ace"
+                                           onclick="$('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(true);$('#selectFirstLooker').data('kendoMultiFilterMultiSelect').enable(false);">
+                                    <span class="lbl"> 继续批示</span><br>
+                                </label>
+                            </td>
+                            <td>
+                                <select style="margin-left:70px;width:200px" id="selectNextLeader" name="taskDealPerson"
+                                        required validationMessage="执行人不能为空！"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 70px">
+                                <label class="blue" style="float:left">
+                                    <input name="passor" value="UndertakeDisposeComp" type="radio" class="ace"
+                                           onclick="$('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(false);$('#selectFirstLooker').data('kendoMultiFilterMultiSelect').enable(false);">
+                                    <span class="lbl"> 结束流程</span><br>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+</div>
+<!--阅办人签字-->
+<div id="lookerSignDiv" th:if="${#lists.contains(editControl,'lookerSignDiv')}" style="min-width: 1200px" class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>阅办人签字</h4>
+
+                                                                        <span class="widget-toolbar">
+
+
+                                                                            <a href="#" data-action="collapse">
+                                                                                <i class="icon-chevron-up"></i>
+                                                                            </a>
+
+                                                                        </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div>
+                        <label class="blue" style="float:left"></label>
+
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main" style="height:145px">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="blue" style="float:left">
+                                        <input name="passor" value="ReadoComp" checked
+                                               onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(true);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);"
+                                               type="radio" class="ace">
+                                        <span class="lbl"> 开始承办</span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <select style="margin-left:70px;width:200px;float:left" id="selectFirstUndertaker"
+                                            name="taskDealPerson" required validationMessage="执行人不能为空！"></select>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="blue" style="float:left">
+                                        <input name="passor" value="NeedReado"
+                                               onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(false);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(true);"
+                                               type="radio" class="ace">
+                                        <span class="lbl"> 继续阅办</span><br>
+                                    </label>
+                                </td>
+                                <td>
+                                    <select style="margin-left:70px;width:200px" id="selectNextLooker" name="taskDealPerson"
+                                            required validationMessage="执行人不能为空！"></select>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="blue">
+                                        <input name="passor" value="EndReado" type="radio"
+                                               onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(false);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);"
+                                               class="ace">
+                                        <span class="lbl"> 结束阅办</span><br>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+</div>
+<!-- 阅办后处理-->
+<div id="handlerDiv" th:if="${#lists.contains(editControl,'handlerDiv')}"  class="row" style="min-width: 1200px">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>阅办后处理</h4>
+
+                                                                        <span class="widget-toolbar">
+
+
+                                                                            <a href="#" data-action="collapse">
+                                                                                <i class="icon-chevron-up"></i>
+                                                                            </a>
+
+                                                                        </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+            </div>
+            <!--<div class="widget-body">-->
+                <!--<div class="widget-main" style="height:145px">-->
+                    <!--<table>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                      <!--<label class="blue" style="float:left">-->
+                                      <!--<input name="passor" value="ReadoComp" checked-->
+                                   <!--onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(true);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);"-->
+                                   <!--type="radio" class="ace">-->
+                                      <!--<span class="lbl"> 开始承办</span>-->
+                                      <!--</label>-->
+                            <!--</td>-->
+                            <!--<td>-->
+                             <!--<select style="margin-left:70px;width:200px;float:left" id="selectFirstUndertaker"-->
+                                <!--name="taskDealPerson" required validationMessage="执行人不能为空！"></select>-->
+                            <!--</td>-->
+
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<label class="blue" style="float:left">-->
+                                    <!--<input name="passor" value="NeedReado"-->
+                                           <!--onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(false);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(true);"-->
+                                           <!--type="radio" class="ace">-->
+                                    <!--<span class="lbl"> 继续阅办</span><br>-->
+                                <!--</label>-->
+                            <!--</td>-->
+                            <!--<td>-->
+                                <!--<select style="margin-left:70px;width:200px" id="selectNextLooker" name="taskDealPerson"-->
+                                        <!--required validationMessage="执行人不能为空！"></select>-->
+                            <!--</td>-->
+
+                        <!--</tr>-->
+                    <!--</table>-->
+
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+</div>
+<!--承办后处理-->
+<div id="undertakeDiv" th:if="${#lists.contains(editControl,'undertakeDiv')}" style="min-width: 1200px" class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4>承办后处理</h4>
+
+                                                                        <span class="widget-toolbar">
+
+
+                                                                            <a href="#" data-action="collapse">
+                                                                                <i class="icon-chevron-up"></i>
+                                                                            </a>
+
+                                                                        </span>
+                 <span class="widget-toolbar">
+                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
+                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
+                     </span>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <table>
+                        <tr>
+                            <td>
+                                <label class="blue" style="float:left">
+                                    <input name="passor" value="NeedUndertakeDispose" type="radio"
+                                           onclick="$('#selectNextUndertaker').data('kendoMultiFilterMultiSelect').enable(true);"
+                                           class="ace" checked>
+                                    <span class="lbl"> 继续承办</span>
+                                </label>
+                            </td>
+                            <td>
+                                <select id="selectNextUndertaker" name="taskDealPerson"
+                                        style="width:200px;margin-left:70px;float:left" required
+                                        validationMessage="执行人不能为空！"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="blue">
+                                    <input name="passor" value="EndReado" type="radio"
+                                           onclick="$('#selectNextUndertaker').data('kendoMultiFilterMultiSelect').enable(false);"
+                                           class="ace">
+                                    <span class="lbl"> 结束阅办</span><br>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+</div>
+
+<!--收文阅办卡-->
+<div style="width: 1030px;height:1660px;overflow: hidden;" id="padSignaturePic">
+<img th:src=@{/api/bgPng/small/missiveReceive/{instanceid}(instanceid=${instanceid})}
+     th:if="${hasBgPng}"
+     style="float:left;margin-top:-100px;width: 1030px;height:1460px;"/>
+<div style=" width:891px;height:1260px;margin-left:70px;background-image:url('/img/receiveSeeCard.png');z-index: -1;background-size:contain;background-repeat:no-repeat">
+    <div id="missiveReceive" style="position:absolute;width:891px;height:1260px;background-size:cover;">
+
+        <!--收文年月日-->
+        <div id="receiveYear" name="receiveYear" th:if="${#lists.contains(editControl, 'receiveYear')}"
+             style="font-size:20px;position:absolute;top:178px;left:215px;width:60px;height:30px;"></div>
+        <label id="receiveYears"
+               th:unless="${#lists.contains(editControl,'receiveYear')}"
+               style="font-size:20px;position:absolute;top:178px;left:215px;width:60px;height:30px;"></label>
+
+        <div id="receiveMonth" name="receiveMonth" th:if="${#lists.contains(editControl, 'receiveMonth')}"
+             style="font-size:20px;position:absolute;top:178px;left:307px;width:30px;height:30px;"></div>
+        <lablel id="receiveMonths" th:unless="${#lists.contains(editControl,'receiveMonth')}"
+                style="font-size:20px;position:absolute;top:178px;left:307px;width:30px;height:30px;"></lablel>
+        <div id="receiveDay" name="receiveDay" th:if="${#lists.contains(editControl,'receiveDay')}"
+             style="font-size:20px;position:absolute;top:178px;left:358px;width:30px;height:30px;"></div>
+        <label id="receiveDays" th:unless="${#lists.contains(editControl,'receiveDay')}"
+               style="font-size:20px;position:absolute;top:178px;left:358px;width:30px;height:30px;"></label>
+
+        <!--收文号-->
+        <div style="position:absolute;top:180px;left:682px;">
+            <input id="M_receiveNum" required validationMessage="请输入收文号"
+                   th:if="${#lists.contains(editControl,'M_receiveNum')}" name="M_receiveNum" type="text"
+                   style="font-size:20px;;width:125px;height:30px"/>
+            <label id="M_receiveNums" th:unless="${#lists.contains(editControl,'M_receiveNum')}"
+                   style="font-size:20px;margin-left:25px;margin-bottom: 10px"></label>
+        </div>
+
+
+        <!-- 文件字号-->
+        <div id="file">
+            <input id="missiveNum" type="text" name="missiveNum" class="k-textbox"
+                   th:if="${#lists.contains(editControl,'missiveNum')}"
+                   style="position:absolute;font-size:20px;top:227px;left:199px;width:370px;height:35px;"/>
+
+            <div>
+                <label id="missiveNums" name="missiveNums" th:unless="${#lists.contains(editControl,'missiveNum')}"
+                       style="position:absolute;font-size:20px;top:227px;left:199px;width:402px;height:45px"></label>
+            </div>
+        </div>
+
+        <!--文件份数-->
+        <div id="fileCount">
+            <input id="missiveCount" name="missiveCount" type="number"
+                   th:if="${#lists.contains(editControl,'missiveCount')}"
+                   style="position:absolute;font-size:20px;top:227px;left:619px;width:80px;height:35px;text-align: center"
+                   value="1" min="0" step="1" />
+            <label id="missiveCounts" name="missiveCounts" th:unless="${#lists.contains(editControl,'missiveCount')}"
+                   style="position:absolute;font-size:20px;border-style:none;top:142px;left:619px;margin-left:40px;width:70px;height:45px"></label>
+        </div>
+
+        <!--紧急程度-->
+        <div id="emergencyLevelDiv" style="font-size:15px;position:absolute;left:150px;top:194px;">
+            <select style="width:160px;height:35px" th:if="${#lists.contains(editControl,'emergencyLevel')}"
+                    id="emergencyLevel" name="emergencyLevel" required validationMessage="请选择公文种类"></select>
+            <label th:unless="${#lists.contains(editControl,'emergencyLevel')}" id="emergencyLevels"
+                   name="emergencyLevels" style="margin-left:15px;font-size:20px;width:70px;height:35px"></label>
+        </div>
+
+        <!--办理时限-->
+        <div style="position:absolute;top:275px;left:610px">
+            <input id="deadline" name="deadline" required validationMessage="请输入办理时限"
+                   th:if="${#lists.contains(editControl,'deadline')}" style="font-size:20px;width:200px;height:30px;"/>
+            <label id="deadlines" name="deadlines" th:unless="${#lists.contains(editControl,'deadline')}"
+                   style="font-size:20px;margin-left:15px;width:200px;height:30px;"></label>
+        </div>
+
+        <!--来文单位-->
+        <div style="position:absolute;top:345px;left:270px">
+            <input id="sendUnit" name="deadline" required validationMessage="请输入来文单位"
+                   th:if="${#lists.contains(editControl,'sendUnit')}" style="font-size:20px;width:430px;height:30px;"/>
+            <label id="sendUnits" name="deadlines" th:unless="${#lists.contains(editControl,'sendUnit')}"
+                   style="font-size:20px;margin-left:15px;width:430px;height:30px;"></label>
+        </div>
+
+        <!--领导批示-->
+        <div style="height: 599px;width: 790px;top: 415px;left: 50px;position: absolute;">
+            <img id="leaderInstuct_img" name="leaderInstuct_img" style="width: 100%;height: 100%;border: none;"/>
+        </div>
+        <!--来文摘要-->
+        <div style="position:absolute;top:415px;left:55px" id="missiveaAbstractDiv">
+            <textarea name="来文摘要" th:if="${#lists.contains(editControl,'missiveaAbstract')}" required
+                      validationMessage="请输入来文摘要" id="missiveaAbstract" name="missiveaAbstract"
+                      style="font-size:20px;width:783px;height:145px;resize:none;"></textarea>
+
+        </div>
+        <label th:unless="${#lists.contains(editControl,'missiveaAbstract')}" id="missiveaAbstracts"
+               name="missiveaAbstracts"
+               style="position:absolute;font-size:20px;width:790px;height:138px;top:275px;left:50px"></label>
+
+        <!--办公室拟办-->
+        <div  style="position:absolute;top:585px;left:55px;" id="officeSuggestDiv" th:if="${#lists.contains(editControl,'officeSuggest')}" >
+            <textarea name="拟办内容" th:if="${#lists.contains(editControl,'officeSuggest')}" id="officeSuggest"
+                      name="officeSuggest" required validationMessage="请输入拟办内容"
+                      style="font-size:20px;width:783px;height:113px;resize: none" placeholder="请输入拟办内容..."></textarea>
+        </div>
+        <label th:unless="${#lists.contains(editControl,'officeSuggest')}" id="officeSuggests" name="officeSuggests"
+               style="position:absolute;top:450px;left:50px;font-size:20px;width:790px;height:115px;WORD-BREAK:break-all"></label>
+
+
+        <!--拟办时间-->
+        <div id="officeSuggest_Month" th:if="${#lists.contains(editControl,'officeSuggest_Month')}"
+             style="font-size:20px;position:absolute;top:564px;left:735px;width:35px;height:30px;"
+             naem="officeSuggest_Month"></div>
+        <label id="officeSuggest_Months" th:unless="${#lists.contains(editControl,'officeSuggest_Month')}"
+               style="font-size:20px;position:absolute;top:562px;left:735px;width:35px;height:30px;"></label>
+
+        <div id="officeSuggest_Day" th:if="${#lists.contains(editControl,'officeSuggest_Day')}"
+             style="font-size:20px;position:absolute;top:564px;left:785px;width:35px;height:30px;"
+             name="officeSuggest_Day"></div>
+        <label id="officeSuggest_Days" th:unless="${#lists.contains(editControl,'officeSuggest_Day')}"
+               style="font-size:20px;position:absolute;top:562px;left:785px;width:35px;height:30px;"></label>
+
+        <!--领导批示-->
+        <!--<div style="height: 156px;width: 790px;top: 640px;left: 50px;position: absolute;">-->
+            <!--<img id="leaderInstuct_img" name="leaderInstuct_img" style="width: 100%;height: 100%;border: none"/>-->
+        <!--</div>-->
+
+        <div style="top: 640px;left: 55px;background:none;position: absolute;"id="leaderSignAreaDiv"th:if="${#lists.contains(editControl, 'leaderSignArea')}" >
+            <textarea th:if="${#lists.contains(editControl, 'leaderSignArea')}" id="leaderSignArea"
+                      name="leaderSignArea"
+                      style="height: 156px;width: 783px;position: absolute;background: none;resize: none;font-size: 20px;padding: 0px"></textarea>
+
+        </div>
+        <label style="top: 640px;left: 50px;height: 156px;width: 790px;background:none;position: absolute;font-size: 20px" th:unless="${#lists.contains(editControl, 'leaderSignArea')}" id="leaderSignAreas"
+                   ></label>
+
+        <div  th:if="${#lists.contains(editControl, 'leaderSignBtn')}"
+             style="height: 20px;width: 20px;top: 612px;left: 180px;position: absolute;">
+            <input type="button" style="width:62px" id="leaderSignBtn" value="手写"
+                   class="btn btn-xs btn-primary icon-edit bigger-110"
+                   onclick="handSignature('leaderSignArea')">
+            </input>
+
+        </div>
+
+
+        <!--批示时间-->
+        <div id="signMonth" th:if="${#lists.contains(editControl,'signMonth')}" name="signMonth"
+             style="font-size:20px;position:absolute;top:797px;left:735px;width:35px;height:30px;"></div>
+        <label id="signMonths" th:unless="${#lists.contains(editControl,'signMonth')}"
+               style="font-size:20px;position:absolute;top:797px;left:735px;width:35px;height:30px;"></label>
+
+        <div id="signDay" th:if="${#lists.contains(editControl,'signDay')}" name="signDay"
+             style="font-size:20px;position:absolute; top:797px;left:785px;width:35px;height:30px;"></div>
+        <label id="signDays" th:unless="${#lists.contains(editControl,'signDay')}"
+               style="font-size:20px;position:absolute; top:797px;left:785px;width:35px;height:30px;"></label>
+
+
+        <!--阅办人签字-->
+        <!--<div id="lookerSignDiv" th:if="${#lists.contains(editControl,'lookerSignDiv')}">-->
+        <div style="height: 140px;width: 790px;top: 876px;left: 50px;position: absolute;">
+            <img id="lookSign_img" style="width: 100%;height: 100%;"/>
+        </div>
+        <div style="position: absolute;top: 876px;left: 50px;" th:if="${#lists.contains(editControl, 'lookSignArea')}" id="lookSignAreaDiv">
+            <textarea id="lookSignArea" th:if="${#lists.contains(editControl, 'lookSignArea')}"
+                      style="position: absolute;height: 140px;width: 790px;resize: none;background: none;font-size: 20px;padding: 0px"></textarea>
+        </div>
+        <label th:unless="${#lists.contains(editControl, 'lookSignArea')}" id="lookSignAreas"
+               style="position: absolute;top: 876px;left: 50px;height: 140px;width: 790px;background: none;font-size: 20px"></label>
+
+        <div th:if="${#lists.contains(editControl, 'lookSignBtn')}"
+             style="height: 20px;width: 20px;top: 844px;left: 180px;position: absolute;">
+            <input type="button" style="width:62px" id="lookSignBtn" value="手写" class="btn btn-xs btn-primary"
+                   onclick="handSignature('lookSignArea')">
+            </input>
+        </div>
+
+
+        <!--承办情况-->
+        <div style="height: 115px;width: 790px;top: 1050px;left: 50px;position: absolute;">
+            <img id="undertake_img" style="width: 100%;height: 100%;"/>
+        </div>
+        <div style="top: 1050px;left: 50px;position:absolute" id="undertakeAreaDiv">
+            <textarea th:if="${#lists.contains(editControl, 'undertakeArea')}" id="undertakeArea" name="undertakeArea"
+                      style="height: 115px;width: 790px;background: none;font-size: 20px;padding: 0px"></textarea>
+            <label th:unless="${#lists.contains(editControl, 'undertakeArea')}" id="undertakeAreas"
+                   style="height: 115px;width: 790px;background: none;font-size: 20px;padding: 0px"></label>
+        </div>
+
+
+        <div th:if="${#lists.contains(editControl, 'undertakerSignBtn')}"
+             style="height: 20px;width: 20px;top: 1025px;left: 180px;position: absolute;">
+            <input value="手写" style="width:62px" type="button" id="undertakerSignBtn" class="btn btn-xs btn-primary"
+                   onclick="handSignature('undertakeArea')">
+            </input>
+        </div>
+        <div class="hr hr-double hr-dotted hr18" style="margin-top: 1240px"></div>
+        <div  style="height:200px; width: 450px;top: 1250px;left: 30px;position: absolute;" >
+            <label class="control-label bolder blue"  >备注:</label>
+            <label id="remarkLbl" th:text="${remarkList}" style="line-height: 50%">备注:</label><br/>
+            <label class="control-label bolder blue">添加备注：</label>
+            <textarea  id="remark" class="vali_textarea" name="remark" style="height:120px; width: 450px;"
+
+                    ></textarea>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<table style="position:absolute;top:1750px;width:891px;margin-left:70px;">
+    <!--Un-->
+
+    <tr class="trClass borderNone">
+        <td class="borderNone" style="width: 16.66%;height: 0px"></td>
+        <td class="borderNone" style="width: 16.66%;height: 0px"></td>
+        <td class="borderNone" style="width: 16.66%;height: 0px"></td>
+        <td class="borderNone" style="width: 16.66%;height: 0px"></td>
+        <td class="borderNone" style="width: 16.66%;height: 0px"></td>
+        <td class="borderNone" style="width: 16.66%;height: 0px"></td>
+    </tr>
+    <tr th:class="${#lists.contains(editControl,'attachments')}?'trClass borderNone':'hide'">
+    <!--<tr class="trClass borderNone">-->
+    <td class="borderNone" colspan="6">
+            <div class="hr hr-double hr-dotted hr18"></div>
+            <h3 class="header smaller lighter header-color-red">
+            </h3>
+            <i class="icon-cloud-upload"></i>
+            上传附件
+        </td>
+
+    </tr>
+    <tr th:class="${#lists.contains(editControl,'attachments')}?'trClass borderNone':'hide'">
+        <td class="borderNone" colspan="6">
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="demo-section k-header" id="filesDIV">
+                        <input type="file" name="files" id="attachments"/>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+        </td>
+
+    </tr>
+
+    <tr class="trClass borderNone">
+        <td class="borderNone" colspan="6">
+
+            <div class="widget-box transparent">
+                <div class="widget-header widget-header-small">
+                    <h4 class="blue smaller">
+                        <i class="icon-list orange"></i>
+                        附件
+                    </h4>
+
+                    <div class="widget-toolbar action-buttons">
+                        <a href="#" data-action="collapse">
+                            <i class="icon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-8" id="fileList">
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+    <tr class="trClass borderNone">
+        <td class="tdClass borderNone" colspan="6">
+            <div class="clearfix form-actions" style="min-width : 768px">
+                <div class="col-xs-1 col-xs-offset-4 col-sm-offset-4 col-sm-1 col-md-offset-4 col-md-1">
+                    <button id="completeTask" onclick="return false" class="btn btn-info">
+                        <i class="icon-ok bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+
+                <div class="col-xs-2 col-xs-offset-1 col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2">
+                    <button class="btn btn-danger" data-action="close"
+                            onclick="window.location.href='/dbzx/1';window.event.returnValue = false;">
+                        <i class="icon-remove bigger-110"></i>
+                        取消
+                    </button>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+<div id="updateing_div" style="position:absolute;"> &nbsp;</div><!--进度条-->
+<div><label id="isSelf" hidden="hidden"/></div>
+<!--自定义短语弹出窗口-->
+<div id="diyWin" style="position:absolute;text-align: center;display: none;">
+    <div class="dd">
+        <ol class="dd-list" th:each="phase:${phases}">
+
+            <li class="dd-item" >
+                <div>
+                    <a class="dd-handle" href="javascript:void(0)"   th:text="${phase}" onclick="insertData(this)" >
+                    </a>
+
+                </div>
+
+            </li>
+
+
+        </ol>
+
+    </div>
+</div>
+</form>
+
+</div>
+</div>
+
+</div>
+<!-- /#ace-settings-container -->
+</div>
+<!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<script src="/js/custom/basicobjectoption.js" type="text/javascript"></script>
+<script src="/js/elementUseage.js"></script>
+
+<!-- basic scripts -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/jquery.base64.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+
+<!--[if !IE]> -->
+
+<!--<script src='/assets/js/jquery-2.0.3.min.js'></script>-->
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>" + "<" + "script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>" + "<" + "script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
+</script>
+
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!--[if lte IE 8]>
+<script src="/assets/js/excanvas.min.js"></script>
+<![endif]-->
+<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/assets/js/jquery.slimscroll.min.js"></script>
+<script src="/assets/js/jquery.easy-pie-chart.min.js"></script>
+<script src="/assets/js/jquery.sparkline.min.js"></script>
+<script src="/assets/js/flot/jquery.flot.min.js"></script>
+<script src="/assets/js/flot/jquery.flot.pie.min.js"></script>
+<script src="/assets/js/flot/jquery.flot.resize.min.js"></script>
+<script src="/assets/js/dropzone.min.js"></script>
+<script src="/js/cultures/kendo.culture.zh-CN.min.js"></script>
+
+<script src="/js/custom/kendomultiselect-filter-plugin.js"></script>
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+
+<!-- inline scripts related to this page -->
+
+
+<script src="/js/jSingnature/src/jSignature.js"/>
+<script src="/js/elementUseage.js"></script>
+<script src="/js/console.js"></script>
+<!--<script src="/js/kendo.web.min.js"></script>-->
+<script src="/js/jSingnature/jSignature.wlsh.js" type="text/javascript" defer></script>
+<script src="/js/jSingnature/src/plugins/jSignature.CompressorBase30.js" type="text/javascript"></script>
+<script src="/js/fileList.wls.js" type="text/javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+
+
+var remarkList1=$("#remarkLbl").text();
+var remarkListNew="";
+var uuu=remarkList1.split("+");
+var mainSize=uuu.length-1;
+
+for(var i=0;i<mainSize;i++){
+    if(mainSize==1){
+        remarkListNew=remarkListNew+uuu[i];
+    }else{
+        remarkListNew=remarkListNew+"\n"+uuu[i];
+    }
+
+}
+
+$("#remarkLbl")[0].innerText= remarkListNew;
+
+
+
+var processDeId = /*[[${processDeId}]]*/null;//流程定义编号
+var currentEditableField = /*[[${editControl}]]*/[];
+var userID=/*[[${ud.id}]]*/[];
+var userSign=/*[[${ud.signImg}]]*/[];
+var phases =/*[[${phases}]]*/null;
+
+var taskId = /*[[${taskId}]]*/null;//当前任务编号
+var codes = /*[[${exsistCodes}]]*/[];
+
+var taskName = /*[[${taskName}]]*/null;
+var nextTasks = /*[[${nextAvailableTasks}]]*/[];
+var userDataSource=/*[[${userDataSource}]]*/null;   //下拉用户
+
+var missiveTitle = "";
+var control;
+var nextTaskUserName="";
+var nextTaskAssignee = "";//下一个任务执行人变量
+
+var taskAssignees = /*[[${taskAssignee}]]*/[];
+
+var missiveReceiveForm = /*[[${missiveReceiveForm}]]*/null;
+
+var blankSignImageurl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAxEAAAFjCAYAAABCEoaFAAAWB0lEQVR4Xu3XoREAAAgDMbr/0szwPuiqHOZ3jgABAgQIECBAgAABAkFgYWtKgAABAgQIECBAgACBExGegAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSTwRdcBZA2nfHIAAAAASUVORK5CYII=";//上一个流程的会签签字状态
+var undertakeImgForBankend = blankSignImageurl;
+var lookerSignImgForBankend = blankSignImageurl;
+var leaderInstructImgForBankend = blankSignImageurl;
+
+var missiveCode2=null;
+var missiveReceiveFormDataObj=null;
+//文件上传
+var resultFiles = [];//存放结果文件集合
+var initFiles = [];
+var version = 0;
+if (missiveReceiveForm != null) {
+    if (missiveReceiveForm.title != null) {
+        missiveTitle = missiveReceiveForm.title;
+    }
+
+}
+if (missiveReceiveForm.missiveInfo != null) {
+    if (missiveReceiveForm.missiveInfo.versions[0] != null) {
+        if (missiveReceiveForm.missiveInfo.versions[0].versionNumber != 0)
+            version = missiveReceiveForm.missiveInfo.versions[0].versionNumber;
+    }
+}
+var filePath_version = 1;
+if (version == 0)
+    filePath_version = version + 1;
+else
+    filePath_version = version;
+//if (missiveReceiveForm.missiveInfo != null) {
+//    if (missiveReceiveForm.missiveInfo.versions[0] != null) {
+//        if (missiveReceiveForm.missiveInfo.versions[0].attachments.length != 0) {
+//            for (var i = 0; i < missiveReceiveForm.missiveInfo.versions[0].attachments.length; i++) {
+//                if (missiveReceiveForm.missiveInfo.versions[0].attachments[i].isOriginalFil = false | missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[1] == "pdf" | missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[1] == "PDF") {
+//                    var temp = {};
+//                    temp.extension = "." + missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[1];//后缀
+//                    temp.name = missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle;
+//                    temp.size = 1;
+//                    initFiles.push(temp);
+//                   // fileListCreate("fileList", temp, "attachments", "filesDIV", currentEditableField);
+//                }
+//            }
+//        }
+//    }
+//}
+$(function ($) {
+
+    if (missiveReceiveForm.missiveInfo != null) {
+        if (missiveReceiveForm.missiveInfo.versions[0] != null) {
+            if (missiveReceiveForm.missiveInfo.versions[0].attachments.length != 0) {
+                for (var i = 0; i < missiveReceiveForm.missiveInfo.versions[0].attachments.length; i++) {
+                    var temp = {};
+                    temp.extension = "." + missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.').length - 1];//后缀
+                    temp.name = missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle;
+                    temp.size = 1;
+                    initFiles.push(temp);
+                    //-------add list of attachments--->>>>>
+                    //fileListCreate("fileList", temp, "attachments", "filesDIV", currentEditableField);
+
+                }
+            }
+        }
+    }
+    resultFiles = initFiles;//将初始化的文件数字赋值给结果数据，然后将上传文件加入文件数组
+    $("#attachments").kendoUpload({
+        multiple: true,
+        async: {
+            saveUrl: '/missiveReceive/upload/' + instanceId,
+            autoUpload: false
+        },
+        localization: {
+            select: "选择文件....",
+            uploadSelectedFiles: "上传"
+        },
+        success: onSuccess,
+        select: onSelect,
+        files: initFiles
+    });
+
+    for (var initfiles_i = 0; initfiles_i < initFiles.length; initfiles_i++) {
+        var hide_init_file = $("span[class='k-filename'][title='" + initFiles[initfiles_i].name + "']");
+        for (var hide_init_file_i = 0; hide_init_file_i < hide_init_file.length; hide_init_file_i++) {
+            $(hide_init_file[hide_init_file_i]).parent()[0].setAttribute("class", "hide");
+        }
+    }
+
+
+});
+
+
+
+
+
+//获取用户
+var selectLeaderDataSource = new kendo.data.DataSource({
+    transport: {
+        read: {
+            url: "/api/receiveMissive/getUser",
+            dataType: "json"
+        }
+    }
+});
+var selectLeaderDataSource2 = new kendo.data.DataSource({
+    transport: {
+        read: {
+            url: "/api/receiveMissive/getUser",
+            dataType: "json"
+        }
+    }
+});
+var urgent_dataSource = new kendo.data.DataSource({
+    transport: {
+        read: {
+            url: "/api/getUrgencyLevel",
+            dataType: "json"
+        }
+    }
+});
+var missType_dataSource = new kendo.data.DataSource({
+    transport: {
+        read: {
+            url: '/api/getMissiveTypes',
+            dataType: 'json'
+        }
+    }
+});
+//搜索监听
+$("#nav-search-input").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+
+        var searchValue=event.currentTarget.value;
+        if(searchValue==""){
+            swal("请在搜索框输入关键字！");
+
+        }else{
+            self.location="/fullSearch/"+searchValue;
+
+        }        //alert(searchValue);
+    }
+
+});
+$(function () {
+    //加载背景图片
+  /*  if (missiveReceiveForm.bgPngPath != null) {
+        $("#padSignaturePic")[0].style.backgroundImage = "url(/api/bgPng/missiveReceive/" + instanceId + ")";
+    }*/
+    //获取自定义短语内容
+
+    //办理时限控件
+    $('#deadline').kendoDatePicker({
+        animation: {
+            close: {
+                effects: "fadeOut zoom:out",
+                duration: 300
+            },
+            open: {
+                effects: "fadeIn zoom:in",
+                duration: 300
+            }
+        },
+
+        min:new Date()
+    });
+
+    //公文种类
+    $('#missiveType').kendoMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        width:'350px',
+        placeholder: "请选择公文种类...",
+        dataTextField: "typeName",
+        dataValueField: "id",
+        autoBind: false,
+        dataSource: missType_dataSource,
+        tagTemplate: '#: typeName #'
+    });
+    //紧急程度
+    $('#emergencyLevel').kendoMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: "请选择...",
+        dataTextField: "value",
+        dataValueField: "id",
+        autoBind: false,
+        dataSource: urgent_dataSource,
+        tagTemplate: '#: value #'
+    });
+    CreateSelectUserControlChecker("selectChecker", "请选择审核人...");
+    CreateSelectUserControlSigner("selectFirstLeader ", "请选择批示人...");
+    CreateSelectUserControlSignH("selectDisposer ", "请选择办公室处理人...");
+    CreateSelectUserControlLooker("selectFirstLooker", "请选择阅办人...");
+   // CreateSelectUserControlLookerH("selectAfterLook ", "请选择阅办处理人...");
+    CreateSelectUserControlSigner("selectNextLeader", "请选择批示人...");
+    CreateSelectUserControlUnderT("selectFirstUndertaker ", "请选择承办人...");
+    CreateSelectUserControlLooker("selectNextLooker", "请选择阅办人...");
+    CreateSelectUserControlUnderT("selectNextUndertaker", "请选择下一位承办人...");
+
+    if ($("#selectNextLeader")[0]) {
+        $('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(false);
+    }
+
+    if ($('#selectNextLooker')[0]) {
+        $('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);
+    }
+
+
+
+    if($('#missiveaAbstract')[0]){
+        CM_addEvent(window, 'load', insertAbstract);
+    }
+
+    function insertAbstract(){
+        control="missiveaAbstract";
+        control = new ContextMenu();
+        control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
+        control.addSeparator();
+        control.addtitle="missiveaAbstract";
+        control.register("missiveaAbstractDiv");
+    }
+
+    //办公室拟办插入自定义短语
+    if($('#officeSuggest')[0]){
+        CM_addEvent(window, 'load', insertofficeToDo);
+    }
+
+    function insertofficeToDo(){
+        control="officeSuggest";
+        control = new ContextMenu();
+        control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
+        control.addSeparator();
+        control.addtitle="officeSuggest";
+        control.register("officeSuggestDiv");
+    }
+
+    //领导批示右键插入签名和短语
+
+    function itemAlert(e) {
+        if(e.item.label.replace(/<[^>]+>/g, "")=="插入签名"){
+
+            handSignature(control.addtitle);
+
+        }else if(e.item.label.replace(/<[^>]+>/g, "")=="插入短语"){
+            var win_height=$(document).scrollTop() + $(window).height() / 2-150;
+            var win_width=$(window).width()/2;
+            if(phases[0]!=null) {
+                $('#diyWin').kendoWindow({
+                    title: '自定义短语',
+                   position: {
+                        top:  win_height,
+                        left: win_width
+
+                    },
+                    pinned: true,
+                    minWidth: 190,
+                    minHeight: 430,
+                    maxWidth: 280,
+                    maxHeight: 650,
+                    modal: true
+
+                });
+                $("#diyWin").data("kendoWindow").open();
+            }
+            else{
+                swal("您还没有自定义短语！");
+            }
+
+        }
+    }
+    if($('#leaderSignArea')[0]) {
+        CM_addEvent(window, 'load', insertLeaderSgin);
+    }
+    function insertLeaderSgin() {
+
+        control = new ContextMenu();
+        control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
+     //   control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
+        control.addSeparator();
+        control.addtitle="leaderSignArea";
+        control.register("leaderSignAreaDiv");
+    }
+
+
+    if($('#lookSignArea')[0]) {
+        CM_addEvent(window, 'load', insertLookerSgin);
+    }
+
+    function insertLookerSgin(){
+        control = new ContextMenu();
+        control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
+    //    control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
+
+        control.addSeparator();
+        control.addtitle="lookSignArea";
+        control.register("lookSignAreaDiv");
+    }
+    if($('#undertakeArea')[0]) {
+        CM_addEvent(window, 'load', insertUndertakeSgin);
+    }
+    function insertUndertakeSgin(){
+        control = new ContextMenu();
+        control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
+    //    control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
+
+        control.addSeparator();
+        control.addtitle="undertakeArea";
+        control.register("undertakeAreaDiv");
+    }
+
+
+    //渲染页面内容
+    $.ajax({
+        url: '/api/getPreContent',//MissiveController
+        data: {instanceid: instanceId, taskid: taskId},
+        async: false,
+        success: function (result) {//result对应missiveReceiveRender类
+            //办公室审核修改意见
+            if ($('#registerDiv')[0]) {
+                $('#modifyDiv').attr("style", "display:'';margin-top:10px");
+                var modify = result.reModifyContent;
+                if(modify!=""&&modify!=null) {
+                    if(modify.replace(/\s/g,"")!="") {
+                        $('#modifyLabel').attr("style", "display:''");
+                    }
+                    if (modify.indexOf('\\n')>0) {
+                        modify = modify.replace(/\\n/g, "<br/>");
+                    }
+
+                    $('#modifyContentL').html(modify);
+                }
+
+
+                $('#missiveTitle').val(result.title);
+                $('#missiveNum').val(result.missiveNumber);
+
+                if(result.fileCount!=null&&result.fileCount!="") {
+                    $('#missiveCount').val(result.fileCount);
+                }
+                else{
+                    $('#missiveCount').val('1');
+                }
+                $('#deadline').val(result.dealDeadline);
+                $('#M_receiveNum').val(result.code);
+                missiveCode2=result.code1;
+
+               $('#missiveaAbstract').val(result.missiveAbstract);
+                /*if ($("#selectChecker")[0] && result.taskDealer != null) {
+                    var selectToDoP = $("#selectChecker").data("kendoMultiSelect");//创建选择拟办人对象
+                    selectToDoP.value(result.taskDealer.officeHandle);//设置已选拟办人
+                }*/
+                if ($('#missiveType')[0] && result.missiveInfo.missiveType != null) {
+                    var missiveType = $('#missiveType').data("kendoMultiSelect");
+                    missiveType.value(result.missiveInfo.missiveType.id);
+                }
+            }
+            //$('#toDoModifyContentL').html(result.toModifyContent);
+            //$('#officeSuggest').html(result.officeToDo);
+
+            $('#receiveYears').html(result.receiveYear);//收文年
+            $('#receiveYear').html(result.receiveYear);//收文年
+            $('#receiveMonths').html(result.receiveMonth);//收文月
+            $('#receiveMonth').html(result.receiveMonth);//收文月
+            $('#receiveDays').html(result.receiveDay);//收文日
+            $('#receiveDay').html(result.receiveDay);//收文日
+
+            $('#M_receiveNums').html(result.code);//收文号
+            $('#missiveNums').html(result.missiveNumber);//文件字号
+            $('#missiveCounts').html(result.fileCount);//文件份数
+            $('#sendUnits').html(result.sendUnit);//文件份数
+            $('#sendUnit').html(result.sendUnit);//文件份数
+
+            //紧急程度
+            if (result.urgencyLevel != null) {
+                if ($('#emergencyLevel')[0]) {
+                    var emergencyLevel = $('#emergencyLevel').data("kendoMultiSelect");
+                    emergencyLevel.value(result.urgencyLevel.id);
+                }
+                else {
+                    $('#emergencyLevels').html(result.urgencyLevel.value);
+                }
+            }
+            $('#deadlines').html(result.dealDeadline);//办理时限
+            if (result.missiveAbstract != null && result.missiveAbstract != "") {
+                var abstract = result.missiveAbstract;
+               // if(abstract.indexOf("\\n")>0){
+                    abstract=abstract.replace(/\\n/g,"<br/>");
+                    abstract=abstract.replace(/\s/g,"&nbsp");
+               // }
+                $('#missiveaAbstracts').html(abstract);
+                $('#missiveaAbstract').html(abstract);
+            }//来问摘要
+            //渲染的页面内容分已经完成的和未完成的
+
+            if (result.officeToDo != null&&result.officeToDo!="") {
+                var todo="";
+                var officetodo = result.officeToDo;
+              //  if(officetodo.indexOf('\\n')>0){
+                    officetodo=officetodo.replace(/\\n/g,"<br/>");
+                officetodo=officetodo.replace(/\s/g,"&nbsp");
+               // }
+                $('#officeSuggests').html(officetodo);//办公室拟办
+                $('#officeSuggest').html(officetodo);
+            }
+
+            if ($("#selectChecker")[0] && result.taskDealer != null) {
+                $('#selectChecker').data("kendoMultiFilterMultiSelect").value(result.taskDealer.chargerCheck);
+            }
+            $('#officeSuggest_Month').html(result.toDoDateMonth);//办公室拟办月
+            $('#officeSuggest_Months').html(result.toDoDateMonth);//办公室拟办月
+            $('#officeSuggest_Day').html(result.toDoDateDay);//办公室拟办日
+            $('#officeSuggest_Days').html(result.toDoDateDay);//办公室拟办日
+
+            if (result.leaderInstruct != null && result.leaderInstruct != "") {
+                var Imageurl = result.leaderInstruct.Imageurl;
+                if (Imageurl != "") {
+                    leaderInstructImgForBankend=Imageurl;
+                }
+                //领导批示打字
+                var instructText = result.leaderInstruct.contentText;
+                if(instructText!=""&&instructText!=null) {
+
+                    if ($('#leaderSignArea')[0]) {
+                      //  if(instructText.indexOf("\\n")>0){
+                            instructText=instructText.replace(/\\n/g,"<br/>");
+                     //   }
+
+                        $('#leaderSignArea').html(instructText);
+                    }
+                    else {
+                        var instructtextT = instructText.replace(/\s/g,"");
+                        if(instructText.length!=instructtextT.length){
+                            instructText=instructText.replace(/\s/g,"&nbsp");
+                        }
+                     //   if(instructText.indexOf("\\n")>0){
+                            instructText=instructText.replace(/\\n/g,"<br/>");
+                      //  }
+                        $('#leaderSignAreas').html(instructText);
+                    }
+
+                }
+            }
+            $('#leaderInstuct_img')[0].src = leaderInstructImgForBankend;
+
+
+            $('#signMonth').html(result.instructDateMonth);//批示月
+            $('#signMonths').html(result.instructDateMonth);//批示月
+            $('#signDay').html(result.instructDateDay);//批示日
+            $('#signDays').html(result.instructDateDay);//批示日
+
+            //阅办人签字
+            if (result.lookerSign != null && result.lookerSign != "") {
+                var lookSign_img = result.lookerSign.Imageurl;
+                if (lookSign_img != "") {
+                    lookerSignImgForBankend=lookSign_img;
+                }
+                //阅办人打字
+                var lookerSignText = result.lookerSign.contentText;
+                if(lookerSignText!=null&&lookerSignText!="") {
+                    if ($('#lookSignArea')[0]) {
+                       // if(lookerSignText.indexOf("\\n")>0){
+                            lookerSignText= lookerSignText.replace(/\\n/g,"<br/>");
+                      //  }
+                        $('#lookSignArea').html(lookerSignText);
+                    }
+                    else {
+                       // if(lookerSignText.indexOf('\\n')>0){
+                            lookerSignText=  lookerSignText.replace(/\\n/g,"<br/>");
+                      //  }
+                        var lookertextT=lookerSignText.replace(/\s/g,"");
+                        if(lookerSignText.length!=lookertextT.length){
+                            lookerSignText= lookerSignText.replace(/\s/g,'&nbsp');
+                        }
+                        $('#lookSignAreas').html(lookerSignText);
+                    }
+                }
+            }
+            $('#lookSign_img')[0].src = lookerSignImgForBankend;
+
+            //承办人签字
+            if (result.undertake != null && result.undertake != "") {
+                var undertake_img = result.undertake.Imageurl;
+                if (undertake_img != "") {
+                    undertakeImgForBankend = undertake_img;
+                }
+                //承办人打字
+                var undertakerSignText = result.undertake.contentText;
+//                if(undertakerSignText!=null&&undertakerSignText!="") {
+//                    if ($('#undertakeArea')[0]) {
+//                      //  if(undertakerSignText.indexOf("\\n")>0){
+//                            undertakerSignText=undertakerSignText.replace(/\\n/g,"<br/>");
+//                      //  }
+//                        $('#undertakeArea').html(undertakerSignText);
+//                    }
+//                }
+
+
+                  if(undertakerSignText!=null&&undertakerSignText!="") {
+                    if ($('#undertakeArea')[0]) {
+                        undertakerSignText= undertakerSignText.replace(/\\n/g,"<br/>");
+                        $('#undertakeArea').html(undertakerSignText);
+                    }
+                    else {
+
+                        var undertakerSignTextT=undertakerSignText.replace(/\s/g,"");
+                        if(undertakerSignText.length!=undertakerSignTextT.length){
+                            undertakerSignText= undertakerSignText.replace(/\s/g,'&nbsp');
+                        }
+                        undertakerSignText=  undertakerSignText.replace(/\\n/g,"<br/>");
+                        $('#undertakeAreas').html(undertakerSignText);
+                    }
+                }
+
+
+
+            }
+            $('#undertake_img')[0].src = undertakeImgForBankend;
+        },
+        error: function () {
+            alert('error');
+        }
+    });
+    var leaderSignAreaBefore;
+    var lookerSignAreaBefore;
+    var undertakeAreaBefore;
+    if($('#leaderSignArea')[0]) {
+        leaderSignAreaBefore = $("#leaderSignArea")[0].value;//领导批示已有的内容
+        document.onkeyup=function(event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            var leaderSignAreaAfter = $("#leaderSignArea")[0].value//.replace(/\n/g,"<br>");//领导批示修改后的内容
+            if (leaderSignAreaBefore != "" && leaderSignAreaBefore != null) {
+                var contentlength = leaderSignAreaBefore.length;
+                if (leaderSignAreaAfter.substr(0, contentlength) != leaderSignAreaBefore) {
+//                    swal("警告", "您不能修改或删除已有的字迹", "warning");
+                    alert("您不能修改或删除已有的字迹");
+                    $("#leaderSignArea")[0].value = leaderSignAreaBefore;//
+                    $("#leaderSignArea").focusin();
+                }
+            }
+        }
+    }
+    if($('#lookSignArea')[0]) {
+        lookerSignAreaBefore = $("#lookSignArea")[0].value;//领导批示已有的内容
+        document.onkeyup=function(event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            var lookSignAreaAfter = $("#lookSignArea")[0].value//.replace(/\n/g,"<br>");//领导批示修改后的内容
+            if (lookerSignAreaBefore != "" && lookerSignAreaBefore != null) {
+                var contentlength = lookerSignAreaBefore.length;
+                if (lookSignAreaAfter.substr(0, contentlength) != lookerSignAreaBefore) {
+//                    swal("警告", "您不能修改或删除已有的字迹", "warning");
+                    alert("您不能修改或删除已有的字迹");
+                    $("#lookSignArea")[0].value = lookerSignAreaBefore;//
+                    $("#lookSignArea").focusin();
+                }
+            }
+        }
+    }
+    if($('#undertakeArea')[0]) {
+        undertakeAreaBefore = $("#undertakeArea")[0].value;//领导批示已有的内容
+        document.onkeyup=function(event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            var undertakeAreaAfter = $("#undertakeArea")[0].value//.replace(/\n/g,"<br>");//领导批示修改后的内容
+            if (undertakeAreaBefore != "" && undertakeAreaBefore != null) {
+                var contentlength = undertakeAreaBefore.length;
+                if (undertakeAreaAfter.substr(0, contentlength) != undertakeAreaBefore) {
+//                    swal("警告", "您不能修改或删除已有的字迹", "warning");
+                    alert("您不能修改或删除已有的字迹");
+                    $("#undertakeArea")[0].value = undertakeAreaBefore;//
+                    $("#undertakeArea").focusin();
+                }
+            }
+        }
+    }
+
+
+
+
+    for (var i = 0; i < resultFiles.length; i++) {
+        var temp = resultFiles[i];
+        //-------add list of attachments--->>>>>
+        fileListCreate("fileList", temp, "attachments", "filesDIV", currentEditableField);
+    }
+
+    //表单验证
+    var validator = $('#receiveForm').kendoValidator().data("kendoValidator");
+    var nextTaskName = "";//下一个任务名称
+
+    var confirmMessageText = "";
+    var confirmMessageTittle = "确认 -- " + taskName + " -- 完成？";
+
+
+
+    //选择用户下拉框   //点击提交任务
+    $('#completeTask').bind('click', function () {
+        var taskIndex = $("input[name='passor']:checked").val() == undefined ? "" : $("input[name='passor']:checked").val();
+        if(resultFiles.length==0){
+            swal("请上传附件！！！");
+
+        }else{
+            if (validator.validate()) {
+                var myDate = new Date();
+                var year=myDate.getFullYear();
+                var missiveCode=$('#M_receiveNum').val();
+                var mmType=$('#missiveType').val() == undefined ? "" : $('#missiveType').val()[0];
+                var missiveCode1;
+
+                if(missiveCode2==""||missiveCode2==undefined||missiveCode2==null){
+                    if(mmType.indexOf("传真")!=1){
+                    missiveCode1=year+"|"+"传"+" "+missiveCode;
+                    }else{
+                        missiveCode1=year+"|"+"收"+" "+missiveCode;
+                    }
+                }else{
+                    missiveCode1=year+"|"+missiveCode;
+                }
+
+
+                //var receiveNum = $('#M_receiveNum').val() == undefined ? "" : $('#M_receiveNum').val();
+                var receiveNum = $('#M_receiveNum').val() == undefined ? "" : $('#M_receiveNum').val();
+                if((taskName=="办公室登记")&&($.inArray(missiveCode1, codes) > -1)){
+
+                    swal("收文号已存在！");
+
+
+                }
+                else{
+
+
+                    var selectToDo = "";//$("#selectToDo").val() == undefined ? "" : $("#selectToDo").val()[0];//拟办人
+                    var selectChecker = $("#selectChecker").val() == undefined ? "" : $("#selectChecker").val()[0];//办公室审核人
+                    var selectFirstLeader = $("#selectFirstLeader").val() == undefined ? "" : $("#selectFirstLeader").val()[0];//批示领导
+                    var selectDisposer = $("#selectDisposer").val() == undefined ? "" : $("#selectDisposer").val()[0];//办公室处理人
+                    var selectFirstLooker = $("#selectFirstLooker").val() == undefined ? "" : $("#selectFirstLooker").val();//阅办人
+                    //  var selectAfterLook = $("#selectAfterLook").val() == undefined ? "" : $("#selectAfterLook").val()[0];//阅办后处理人
+                    var selectNextLeader = $("#selectNextLeader").val() == undefined ? "" : $("#selectNextLeader").val()[0];//下一位批示领导
+                    var selectFirstUndertaker = $("#selectFirstUndertaker").val() == undefined ? "" : $("#selectFirstUndertaker").val()[0];//承办人
+                    var selectNextLooker = $("#selectNextLooker").val() == undefined ? "" : $("#selectNextLooker").val()[0];//下一位阅办人
+                    var selectNextUndertaker = $("#selectNextUndertaker").val() == undefined ? "" : $("#selectNextUndertaker").val()[0];//下一位承办人
+                    var remark=$("#remark")[0].value;
+                    var sendUnit=$("#sendUnit")[0].value== undefined ? "" : $("#sendUnit").val();
+
+                    if (nextTasks != null&&taskIndex!="UndertakeDisposeComp"&&taskIndex!="UndertakeDisposeComp") {
+
+                        if(nextTasks==null){
+                            nextTaskName="继续承办";
+                            selectNextAssignee("UndertakeDisposer");
+                            $.ajax({
+                                url:'/api/getNameByUserName/'+nextTaskUserName,
+                                type:'post',
+                                async:false,
+                                success:function(result){
+                                    nextTaskAssignee=result;
+                                }
+                            });
+
+                        }
+
+                        else
+                        if (nextTasks.length == 1) {
+                            nextTaskName = nextTasks[0].name;
+                            selectNextAssignee(nextTasks[0].assignee);
+                            $.ajax({
+                                url:'/api/getNameByUserName/'+nextTaskUserName,
+                                type:'post',
+                                async:false,
+                                success:function(result){
+                                    nextTaskAssignee=result;
+                                }
+                            });
+
+                        }
+                        else {
+                            var taskIndex = $("input[name='passor']:checked").val() == undefined ? "" : $("input[name='passor']:checked").val();
+                            for (var i = 0; i < nextTasks.length; i++) {
+                                var condition = nextTasks[i].condition;
+                                if (condition == taskIndex) {
+                                    nextTaskName = nextTasks[i].name;
+
+                                    if(condition=="SignComp"){
+                                        selectNextAssignee("Reador");
+                                        nextTaskName+="\n\n转入阅办处理";
+                                    }else{
+                                        selectNextAssignee(nextTasks[i].assignee);
+                                    }
+
+
+                                    $.ajax({
+                                        url:'/api/getNameByUserName/'+nextTaskUserName,
+                                        type:'post',
+                                        async:false,
+                                        success:function(result){
+                                            nextTaskAssignee=result;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        if(nextTaskAssignee!=""){
+                            confirmMessageText = "流程将转到 - " + nextTaskName+"\n\n处理人为 - 【"+nextTaskAssignee+"】";}
+                        else{confirmMessageText = "流程将转到 - " + nextTaskName;}
+                    }
+
+                    else {
+                        confirmMessageText = "收文流程即将结束";
+                    }
+
+
+
+
+                    var deadline = $('#deadline').val() == undefined ? "" : $('#deadline').val();
+
+                    var signLeader = selectFirstLeader == "" ? selectNextLeader : selectFirstLeader;
+                    var signLooker = selectFirstLooker == "" ? selectNextLooker : selectFirstLooker;
+                    var signUndertaker = selectFirstUndertaker == "" ? selectNextUndertaker : selectFirstUndertaker;
+
+                    //公文标题、类型、任务完成标识
+                    var title = $('#missiveTitle').val() == undefined ? "" : $('#missiveTitle').val();
+
+                    //var mtittle=title.replace(/<br>/g, '');
+
+                    var missiveType = $('#missiveType').val() == undefined ? "" : $('#missiveType').val()[0];
+
+
+                    //收文年月日
+                    var receiveYear = $('#receiveYear').html() == undefined ? "" : $('#receiveYear').html();
+                    var receiveMonth = $('#receiveMonth').html() == undefined ? "" : $('#receiveMonth').html();
+                    var receiveDay = $('#receiveDay').html() == undefined ? "" : $('#receiveDay').html();
+
+                    //收文号、文件字号、文件份数
+
+                    var receiveNum = $('#M_receiveNum').val() == undefined ? "" : $('#M_receiveNum').val();
+                    var missiveNum = $('#missiveNum').val() == undefined ? "" : $('#missiveNum').val();
+                    var missiveCount = $('#missiveCount').val() == undefined ? "" : $('#missiveCount').val();
+
+                    //紧急程度、办理期限、来文摘要
+                    var emergencyLevel = $('#emergencyLevel').val() == undefined ? "" : $('#emergencyLevel').val()[0];
+
+                    var missiveAbstract = $('#missiveaAbstract').val() == undefined ? "" : $('#missiveaAbstract').val();
+
+                    //办公室登记、拟办修改意见
+                    var registerModify = $('#regModifyContentT').val() == undefined ? "" : $('#regModifyContentT').val();
+                    var toDoModify = $('#toDoModifyContentT').val() == undefined ? "" : $('#toDoModifyContentT').val();
+
+                    //拟办内容、拟办月日
+                    var officeToDo = $('#officeSuggest').val() == undefined ? "" : $('#officeSuggest').val();
+                    var toDoMonth = $('#officeSuggest_Month').html() == undefined ? "" : $('#officeSuggest_Month').html();
+                    var toDoDay = $('#officeSuggest_Day').html() == undefined ? "" : $('#officeSuggest_Day').html();
+
+                    //领导批示
+                    var leaderInstruct_img = $("#leaderInstuct_img")[0].src == undefined ? "" : $("#leaderInstuct_img")[0].src;
+                    var leaderSignArea = $('#leaderSignArea').val() == undefined ? "" : $('#leaderSignArea').val();
+
+                    //批示月、日
+                    var instructMonth = $('#signMonth').html() == undefined ? "" : $('#signMonth').html();
+                    var instructDay = $('#signDay').html() == undefined ? "" : $('#signDay').html();
+
+                    //阅办人签字
+                    var lookSign_img = $('#lookSign_img')[0].src == undefined ? "" : $('#lookSign_img')[0].src;
+                    var lookSignArea = $('#lookSignArea').val() == undefined ? "" : $('#lookSignArea').val();
+
+                    //承办人签字
+                    var undertake_img = $('#undertake_img')[0].src == undefined ? "" : $('#undertake_img')[0].src;
+                    var undertakeArea = $('#undertakeArea').val() == undefined ? "" : $('#undertakeArea').val();
+
+                    //保存公文的附件信息
+                    var attachFiles = "";
+                    for (var i = 0; i < resultFiles.length; i++) {
+                        attachFiles += resultFiles[i].name + "&";
+                    }
+                    //var signLooker;
+                    signLooker ="";
+                    if(selectFirstLooker.length!=0){
+                        for (var i = 0; i < selectFirstLooker.length; i++) {
+
+                            signLooker += selectFirstLooker[i] + "|";
+                        }}else{
+
+                        signLooker = selectFirstLooker == "" ? selectNextLooker : selectFirstLooker;
+                    }
+
+                    missiveReceiveFormDataObj = {
+                        //任务执行人
+                        Handle: selectToDo,
+                        ChargerCheck: selectChecker,
+                        LeaderSign: signLeader,
+                        OfficeDispose: selectDisposer,
+                        Reado: signLooker,
+                        //  ReadoDispose: selectAfterLook,
+                        UndertakeDispose: signUndertaker,
+                        //表单数据
+                        mTitle: title,
+                        mType: missiveType,
+                        mTaskIndex: taskIndex,
+                        mReceiveYear: receiveYear,
+                        mReceiveMonth: receiveMonth,
+                        mReceiveDay: receiveDay,
+                        mReceiveNum: receiveNum,
+                        mMissiveNum: missiveNum,
+                        mMissiveCount: missiveCount,
+                        mEmergencyLevel: emergencyLevel,
+                        mDeadline: deadline,
+                        mMissiveAbstract: missiveAbstract,
+                        mRegisterModify: registerModify,
+                        mToDoModify: toDoModify,
+                        mOfficeToDo: officeToDo,
+                        mToDoMonth: toDoMonth,
+                        mToDoDay: toDoDay,
+                        mLeaderInstruct_img: leaderInstruct_img,
+                        mLeaderSignArea: leaderSignArea,
+                        mInstructMonth: instructMonth,
+                        mInstructDay: instructDay,
+                        mLookSign_img: lookSign_img,
+                        mLookSignArea: lookSignArea,
+                        mUndertake_img: undertake_img,
+                        mUndertakeArea: undertakeArea,
+                        mUploadAttach: attachFiles,
+                        remark:remark,
+                        sendUnit:sendUnit
+                    };
+
+                    if ($.inArray("attachments", currentEditableField) > -1 && (resultFiles.length == 0 )) {
+                        swal(
+                                {
+                                    title: "确认提交?",
+                                    text: "您没有上传新的附件，是否继续提交？",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "确定提交!",
+                                    cancelButtonText: "取消",
+                                    closeOnConfirm: false,
+                                    closeOnCancel: false
+                                },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        swal(
+                                                {
+                                                    title: "确认提交?",
+                                                    text: confirmMessageText,
+                                                    type: "warning",
+//                                                minWidth:600,
+                                                    showCancelButton: true,
+//                                                confirmButtonColor: "#DD6B55",
+                                                    confirmButtonText: "确定",
+                                                    cancelButtonText: "取消",
+                                                    closeOnCancel: true
+                                                },
+                                                function (isConfirm) {
+                                                    if (isConfirm) {
+                                                        generateSubmitUpload();
+                                                        postAjaxData();//提交表单数据
+
+
+
+                                                    }
+                                                }
+                                        );
+                                    }
+                                    else {
+                                        swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+
+                                    }
+                                }
+                        );
+                    }
+                    else {
+
+                        swal(
+                                {
+                                    title: "确认提交?",
+                                    text: confirmMessageText,
+                                    type: "warning",
+//                                minWidth:560,
+                                    showCancelButton: true,
+                                    confirmButtonText: "确定",
+                                    cancelButtonText: "取消",
+                                    closeOnConfirm: true,
+                                    closeOnCancel: true
+                                },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        generateSubmitUpload();
+                                        postAjaxData();
+
+
+
+                                    }
+//                                else {
+//                                    swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+//
+//                                }
+                                }
+                        );
+                    }
+
+
+
+                }
+            }
+            else {
+                swal("请保证信息完整性！");
+                window.event.returnValue = false;
+
+            }
+        }
+
+        //$("#completeTask").attr("disabled","true")
+    });
+});
+
+
+//选择文件时触发事件
+function onSelect(e) {
+    var file_extentAllowed=[".pdf",".PDF",".docx",".DOCX",".doc",".DOC",".xls",".XLS",".xlsx",".XLSX",".ppt",".pptx",".jpg",".JPG",".PNG",".png",".GIF",".gif"];
+    var resualt=e.files;
+    console.log(resualt)
+    $.each(resualt,function(index,val){
+        var upfile_extent=val.extension;
+        console.log(upfile_extent)
+        if(!($.inArray(upfile_extent, file_extentAllowed) > -1)){
+            swal("不支持的文件格式","请上传 [ doc, xls, docx, xlsx,ppt,pptx ] 的 Office 文件和相关的图像文件","error");
+            e.preventDefault();
+        }
+    })
+}
+
+//上传文件成功时触发事件
+function onSuccess(e) {
+    // Array with information about the uploaded files
+    var files = e.files;
+    //将上传的文件写入到resultFiles数组中
+
+    if (e.operation == "upload") {
+        if (e.response == true) {
+            addObjFromObj(e);//添加文件信息到文件数组
+        }
+    } else {
+        if (e.response == true) {
+            //初始文件对象中删除指定对象
+            delObjFromObj(e);
+        }
+    }
+    if (missiveTitle != "") {//如果流程不是首次创建，则有公文名存在，则版本需要+1；否则公文版本不变
+        filePath_version = version + 1;
+    }
+
+    $("#fileList").empty();
+    for (var i = 0; i < resultFiles.length; i++) {
+        var temp = resultFiles[i];
+
+
+        //-------add list of attachments--->>>>>
+        fileListCreate("fileList", temp, "attachments", "filesDIV", currentEditableField);
+
+    }
+    $.ajax({
+        url: '/process/updateFile/',
+        type: 'post',
+        data: {taskid: taskId, instantid: instanceId},
+        success: function () {
+
+
+
+        },
+        error: function () {
+
+        }
+    });
+
+}
+//初始文件对象中增加上传文件对象
+function addObjFromObj(e) {
+    var files = e.files[0];
+
+    var fileName = e.files[0].name;
+    resultFiles = resultFiles.filter(function (el) {
+        return el.name !== fileName;
+    });
+
+    var temp = {};
+    temp.name = files.name;//文件名
+    temp.extension = files.extension;//后缀名
+    resultFiles.push(temp);
+    var hide_span_file = $("span[class='k-filename'][title='" + e.files[0].name + "']");
+    for (var span_file_i = 0; span_file_i < hide_span_file.length; span_file_i++) {
+        $(hide_span_file[span_file_i]).parent()[0].setAttribute("class", "hide");
+    }
+}
+
+function insertData(e){
+    var controlname=control.addtitle
+    var txtAreaV=$('#'+controlname).val();
+   if(txtAreaV!=""&&txtAreaV!=null) {
+       $('#' + controlname).val(txtAreaV + " " + e.text);
+   }
+    else{
+       $('#' + controlname).val( e.text);
+   }
+    $("#diyWin").data("kendoWindow").close();
+
+}
+
+function kendoUpload(e) {
+    var files = e.files[0];
+
+    var fileName = e.files[0].name;
+    resultFiles = resultFiles.filter(function (el) {
+        return el.name !== fileName;
+    });
+
+    var temp = {};
+    temp.name = files.name;//文件名
+    temp.extension = files.extension;//后缀名
+    temp.size = 1;
+    resultFiles.push(temp);
+    var hide_span_file = $("span[class='k-filename'][title='" + e.files[0].name + "']");
+    for (var span_file_i = 0; span_file_i < hide_span_file.length; span_file_i++) {
+        $(hide_span_file[span_file_i]).parent()[0].setAttribute("class", "hide");
+    }
+}
+function fileListCreate(fileListDiv_id, file, attachment_id, attachmentparent_id, editableElementList) {
+    //fileListDiv_id--文件列表的id
+    //file：文件{name;extension;size}
+    //attachment_id:附件控件的id   //其必须有父级元素
+    //attachmentparent_id:父级元素
+    //editableElementList：当前可编辑控件集合的数组
+    //pdfViewerURL:pdf浏览器URL
+    //fileURL：文件下载的URL
+    //fileUploadUrl  文件上传的URL//'/missivePublish/upload/'+instanceID,
+    //fileRemoveURL;文件删除的URL// "/missivePublish/remove/"+instanceID;
+//
+//    var tempname = file.name;
+//    var start = tempname.lastIndexOf(".") + 1;
+//    var end = tempname.length
+//    var suffix = tempname.substring(start, end);
+
+    var pdfViewerURL = "/pdfViewer/web/viewer.html?file=";
+    var fileURL = "/pdf/missiveReceive/" + instanceId + "/" + filePath_version + "/" + file.name;
+    var fileRemoveURL = "/missiveReceive/remove/" + instanceId;
+    var fileUploadUrl = "/missiveReceive/upload/" + instanceId;
+    createFileListElement(fileListDiv_id, file, attachment_id, attachmentparent_id, editableElementList, pdfViewerURL, fileURL, fileUploadUrl, fileRemoveURL);
+
+}
+function generateSubmitUpload() {  //生成提交数据的动态窗口
+    var detail_window_template = '<div><div class="progress progress-striped active"><div class="progress-bar progress-bar-purple" style="width: 100%;"></div></div><div style="text-align: center"><h6>数据正在提交...</h6></div></div>';
+    var windowsdiv2 = document.createElement("div");
+    windowsdiv2.id="uploadWindow_8899"
+    $(windowsdiv2).appendTo($("#updateing_div"));
+    var window_height = $(window).height();
+    var window_width = $(window).width()/2;
+//        alert($(window).height()); //浏览器当前窗口可视区域高度
+//        alert($(document).height()); //浏览器当前窗口文档的高度
+//        alert($(document.body).height());//浏览器当前窗口文档body的高度
+    $('#updateing_div').css('top', $(document).scrollTop() + $(window).height() / 2 - 60);
+    $(windowsdiv2).kendoWindow({
+//                actions: ["Close"],
+        title: false,
+        appendTo: "body",
+        resizable: false,
+        modal: true,
+        draggable: false,
+        width: window_width + 20,
+        pinned: true,
+        position: {
+//                    top: window_height/2-50,
+            left: window_width/2
+        },
+        content: {
+            template: detail_window_template
+        }
+
+    });
+}
+function closeSubmitUpload(){
+    try{
+        var closeuploadewindow=$("#uploadWindow_8899").data("kendoWindow");
+        closeuploadewindow.close();
+    }
+    catch (e){}
+}
+function postAjaxData() {
+    //任务执行人
+    $.ajax({
+        url: '/api/submitFormContent/' + instanceId + "/" + taskId,
+        type: 'post',
+        data: {formData: JSON.stringify(missiveReceiveFormDataObj)},
+        beforeSend: function (req) {
+            req.setRequestHeader('Authorization', $.cookie('userbase64'));
+        },
+
+        success: function (result) {
+            if(result=="ok") {
+                closeSubmitUpload();
+                swal({title: "提交成功!", text: '即将跳转到"我的任务"界面!', confirmButtonText: '确定', type: "success" });
+                window.location.href = "/dbzx/1";
+                window.event.returnValue = false;
+            }
+            else{
+                closeSubmitUpload();
+                swal({title:"任务提交失败!请再次提交",text: "", confirmButtonText:'确定',type:"error"});
+                window.event.returnValue = false;
+            }
+        },
+        error: function () {
+            closeSubmitUpload();
+            swal({title:"任务提交失败!请再次提交",text: "", confirmButtonText:'确定',type:"error"});
+            window.event.returnValue = false;
+        }
+    });
+}
+var SelectUserControlToDo=cloneObject(userDataSource);
+
+
+var SelectUserControlCheckerDataSource=cloneObject(userDataSource);
+var SelectUserControlSignerDataSource=cloneObject(userDataSource);
+
+var SelectUserControlSignHDataSource=cloneObject(userDataSource);//
+var SelectUserControlLookerDataSource=cloneObject(userDataSource);//
+var SelectUserControlLookerHDataSource=cloneObject(userDataSource);//
+var SelectUserControlUnderTDataSource=cloneObject(userDataSource);//
+
+
+
+//创建选择用户的下拉控件
+function CreateSelectUserControlToDo(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: placeholderContent,
+        filter:'contains',
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        dataSource: SelectUserControlToDo,
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+function CreateSelectUserControlChecker(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: placeholderContent,
+        filter:'contains',
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        autoBind: false,
+        dataSource: SelectUserControlCheckerDataSource,
+
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+function CreateSelectUserControlSigner(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: placeholderContent,
+        filter:'contains',
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        autoBind: false,
+        dataSource: SelectUserControlSignerDataSource,
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+function CreateSelectUserControlSignH(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: placeholderContent,
+        filter:'contains',
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        autoBind: false,
+        dataSource: SelectUserControlSignHDataSource,
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+function CreateSelectUserControlLooker(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+
+        theme: "[bootstrap]",
+        placeholder: placeholderContent,
+        filter:'contains',
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        autoBind: false,
+        dataSource: SelectUserControlLookerDataSource,
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+function CreateSelectUserControlLookerH(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: placeholderContent,
+        filter:'contains',
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        autoBind: false,
+        dataSource: SelectUserControlLookerHDataSource,
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+function CreateSelectUserControlUnderT(ControlId, placeholderContent) {
+    $('#' + ControlId).kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        placeholder: placeholderContent,
+        searchFilters:["name","userName","abrev","abbrev","abbrevName","groupName"],
+        dataTextField: "name",
+        dataValueField: "userName",
+        autoBind: false,
+        dataSource: SelectUserControlUnderTDataSource,
+        tagTemplate:'#: name #',
+        itemTemplate:'#: name # -- #: groupName #'
+    });
+}
+
+function handSignature(signType){
+//    if (signType == "leaderSignArea") {
+//        signaturePlace({
+//            sElement:'signatureDiv',
+//            sWidth:1540,
+//            sHeight:304,
+//            imgElement:'leaderInstuct_img',
+//            imgWidth:790,
+//            imgHeight:156,
+//            previousSign:leaderInstructImgForBankend,
+//            signature:userSign,
+//            textElement:'leaderSignArea',
+//            userID:userID,
+//            socketID:'leaderSignArea'+taskId});
+//    }
+//    else if (signType == "lookSignArea") {
+//        signaturePlace({
+//            sElement:'signatureDiv',
+//            sWidth:1540,
+//            sHeight:273,
+//            imgElement:'lookSign_img',
+//            imgWidth:790,
+//            imgHeight:140,
+//            previousSign:lookerSignImgForBankend,
+//            signature:userSign,
+//            textElement:'lookSignArea',
+//            userID:userID,
+//            socketID:'lookSignArea'+taskId});
+//    }
+    if (signType == "leaderSignArea") {
+        openPictureSignatureWindow_missiveRecieve_leader({
+            sElement:'signatureDiv',
+            sWidth:790*1.5,
+            sHeight:603*1.5,
+            imgElement:'leaderInstuct_img',
+            imgWidth:790,
+            imgHeight:603,
+            previousSign:leaderInstructImgForBankend,
+            signature:userSign,
+            textElement:'leaderSignArea',
+            userID:userID,
+            socketID:'leaderSignArea'+taskId,
+
+            //pad_img_url:'/img/312514.png',
+            pad_img_url:'/api/bgPng/small/missiveReceive/'+instanceId,
+            pad_img_left:-176,
+            pad_img_top:-767,
+            pad_img_width:1537
+
+        });
+
+    }
+    else if (signType == "lookSignArea") {
+        openPictureSignatureWindow_missiveRecieve_yueban({
+            sElement:'signatureDiv',
+//            sWidth:1580,
+//            sHeight:280,
+            sWidth:790*1.5,
+            sHeight:140*1.5,
+            imgElement:'lookSign_img',
+            imgWidth:790,
+            imgHeight:140,
+            previousSign:lookerSignImgForBankend,
+            signature:userSign,
+            textElement:'lookSignArea',
+            userID:userID,
+            socketID:'lookSignArea'+taskId,
+
+            //pad_img_url:'/img/310064.png',
+            pad_img_url:'/api/bgPng/small/missiveReceive/'+instanceId,
+            pad_img_left:-177,
+            pad_img_top:-1446,
+            pad_img_width:1534
+        });
+    }
+    else if (signType == "undertakeArea") {
+        signaturePlace({
+            sElement:'signatureDiv',
+            sWidth:1540,
+            sHeight:224,
+            imgElement:'undertake_img',
+            imgWidth:790,
+            imgHeight:115,
+            previousSign:undertakeImgForBankend,
+            signature:userSign,
+            textElement:'undertakeArea',
+            userID:userID,
+            socketID:'undertakeArea'+taskId,
+
+            //pad_img_url:'/img/310064.png',
+            pad_img_url:'/api/bgPng/small/missiveReceive/'+instanceId,
+            pad_img_left:-212,
+            pad_img_top:-2250,
+            pad_img_width:1966
+        });
+    }
+}
+function signaturePlace(option){
+    /*
+     sElement:需要弹出并用来签名的div名称
+     sWidth：需要进行签名div的width
+     sHeight：需要进行签名div的height
+     imgElement：导出生成图片的div名称
+     imgWidth：导出生成图片的div的width
+     imgHeight：导出生成图片的div的height
+     previousSign:前一个签字的base64编码
+     textElement:本次签字text
+     userID socketID*/
+
+    openPictureSignatureWindow(option);
+
+}
+
+function selectNextAssignee(assignVal){
+
+    if(assignVal=="Checker"){//办公室拟办及审核人
+        nextTaskUserName=$('#selectChecker').val()[0];
+    }
+    if(assignVal=="Register"){
+        nextTaskUserName=taskAssignees.officeRegist;
+    }
+    else if(assignVal=="Signer"){//领导批示
+        if($('#selectFirstLeader')[0]) {
+            nextTaskUserName = $('#selectFirstLeader').val()[0];//初次批示人
+        }
+        else if ($('#selectNextLeader')[0]){
+            nextTaskUserName=$('#selectNextLeader').val()[0];//下一个批示人
+        }
+    }
+    else if(assignVal=="Disposer"){//办公室处理
+        nextTaskUserName=taskAssignees.officeDispose;
+    }
+    else if(assignVal=="Reador"){//分发阅办
+        if($('#selectFirstLooker')[0]) {
+            nextTaskUserName = $('#selectFirstLooker').val()[0];
+        }
+        else if($('#selectNextLooker')[0]){
+            nextTaskUserName=$('#selectNextLooker').val()[0];
+        }
+    }
+    else if(assignVal=="ReadoDispose"){//阅办后处理
+        nextTaskUserName=taskAssignees.readoDispose;
+    }
+    else if(assignVal=="UndertakeDisposer"){//承办人
+        if($('#selectFirstUndertaker')[0]){
+            nextTaskUserName=$('#selectFirstUndertaker').val()[0];
+        }
+        else if($('#selectNextUndertaker')[0]){
+            nextTaskUserName=$('#selectNextUndertaker').val()[0];
+        }
+    }
+
+}
+
+
+
+
+</script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <title>公文打印页</title>
+
+    <meta name="title" content="Print" />
+
+    <script>
+
+        (function (window, document, undefined) {
+
+
+            var printy = {
+
+                urlGET: function (param) {
+
+                    var params = document.URL.split('?');
+
+                    if(params.length > 1) {
+                        params = params[1].split('&');
+
+                        for (var  i = 0, len = params.length; i < len; i++) {
+                            if (params[i].split('=')[0] === param) {
+                                return params[i].split('=')[1];
+                            }
+                        }
+                    }
+
+                    return null;
+                },
+
+
+                init: function () {
+
+                    var self = this;
+
+                    window.onload = function () {
+
+                        var src = self.urlGET('path');
+
+                        //creating an iframe element
+                        var ifr = document.createElement('iframe');
+                        ifr.sandbox = "allow-same-origin allow-scripts";
+                        document.body.appendChild(ifr);
+
+                        // making the iframe fill the viewport
+                        ifr.width  = '100%';
+                        ifr.height = window.innerHeight;
+
+                        // continuously checking to see if the pdf file has been loaded
+                        self.interval = setInterval(function () {
+
+                            if (ifr.contentDocument.readyState === 'complete') {
+                                clearInterval(self.interval);
+                                // doing the actual printing
+                                ifr.contentWindow.print();
+                            }
+                        }, 100);
+
+                        ifr.src = src;
+                    }
+                }
+            }
+
+            printy.init();
+
+        })(window, document, undefined);
+    </script>
+
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,23 @@
+.img-circle {
+    display: block;
+    height: 125px;
+    width: 125px;
+    background-position:50% 50%;              /*图片上下左右居中*/
+    background-size:cover;                  /*保持图像本身的宽高比例，将图片缩放到宽度或高度正好适应定义背景的区域*/
+    background-repeat:no-repeat;              /*图像不重复显示*/
+   /* background-image: url(/user/image/1);*/
+    -webkit-border-radius: 500px;
+    -moz-border-radius: 500px;
+    border-radius: 500px;
+    border: solid 6px white;
+}
+
+.img-circle1 {
+    display: block;
+    height: 127px;
+    width: 127px;
+    -webkit-border-radius: 500px;
+    -moz-border-radius: 500px;
+    border-radius: 500px;
+    border: solid 1px #478fca;
+}

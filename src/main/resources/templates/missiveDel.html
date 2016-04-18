@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="流程管理"></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--<meta http-equiv="refresh" content="240" />&lt;!&ndash;一分钟刷新页次页面&ndash;&gt;-->
+   <script th:replace="header :: header"></script>
+
+
+
+</head>
+
+<body>
+<script th:inline="javascript">
+
+    var userbase64 = [[${userbase64}]];
+
+    var user=/*[[${user.userName}]]*/null;
+
+
+
+</script>
+
+<div th:replace="navbar :: navbar(${user})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'xtsz-gwsc'})"></div>
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="/">首页</a>
+            </li>
+
+            <li>
+                <a href="#">流程管理</a>
+            </li>
+
+        </ul><!-- .breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+            <span class="input-icon">
+                <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </div><!-- #nav-search -->
+    </div>
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+        <div id="DelegateWin" style="text-align: center;display: none;width: 350px;height:350px">
+            <div style="margin-top:20px;margin-left:30px">
+                <label class="blue" style="float:left;font-size: 16px">
+                    <span class="lbl"> 当前任务节点：</span>
+                </label>
+
+                <label style="margin-left:15px;float:left;margin-top:3px" id="currentNodeData" contenteditable="false"/>
+
+
+
+            </div>
+            <div style="margin-top: 80px">
+                <label class="blue" style="float: left;margin-left:30px;font-size: 16px;margin-top:-30px">
+                    <span class="lbl" style="font: 16px;width: 100px"> 请输入跳转理由：</span>
+                </label>
+                <input  id="jumpReason" name="jumpReason" style="float: left;margin-left:30px;font-size: 16px" class="vali_input" required validationMessage="跳转理由不能为空！"/>
+                <span class="k-invalid-msg" data-for="jumpReason"></span>
+            </div>
+            <div id="attribute" style="margin-top:80px;margin-left:30px">
+
+            </div>
+
+            <div style="margin-top:250px;margin-left:10px">
+                <button class="btn btn-info" type="button" onclick="submitDelegate()">
+                    <i class="icon-ok bigger-110"></i>
+                    提交
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn" type="reset" onclick="closeWin()">
+                    <i class="icon-undo bigger-110"></i>
+                    取消
+                </button>
+            </div>
+
+
+        </div>
+
+        <div id="DeletedWin" style="text-align: center;display: none;width:300px;height:250px">
+            <div style="margin-top:50px;margin-left:40px;position: absolute">
+                <label class="blue" style="float: left;margin-left:10px;font-size: 16px;margin-top:-30px">
+                    <span class="lbl" style="font: 16px;width: 100px"> 请输入删除理由：</span>
+                </label>
+                <!--<input style="margin-top:30px;float:left;width:200px;float:left;position: absolute" id="selectDelegater" required validationMessage="回退理由不能为空！"/>-->
+                <input  id="deleteReason" name="deleteReason" style="float: left;margin-left:10px;font-size: 16px" class="vali_input" required validationMessage="删除理由不能为空！"/>
+                <span class="k-invalid-msg" data-for="deleteReason"></span>
+            </div>
+            <div style="margin-top:130px;margin-left:45px;position: absolute;">
+                <button class="btn btn-info" type="button" onclick="submitDelete()">
+                    <i class="icon-ok bigger-110"></i>
+                    提交
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn" type="reset" onclick="closeWin2()">
+                    <i class="icon-undo bigger-110"></i>
+                    取消
+                </button>
+            </div>
+
+
+        </div>
+
+
+        <div id="DeletedWin2" style="text-align: center;display: none;width:300px;height:250px">
+            <div style="margin-top:50px;margin-left:40px;position: absolute">
+                <label class="blue" style="float: left;margin-left:10px;font-size: 16px;margin-top:-30px">
+                    <span class="lbl" style="font: 16px;width: 100px"> 请输入删除理由：</span>
+                </label>
+                <!--<input style="margin-top:30px;float:left;width:200px;float:left;position: absolute" id="selectDelegater" required validationMessage="回退理由不能为空！"/>-->
+                <input  id="deleteReason2" name="deleteReason2" style="float: left;margin-left:10px;font-size: 16px" class="vali_input" required validationMessage="删除理由不能为空！"/>
+                <span class="k-invalid-msg" data-for="deleteReason2"></span>
+            </div>
+            <div style="margin-top:130px;margin-left:45px;position: absolute;">
+                <button class="btn btn-info" type="button" onclick="submitDelete2()">
+                    <i class="icon-ok bigger-110"></i>
+                    提交
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn" type="reset" onclick="closeWin22()">
+                    <i class="icon-undo bigger-110"></i>
+                    取消
+                </button>
+            </div>
+
+
+        </div>
+
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+                <li th:class="${activeitem=='wbgw'}?'active'">
+                    <a data-toggle="tab" href="#wbgw" >进行中任务</a>
+                </li>
+
+                <li th:class="${activeitem=='ybgw'}?'active'">
+                    <a data-toggle="tab" href="#ybgw">已办结流程</a>
+                </li>
+            </ul>
+            <div class="tab-content" style="height:1300px">
+                <div id="wbgw" th:class="${activeitem=='wbgw'}?'tab-pane in active':'tab-pane'">
+                    <div class="table-responsive">
+                        <table  id="sample-table-2" class="table table-bordered table-hover no-margin-bottom no-border-top"  style="background-color: #FFFFFF" onmousedown="trSelect2()">
+                            <thead>
+                            <tr>
+                                <!--<th style="text-align: center;vertical-align:middle"> 置顶</th>-->
+                                <th style="text-align: center;width:110px">任务人</th>
+                                <th style="text-align: center;width:110px">类型</th>
+                                <th style="text-align: center;width:170px">任务名称</th>
+                                <th style="text-align: center">公文标题</th>
+                                <th style="text-align: center;width:130px">任务时间</th>
+                                <th style="text-align: center;width:130px">持续时间</th>
+                                <!--<th style="text-align: center">延误设定</th>-->
+                                <!--<th style="text-align: center">延误提醒</th>-->
+                                <th style="text-align: center;width:200px">查看任务 </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr style="height:50px" th:each="taskIng: ${tasksIng}">
+                                <!--<td style="text-align: center;vertical-align:middle"><label class="inline"> <input th:id="page" th:checked="${taskIng.description=='1'}?'true':'false'" th:value="${taskIng.processInstanceId}" type=checkbox  class="ace" onclick="newFunc(this)"/><span class="lbl"></span></label>-->
+                                <!--<i th:class="${taskIng.description=='1'}?'message-star icon-star orange2':'message-star icon-star-empty light-grey'"></i></td>-->
+                                <td id="txt" style="text-align: center;vertical-align:middle" th:text="${taskIng.taskAssName}"></td>
+                                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.typeTitle} "></td>
+                                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.name}"></td>
+                                <td style="text-align: center;vertical-align:middle" th:utext="${taskIng.missiveTitle}"></td>
+                                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.taskStartTime}"></td>
+                                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.intelTime}"></td>
+                                <!--<td style="text-align: center;vertical-align:middle" th:text="${taskIng.DelayNum}"></td>-->
+                                <!--<td style="text-align: center;vertical-align:middle" th:text="${taskIng.DelayWarm}"></td>-->
+                                <td style="text-align: left;vertical-align:middle">
+                                    <a th:href="@{/historyProcess/{instanceid}(instanceid=${taskIng.processInstanceId})}"
+                                       target="_blank" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp
+                                    <a th:attr="data-taskId=${taskIng.id},data-processId=${taskIng.processInstanceId},data-taskName=${taskIng.name},data-missiveType=${taskIng.typeTitle},data-jump=${taskIng.taskCondition}" onclick="delegateTask(this)"
+                                       target="_blank" class="btn btn-minier  btn-warning"><i class="icon-check"></i>流程跳转</a>&nbsp
+                                    <p></p>
+                                    <a th:href="@{/pdfViewer/web/viewer.html?file=/pdf/{missivetype}/{instanceid}(missivetype=${taskIng.missiveType},instanceid=${taskIng.processInstanceId})}"
+                                       class="btn btn-minier bigger btn-primary" target="_blank"><i class="icon-check"></i>查看公文</a>&nbsp
+
+                                    <a class="btn btn-minier bigger btn-danger"  onclick="deleteTask(this)" th:attr="data-taskType=${taskIng.typeTitle},data-missiveType=${taskIng.typeTitle},data-taskName=${taskIng.name},data-processId=${taskIng.processInstanceId},data-title=${taskIng.missiveTitle},data-taskId=${taskIng.id}" ><i class="icon-check"></i>删除</a></td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="ybgw" th:class="${activeitem=='ybgw'}?'tab-pane in active':'tab-pane'">
+
+                    <div id="completeDiv" style="display: none" >
+                        <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top" onmousedown="trSelect()">
+                            <thead>
+                            <tr>
+                                <th style="text-align: center;vertical-align:middle">公文类型</th>
+                                <th style="text-align: center;vertical-align:middle">任务名称</th>
+
+                                <th style="text-align: center;vertical-align:middle">公文标题</th>
+                                <th style="text-align: center;vertical-align:middle">任务时间</th>
+                                <th style="text-align: center;vertical-align:middle;width:290px"> 操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <div class="well" style="height:595px">
+
+                            <h3 class="grey lighter smaller">
+											<span class="blue bigger-125">
+												<i class="icon-sitemap"></i>
+												提示
+											</span>
+                                您当前没有已完成的公文
+                            </h3>
+
+                            <hr />
+                            <h5 class="lighter smaller">您也可以搜索并查阅历史公文</h5>
+
+                            <div>
+                                <form class="form-search">
+												<span class="input-icon align-middle">
+													<i class="icon-search"></i>
+
+													<input type="text" class="search-query" class="nav-search-input" id="nav-search-input2"  placeholder="请输入公文信息..." />
+												</span>
+
+                                </form>
+
+                                <div class="space"></div>
+
+                            </div>
+
+                            <hr />
+                            <div class="space"></div>
+
+
+                        </div>
+                    </div>
+
+                    <div id="displayDiv" style="display: none" >
+
+                        <div class="dataTables_filter" id="taskTable_filter">
+                            <label>快捷查询: <input type="text" class="search-query" class="nav-search-input" id="filterData" placeholder="请输入关键字" ></label>
+                        </div>
+
+                        <div class="table-responsive" id="completedTable" >
+                            <table  class="table  table-bordered table-hover no-margin-bottom no-border-top " style="background-color: #FFFFFF" id="taskTable" onmousedown="trSelect()">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center;vertical-align:middle;width:90px">附件修改</th>
+                                    <th style="text-align: center;vertical-align:middle;width:120px">公文类型</th>
+                                    <!--<th style="text-align: center;vertical-align:middle">上一步执行人</th>-->
+                                    <th style="text-align: center;vertical-align:middle;width:160px">当前任务</th>
+                                    <th style="text-align: center;width:170px">公文号</th>
+                                    <!--<th style="text-align: center;vertical-align:middle">追回</th>-->
+                                    <th style="text-align: center;vertical-align:middle">公文标题</th>
+                                    <th style="text-align: center;vertical-align:middle;width:170px">任务时间</th>
+                                    <th style="text-align: center;vertical-align:middle;width:210px"> 操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr style="height:39px" th:each="taskDone: ${tasksDone}">
+                                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.updateFlag=='1'}?'附件已变更':'附件未变更'"></td>
+                                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.typeTitle}"></td>
+
+                                    <!--<td style="text-align: center;vertical-align:middle" th:text="${taskDone.preOwner}"></td>-->
+                                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.taskCondition}"></td>
+                                    <td style="text-align: center;vertical-align:middle"  th:text="${taskDone.missiveNum}"></td>
+                                    <!--<td style="text-align: center;vertical-align:middle" th:text="${taskDone.rollBackFlag}"></td>-->
+                                    <td style="text-align: center;vertical-align:middle" th:utext="${taskDone.missiveTitle}"></td>
+                                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.taskEndTime}"></td>
+                                    <td style="text-align: left;vertical-align:middle"> <a th:href="@{/historyProcess/{instanceid}(instanceid=${taskDone.processInstanceId})}" target="_blank" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp
+                                        <a th:href="@{${taskDone.htmlUrl}}"  class="btn btn-minier bigger btn-warning"><i class="icon-check"  th:text="${taskDone.cardTitle}"></i></a>&nbsp
+                                        <p></p>
+                                        <a th:href="@{/pdfViewer/web/viewer.html?file=/pdf/{missivetype}/{instanceid}/{version}/pdf2Pad/{taskid}.pdf(missivetype=${taskDone.missiveType},instanceid=${taskDone.processInstanceId},version=${taskDone.versionNum},taskid=${taskDone.lastTaskId})}"
+                                           class="btn btn-minier bigger btn-primary" target="_blank"><i class="icon-check"></i>查看公文</a>&nbsp
+                                        <a class="btn btn-minier bigger btn-danger" th:attr="data-taskId=${taskDone.id},data-instantId=${taskDone.processInstanceId},data-nextTaskId=${taskDone.nextTaskId}" th:disabled="${!taskDone.rollBackFlag}" th:style="${!taskDone.rollBackFlag}?'display:none':''"  onclick="delegateTask(this)"><i class="icon-check"></i>任务回退</a>&nbsp
+
+                                        <a class="btn btn-minier bigger btn-danger"  onclick="deleteTask2(this)" th:attr="data-taskType2=${taskDone.typeTitle},data-missiveType=${taskDone.typeTitle},data-taskName=${taskDone.name},data-processId2=${taskDone.processInstanceId},data-title=${taskDone.missiveTitle},data-taskId2=${taskDone.id}" ><i class="icon-check"></i>删除</a></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="modal-footer no-margin-top" style="margin-bottom: 1px" id="lessThanFive">
+                                <ul class="pagination pull-right no-margin">
+
+                                    <li  th:class="${DonePage==1}?'prev disabled':'prev'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${DonePage-1})}" th:onclick="${DonePage==1}?'return false'">
+                                            <i class="icon-double-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li th:each="num1: ${#numbers.sequence(1,taskDoneTotalNum)}" th:class="${num1==DonePage}?'active'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li th:class="${DonePage==taskDoneTotalNum}?'next disabled':'next'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${DonePage+1})}" th:onclick="${DonePage==taskDoneTotalNum}?'return false'">
+                                            <i class="icon-double-angle-right"></i>
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                            <div class="modal-footer no-margin-top" style="margin-bottom: 1px" id="moreThanFive">
+                                <ul class="pagination pull-right no-margin">
+
+                                    <li  th:class="${DonePage==1}?'prev disabled':'prev'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${DonePage-1})}" th:onclick="${DonePage==1}?'return false'">
+                                            <i class="icon-double-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <!--<li  id="firstPage" th:each="num1:${#numbers.sequence(1, 1)}" th:class="${num1==DonePage}?'active'" >-->
+                                    <!--<a th:href="@{/wdgw/ybgw/{pagenum}/1/1/1(pagenum=${num1})}" th:text="${num1}"></a>-->
+                                    <!--</li>-->
+                                    <li id="pre" th:each="num1:${#numbers.sequence(DonePage-4,DonePage-4)}" th:class="${num1==DonePage}?'active'" >
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li id="front" th:each="num1:${#numbers.sequence(DonePage-3,DonePage-3)}" th:class="${num1==DonePage}?'active'" >
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li id="first" th:each="num1:${#numbers.sequence(DonePage-2,DonePage-2)}" th:class="${num1==DonePage}?'active'" >
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li id="start" th:each="num1:${#numbers.sequence(DonePage-1,DonePage-1)}" th:class="${num1==DonePage}?'active'" >
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li th:each="num1: ${#numbers.sequence(DonePage,DonePage)}" th:class="${num1==DonePage}?'active'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+
+                                    <li id="end" th:each="num1: ${#numbers.sequence(DonePage+1,DonePage+1)}" th:class="${num1==DonePage}?'active'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li id="last" th:each="num1: ${#numbers.sequence(DonePage+2,DonePage+2)}" th:class="${num1==DonePage}?'active'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li id="rear" th:each="num1: ${#numbers.sequence(DonePage+3,DonePage+3)}" th:class="${num1==DonePage}?'active'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <li id="final" th:each="num1: ${#numbers.sequence(DonePage+4,DonePage+4)}" th:class="${num1==DonePage}?'active'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                                    </li>
+                                    <!--<li id="lastPage"  th:each="num1: ${#numbers.sequence(taskDoneTotalNum,taskDoneTotalNum)}" th:class="${num1==DonePage}?'active'">-->
+                                    <!--<a th:href="@{/wdgw/ybgw/{pagenum}/1/1/1(pagenum=${num1})}" th:text="${num1}"></a>-->
+                                    <!--</li>-->
+                                    <li th:class="${DonePage==taskDoneTotalNum}?'next disabled':'next'">
+                                        <a th:href="@{/xtsz/ybgw/1/{pagenum}(pagenum=${DonePage+1})}" th:onclick="${DonePage==taskDoneTotalNum}?'return false'">
+                                            <i class="icon-double-angle-right"></i>
+                                        </a>
+                                    </li>
+
+
+                                    <li  >
+                                        <label>&nbsp共计</label>
+                                        <label th:text="${PageTotal}"></label>
+                                        <label>页&nbsp跳转至：</label>
+                                        <input type="text" style="width: 45px;margin-top: 3px " id="redirect" class="redirect" onchange="changePage(this)">
+                                    </li>
+
+
+
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="table-responsive " id="secondDiv" style="display: none" >
+                            <table  id="filterTable" class="table  table-bordered table-hover no-margin-bottom no-border-top " style="background-color: #FFFFFF" >
+
+                            </table>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+</div><!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+<!-- page specific plugin scripts -->
+
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script src="/assets/js/jquery.dataTables.bootstrap.js"></script>
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/custom/kendomultiselect-filter-plugin.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+
+<script style="javascript" th:inline="javascript">
+
+var taskList = /*[[${tasksIng}]]*/[];
+var taskId="";
+var instantId="";
+var taskName="";
+var dropDownSource=null;
+var missiveType="";
+
+var taskdoneList = /*[[${tasksDone}]]*/[];
+var missiveSend=/*[[${mainSend}]]*/[];
+var missiveCopy=/*[[${copyTo}]]*/[];
+var DonePage=/*[[${DonePage}]]*/[];
+var taskDoneTotalNum=/*[[${PageTotal}]]*/[];
+
+jQuery(function ($) {
+    if(taskdoneList.length==0){
+        $('#completeDiv').attr("style","");
+    }
+    else{
+        $('#displayDiv').attr("style","");
+    }
+    if(taskDoneTotalNum>=5){
+        $("#lessThanFive").attr("style","display:none");
+    }else if(taskDoneTotalNum<5){
+        $("#moreThanFive").attr("style","display:none");
+
+    }
+    if (DonePage == 2) {
+
+        //$("#start").attr("style", "display:none");
+        $("#first").attr("style", "display:none");
+        $("#front").attr("style","display:none");
+        $("#pre").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+    }
+    else if (DonePage == 1) {
+
+        $("#start").attr("style", "display:none");
+        $("#firstPage").attr("style", "display:none");
+        $("#first").attr("style", "display:none");
+        $("#front").attr("style","display:none");
+        $("#pre").attr("style","display:none");
+
+
+    }
+    else if (DonePage == (taskDoneTotalNum - 1)) {
+
+        // $("#end").attr("style", "display:none");
+        $("#last").attr("style", "display:none");
+        $("#pre").attr("style","display:none");
+        $("#rear").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+
+
+    }
+    else if (DonePage == taskDoneTotalNum) {
+        $("#end").attr("style", "display:none");
+        $("#last").attr("style", "display:none");
+        $("#lastPage").attr("style", "display:none");
+        // $("#front").attr("style","display:none");
+        $("#rear").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+    }else{
+        $("#front").attr("style","display:none");
+        $("#pre").attr("style","display:none");
+        $("#rear").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+    }
+
+
+
+});
+
+function changePage(vi){
+    if(vi.value>taskDoneTotalNum||vi.value<1){
+
+        var warnning="请输入1到"+taskDoneTotalNum+"之间的页数";
+        swal({title:'错误提示',text:warnning,type:'error',confirmButtonText:'确定'});
+        //swal("请输入1到"+taskDoneTotalNum+"之间的页数");
+    }else{
+        var pageNum=vi.value;
+        window.location.href="/xtsz/ybgw/1/"+pageNum;
+    }
+
+
+}
+
+$("#filterData").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+        var searchValue = event.currentTarget.value;
+        if (searchValue != "") {
+
+            $.ajax({
+                url: "/api/searchByword/getHistoryMissiveList",
+                data: {data: searchValue},
+                success: function (result) {
+
+                    $("#completedTable").attr("style","display:none");
+                    $("#secondDiv").attr("style", "");
+                    $("#filterTable").empty(); //清空列表
+                    var head = "<thead><tr><th style='text-align: center;vertical-align:middle'>附件修改</th><th style='text-align: center;vertical-align:middle'>公文类型</th><th style='text-align: center;vertical-align:middle'>公文号</th><th style='text-align: center;vertical-align:middle'>公文标题</th><th style='text-align: center;vertical-align:middle'>任务时间</th><th style='text-align: center;vertical-align:middle'> 操作</th></tr></thead>";
+                    $("#filterTable").append(head);
+
+                    for (var i = 0; i < result.length; i++) {
+
+                        var missiveUrl="http://16.64.36.50";
+                        var MissiveFlag=result[i].cardTitle;
+                        var htmlText=result[i].htmlUrl;
+                        var attachlist= result[i].updateFlag=='1'?'附件已变更':'附件未变更';
+                        var HistoryMissiveLink="/historyProcess/"+result[i].processInstanceId;
+                        var Type=result[i].missiveType;
+                        var InstantID=result[i].processInstanceId;
+                        var versionID=result[i].versionNum;
+                        var taskID= result[i].lastTaskId;
+                        var attrValue="data-taskId="+result[i].id+",data-instantId="+result[i].processInstanceId+",data-nextTaskId="+result[i].nextTaskId;
+                        var styleSample="";
+                        if(!result[i].rollBackFlag){
+                            styleSample="display:none"
+                        }
+                        var pdfLink="/pdfViewer/web/viewer.html?file=/pdf/"+Type+"/"+InstantID+"/"+versionID+"/pdf2Pad/"+taskID+".pdf";
+                        var tr = "<tr  style='height:50px'>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + attachlist + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + result[i].typeTitle + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + result[i].missiveNum + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + result[i].missiveTitle + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle;width: 200px'>" + result[i].taskEndTime + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle;width: 370px'> <a href='"+HistoryMissiveLink+"' target='_blank' class='btn btn-minier bigger btn-success'><i class='icon-check'></i>任务信息</a>&nbsp";
+                        tr += "<a href='"+htmlText+"' target='_blank' class='btn btn-minier bigger btn-warning'><i class='icon-check'></i>"+MissiveFlag+"</a>&nbsp";
+                        tr += "<a href='"+pdfLink+"' class='btn btn-minier bigger btn-primary' target='_blank'><i class='icon-check'></i>查看公文</a>&nbsp";
+                        tr +=" <a class='btn btn-minier bigger btn-danger' attr='data-taskId='"+result[i].id+"'',data-instantId='"+attrValue+"' disabled='"+result[i].rollBackFlag+"' style='"+styleSample+"'  onclick='delegateTask(this)'><i class='icon-check'></i>任务回退</a></td>"
+                        tr += "</tr>";
+
+                        $("#filterTable").append($(tr));
+                    } //end for emplo
+
+
+
+                }
+            });
+        } else {
+
+            $("#completedTable").attr("style","");
+            $("#secondDiv").attr("style", "display:none");
+            // swal("请在搜索框输入关键字！");
+        }
+    }
+
+});
+
+
+var SignData = [
+    {text: "处室拟稿", value: "BureauDraft"},
+    {text: "处室领导审核", value: "BureauLeaderCheck"},
+    {text: "相关部门会签", value: "DepartCouSign"},
+    {text: "办公室审核及编号", value: "OfficeCheck"},
+    {text: "领导审批", value: "LeaderSign"},
+    {text: "处室处理", value: "BureauHandle"}
+
+];
+var PublishData = [
+    {text: "处室拟稿", value: "BureauDraft"},
+    {text: "处室领导审核", value: "BureauLeaderCheck"},
+    {text: "相关部门会签", value: "DepartCouSign"},
+    {text: "办公室审核及编号", value: "OfficeCheck"},
+    {text: "领导审批", value: "LeaderSign"},
+    {text: "文印室套红排版打印", value: "SetLayout"},
+    {text: "拟稿处室分发", value: "BureauIssue"}
+
+];
+var ReceiveData = [
+    {text: "办公室登记", value: "OfficeRegist"},
+    {text: "办公室拟办及审核", value: "ChargerCheck"},
+    {text: "领导批示", value: "LeaderSign"},
+    {text: "办公室处理", value: "OfficeDispose"},
+    {text: "分发阅办", value: "usertask1"},
+    {text: "承办处理", value: "usertask2"}
+
+];
+
+var FaxData = [
+    {text: "处室拟稿", value: "BureauDraft"},
+    {text: "处室领导审核", value: "BureauLeaderCheck"},
+    {text: "局领导签字", value: "LeaderSign"},
+    {text: "拟稿处室打印分发", value: "BureauIssue"}
+
+
+];
+var NewsData = [
+    {text: "信息中心收稿", value: "InfoCenRecDraft"},
+    {text: "相关处室审核", value: "BureauLeaderReview"},
+    {text: "新闻中心审核", value: "NewsCenReview"},
+    {text: "领导审批", value: "LeaderReview"},
+    {text: "信息中心校对发布", value: "InfoCenProofPublish"}
+
+
+];
+
+
+
+
+//    var selectLeaderDataSource = new kendo.data.DataSource({
+//        transport: {
+//            read: {
+//                url: "/api/user/getalluser",
+//                dataType: "json"
+//            }
+//        }
+//    });
+
+
+
+var validator = $('#selectDelegater').kendoValidator().data("kendoValidator");;
+var jump;
+function delegateTask(e){
+    taskId=$(e).attr("data-taskId");
+    instantId=$(e).attr("data-processId");
+    taskName=$(e).attr("data-taskName");
+    missiveType=$(e).attr("data-missiveType");
+
+    var text1=" <label class='blue' style='margin-left:-180px;font-size: 16px;float:left;margin-top: 60px'><span class='lbl'> 选择任务节点：</span></label>";
+
+    var text="<select style='margin-left:-180px;width:150px;float:left;margin-top:90px' id='selectDelegater' required validationMessage='请选择跳转结点！'></select>";
+
+    text1+=text;
+    $('#attribute').html(text1);
+    if(missiveType=="收文流程"){
+        dropDownSource=ReceiveData;
+    }else if(missiveType=="发文流程"){
+        dropDownSource=PublishData;
+    }else if(missiveType=="传真电报"){
+        dropDownSource=FaxData
+    }else if(missiveType=="新闻发布"){
+        dropDownSource=NewsData
+    }
+    else dropDownSource=SignData;
+    $('#selectDelegater').kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: "选择跳转结点",
+        filter:'contains',
+        searchFilters:["text","value"],
+        dataTextField: "text",
+        dataValueField: "value",
+        autoBind: false,
+        dataSource: dropDownSource,
+        tagTemplate: '#: text #'
+    });
+    $('#selectDelegater').dataSource=dropDownSource;
+
+    $('#currentNodeData').html(taskName);
+//         $.ajax({
+//            type:'post',
+//            url:'/api/taskRollBack/'+taskId,
+//            success:function(){
+//
+//                swal("任务回退成功！");
+//                window.location.reload();
+//
+//            }
+//          });
+//        $.ajax({
+//            type:'post',
+//            url:'/api/getCurrentNode/'+taskId+'/'+instantId,
+//            success:function(result){
+//
+//
+//
+//            }
+//        });
+
+    $('#DelegateWin').kendoWindow({
+        title: '流程跳转',
+        position: {
+            top: screen.height / 3,
+            left: screen.width / 3
+        },
+        modal: true
+
+    });
+    $("#DelegateWin").data("kendoWindow").open();
+    validator = $('#selectDelegater').kendoValidator().data("kendoValidator");
+}
+function closeWin(){
+    $("#DelegateWin").data("kendoWindow").close();
+}
+function submitDelegate(){
+    if(validator.validate()){
+        var jumpTo = $('#selectDelegater option:selected').val();
+        var jumpToNode = $('#selectDelegater option:selected').text();
+
+        var delegator=$('#jumpReason').val();
+        $.ajax({
+            //type:'post',
+            url:'/api/getCurrentNode/'+taskId+'/'+instantId+'/'+delegator+'/'+jumpTo+'/'+taskName+'/'+jumpToNode,
+            success:function(){
+                closeWin();
+                $("#DelegateWin").data("kendoWindow").close();
+                swal("任务跳转成功！");
+                window.location.reload();
+
+            }
+        });
+
+    }
+}
+
+
+function submitDeleteReason(){
+
+}
+
+
+
+
+$("#nav-search-input").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+
+        var searchValue=event.currentTarget.value;
+        if(searchValue==""){
+            swal("请在搜索框输入关键字！");
+
+        }else{
+            self.location="/fullSearch/"+searchValue;
+
+        }            //alert(searchValue);
+    }
+
+});
+
+function trSelect2(){
+    var tbl = document.getElementById("sample-table-2");
+    for(var i = 1; i < tbl.rows.length; i++){
+        tbl.rows[i].onclick =function(){
+            if(window.cur) window.cur.style.background = "#FFF";
+            this.style.background = "#7DB4D8";
+            window.cur = this;
+        }
+    }
+}
+
+function trSelect(){
+    var tbl = document.getElementById("taskTable");
+    for(var i = 1; i < tbl.rows.length; i++){
+        tbl.rows[i].onclick =function(){
+            if(window.cur) window.cur.style.background = "#FFF";
+            this.style.background = "#7DB4D8";
+            window.cur = this;
+        }
+    }
+}
+
+
+
+function newFunc(vi) {
+    var text=vi.value;
+    var text2=document.getElementById("txt").innerHTML;
+    if(vi.checked){
+
+        $.ajax({
+            url: "/api/config/actRuTaskInsert",
+            data: {data: text, isTop: 1}
+        });
+    }else {
+        $.ajax({
+            url: "/api/config/actRuTaskInsert",
+            data: {data: text, isTop: 0}
+        });
+    }
+    window.location.href="/cbdb/1";
+
+}
+var taskId1;
+var processId;
+var type;
+function deleteTask(e){
+    taskId1=$(e).attr("data-taskId");
+    processId=$(e).attr("data-processId");
+    type=$(e).attr("data-taskType");
+    $('#DeletedWin').kendoWindow({
+        title: '任务删除',
+        position: {
+            top: screen.height / 3,
+            left: screen.width / 3
+        },
+        modal: true
+
+    });
+    $("#DeletedWin").data("kendoWindow").open();
+}
+
+var taskId2;
+var processId2;
+var type2;
+function deleteTask2(e){
+    taskId2=$(e).attr("data-taskId2");
+    processId2=$(e).attr("data-processId2");
+    type2=$(e).attr("data-taskType2");
+    $('#DeletedWin2').kendoWindow({
+        title: '任务删除',
+        position: {
+            top: screen.height / 3,
+            left: screen.width / 3
+        },
+        modal: true
+
+    });
+    $("#DeletedWin2").data("kendoWindow").open();
+}
+
+function closeWin2(){
+    $("#DeletedWin").data("kendoWindow").close();
+}
+
+function closeWin22(){
+    $("#DeletedWin2").data("kendoWindow").close();
+}
+var validator1=$('#deleteReason').kendoValidator().data("kendoValidator");
+
+//function submitDelete(){
+//    if(validator1.validate()) {
+//        var deleteReason = $('#deleteReason').val();
+//        $.ajax({
+//            type:'post',
+//            url:'/api/taskDelete/'+processId+"/"+deleteReason+"/"+taskId1,
+//            success:function(){
+//                $("#DeletedWin").data("kendoWindow").close();
+//                swal("任务删除成功！");
+//                window.location.reload();
+//
+//            }
+//        });
+//
+//    }
+//}
+
+function submitDelete(){
+    if(validator1.validate()) {
+        var deleteReason = $('#deleteReason').val();
+        $("#DeletedWin").data("kendoWindow").close();
+        swal(
+                {
+                    title: "确认删除?",
+                    text: "删除公文后无法复原，是否继续删除？",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定!",
+                    cancelButtonText: "取消",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+
+                    if (isConfirm) {
+                        console.log("submit delete!");
+                        $.ajax({
+                            type:'post',
+                            url:'/api/taskDelete/'+processId+"/"+deleteReason+"/"+taskId1+"/"+type,
+                            success:function(){
+                                //$("#DeletedWin").data("kendoWindow").close();
+                                // swal("任务删除成功！");
+                                swal({title: "成功", text: "任务删除成功!", type: "success", timer: 3000 },function(){
+                                    window.location.reload()
+                                });
+                            },
+                            error: function () {
+                                swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                            }
+                        });
+                    } else {
+                        swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                    }
+                }
+        )
+
+
+
+
+
+
+    }
+}
+
+var validator2=$('#deleteReason2').kendoValidator().data("kendoValidator");
+function submitDelete2(){
+    if(validator2.validate()) {
+        var deleteReason2 = $('#deleteReason2').val();
+        $("#DeletedWin2").data("kendoWindow").close();
+        swal(
+                {
+                    title: "确认删除?",
+                    text: "删除公文后无法复原，是否继续删除？",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定!",
+                    cancelButtonText: "取消",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+
+                    if (isConfirm) {
+                        console.log("submit delete!");
+                        $.ajax({
+                            type:'post',
+                            url:'/api/taskDelete2/'+processId2+"/"+deleteReason2+"/"+taskId2+"/"+type2,
+                            success:function(){
+                                //$("#DeletedWin").data("kendoWindow").close();
+                                // swal("任务删除成功！");
+                                swal({title: "成功", text: "任务删除成功!", type: "success", timer: 3000 },function(){
+                                    window.location.reload()
+                                });
+                            },
+                            error: function () {
+                                swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                            }
+                        });
+                    } else {
+                        swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                    }
+                }
+        )
+
+
+
+
+
+
+    }
+}
+
+
+//function deleteMissive(e){
+//    var taskName = $(e).attr("data-taskName");
+//    var processId = $(e).attr("data-processId");
+//    var title=$(e).attr("data-title");
+//    var type=$(e).attr("data-missiveType");
+//    var text1=" <label class='blue' style='float:left;font-size: 16px'><span class='lbl'> 请输入删除理由：</span></label>";
+//    var text="<input style='margin-left:10px;width:150px;float:left' id='delReason' />";
+//
+////    if (text!=null){
+////        swal(
+////                {
+////                    title: "确认删除?",
+////                    text: "删除公文后无法复原，是否继续删除？",
+////                    type: "warning",
+////                    showCancelButton: true,
+////                    confirmButtonColor: "#DD6B55",
+////                    confirmButtonText: "确定!",
+////                    cancelButtonText: "取消",
+////                    closeOnConfirm: false,
+////                    closeOnCancel: false
+////                },
+////                function (isConfirm) {
+////                    if (isConfirm) {
+////                        $.ajax({
+////                            type: 'post',
+////                            url: '/api/deleteMissiveByAdmin/' + processId+'/'+type,
+////                            success: function () {
+////                                swal({title: "删除成功!", text: '', type: "success", timer: 3000 });
+////                                window.location.reload();
+////                            },
+////                            error: function () {
+////                                swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+////                            }
+////
+////                        });
+////                    }
+////                    else {
+////                        swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+////                    }
+////                }
+////        )
+////    }
+//
+//
+//}
+
+
+
+//jQuery(function ($) {
+//    var oTable1 = $("#sample-table-2").dataTable({
+//        "aoColumns": [
+//            { "bSortable": false },
+//            { "bSortable": true },
+//            { "bSortable": false },
+//            { "bSortable": false },
+//            { "bSortable": true },
+//            null,
+//            { "bSortable": false }
+//        ] });
+//
+//
+//    $('table th input:checkbox').on('click', function () {
+//        var that = this;
+//        $(this).closest('table').find('tr > td:first-child input:checkbox')
+//                .each(function () {
+//                    this.checked = that.checked;
+//                    $(this).closest('tr').toggleClass('selected');
+//                });
+//
+//    });
+//
+//
+//    $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+//    function tooltip_placement(context, source) {
+//        var $source = $(source);
+//        var $parent = $source.closest('table')
+//        var off1 = $parent.offset();
+//        var w1 = $parent.width();
+//
+//        var off2 = $source.offset();
+//        var w2 = $source.width();
+//
+//        if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+//        return 'left';
+//    }
+//
+//
+//});
+
+
+jQuery(function ($) {
+    var oTable1 = $("#sample-table-2").dataTable({
+//            "pagingType":   "iFullNumbersShowPages",
+
+
+        "aoColumns": [
+//                { "bSortable": false },
+            { "bSortable": true },
+            { "bSortable": true },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": true },
+            null,
+            { "bSortable": false }
+        ],
+        "fnDrawCallback": function(){
+            var oTable = $("#sample-table-2").dataTable();
+            $('#redirect').keyup(function(e){
+                if($(this).val() && $(this).val()>0){
+                    var redirectpage = $(this).val()-1;
+                }else{
+                    var redirectpage = 0;
+                }
+                oTable.fnPageChange( redirectpage );
+            });
+        }
+
+
+
+
+    });
+
+
+    $('table th input:checkbox').on('click', function () {
+        var that = this;
+        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+
+    });
+
+
+    $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+    function tooltip_placement(context, source) {
+        var $source = $(source);
+        var $parent = $source.closest('table')
+        var off1 = $parent.offset();
+        var w1 = $parent.width();
+
+        var off2 = $source.offset();
+        var w2 = $source.width();
+
+        if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+        return 'left';
+    }
+});
+
+
+
+</script>
+<style>
+
+    .table-hover > tbody > tr:hover > td,
+    .table-hover > tbody > tr:hover > th {
+        background-color: #f5f5f5;
+    }
+
+</style>
+
+
+</body>
+</html>

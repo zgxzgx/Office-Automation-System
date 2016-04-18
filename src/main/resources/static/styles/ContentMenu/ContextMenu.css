@@ -1,0 +1,142 @@
+/* Container */
+div.contextMenu {
+	position: absolute;
+	display: none;
+	z-index: 100;
+	padding: 1px;
+	margin: 0;
+	min-width: 150px;
+	cursor: default;
+	background: #FCFCFC;
+	border: 1px solid #8492A6;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Separator Container */
+div.contextMenu table.separator {
+	height: 1px;
+	border: 0;
+	padding: 0;
+	overflow: hidden;
+	border-collapse: collapse;
+}
+
+/* Separator Left Cell */
+div.contextMenu table.separator tr td.left {
+	height: 1px;
+	background-color: #F3F7FB;
+	width: 20px;
+	border-right: 1px solid #CFDBEB;
+	padding: 0 3px;
+	margin: 0;
+}
+
+/* Separator Right Cell */
+div.contextMenu table.separator tr td.right {
+	padding: 0;
+	margin: 0;
+	height: 1px;
+}
+
+/* Separator Bar */
+div.contextMenu table.separator tr td.right hr {
+	display: block;
+	clear: both;
+	padding: 0;
+	margin: 1px 0;
+	*margin: -6px 0; /* Fix ie7 Margins */
+	margin-left: 6px;
+	border: 0;
+	background: #CFDBEB;
+	width: 100%;
+	height: 1px;
+}
+
+/* Menu Item */
+div.contextMenu table.item {
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	white-space: nowrap;
+}
+
+/* Active Menu Item */
+div.contextMenu table.item.active {
+	cursor: pointer;
+	color: #254280;
+}
+
+/* Active Menu Item Mouse Over */
+div.contextMenu table.item.active:hover {
+	background: #3399FF;
+	color: #FFFFFF;
+}
+
+/* Inactive Menu Item */
+div.contextMenu table.item.inactive {
+	color: #AEAEAE;
+}
+
+/* Inactive Menu Item Mouse Over */
+div.contextMenu table.item.inactive:hover {
+}
+
+/* Menu Item Table Cells */
+div.contextMenu table.item tr td {
+	padding: 4px 8px;
+}
+
+/* Menu Item Label Cell */
+div.contextMenu table.item tr td.label {
+	text-align: left;
+}
+
+/* Menu Item Icon Cell */
+div.contextMenu table.item tr td.icon {
+	background-color: #F3F7FB;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 20px;
+	height: 22px;
+	border-right: 1px solid #CFDBEB;
+	padding: 0 3px;
+}
+
+/* Menu Item Mouse Over Icon Cell */
+div.contextMenu table.item.active:hover tr td.icon {
+	border-right-color: transparent;
+	background-color: transparent;
+}
+
+/* Drop Shadow */
+div.contextMenu .drop-shadow {
+	position: absolute;
+}
+
+/* Bottom Shadow */
+div.contextMenu .drop-shadow.bottom {
+	background: url('ContextMenu-Images/shdw_bottom.png') repeat-x left bottom;
+	width: 100%;
+	height: 4px;
+	left: 1px;
+	bottom: -5px;
+}
+
+/* Right Shadow */
+div.contextMenu .drop-shadow.right {
+	background: url('ContextMenu-Images/shdw_right.png') repeat-y right top;
+	width: 4px;
+	height: 100%;
+	right: -5px;
+	top: 1px;
+}
+
+/* Bottom-Right Shadow */
+div.contextMenu .drop-shadow.corner {
+	background: url('ContextMenu-Images/shdw_bottom_right.png') no-repeat right bottom;
+	width: 5px;
+	height: 5px;
+	right: -6px;
+	bottom: -6px;
+}

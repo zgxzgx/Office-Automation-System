@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="查看公文"></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--<meta http-equiv="refresh" content="240" />&lt;!&ndash;一分钟刷新页次页面&ndash;&gt;-->
+    <script th:replace="header :: header"></script>
+
+
+
+</head>
+
+<body>
+<script th:inline="javascript">
+
+    var userbase64 = [[${userbase64}]];
+
+    var user=/*[[${user.userName}]]*/null;
+
+
+
+</script>
+
+<div th:replace="navbar :: navbar(${user})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'csgw-wbgw'})"></div>
+
+<div class="main-content">
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="/">首页</a>
+        </li>
+
+        <li>
+            <a href="#">查看公文</a>
+        </li>
+
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+                        <span class="input-icon">
+                            <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                            <i class="icon-search nav-search-icon"></i>
+                        </span>
+    </div><!-- #nav-search -->
+</div>
+
+<div class="page-content">
+<div class="row">
+<div class="col-xs-12">
+<div class="tabbable">
+<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+    <li th:class="${activeitem=='wbgw'}?'active'">
+        <a data-toggle="tab" href="#wbgw" >进行中任务</a>
+    </li>
+
+    <li th:class="${activeitem=='ybgw'}?'active'">
+        <a data-toggle="tab" href="#ybgw">已办结流程</a>
+    </li>
+</ul>
+<div class="tab-content" style="height:1300px">
+<div id="wbgw" th:class="${activeitem=='wbgw'}?'tab-pane in active':'tab-pane'">
+    <div class="table-responsive">
+        <table  id="sample-table-2" class="table table-bordered table-hover no-margin-bottom no-border-top"  style="background-color: #FFFFFF" onmousedown="trSelect2()">
+            <thead>
+            <tr>
+                <!--<th style="text-align: center;width:90px">修改附件</th>-->
+                <th style="text-align: center;width:110px">传送人</th>
+                <th style="text-align: center;width:110px">当前任务人</th>
+                <th style="text-align: center;width:120px">公文类型</th>
+                <th style="text-align: center;width:170px">任务名称</th>
+                <th style="text-align: center">公文标题</th>
+                <th style="text-align: center;width:130px">任务时间</th>
+                <th style="text-align: center;width:130px">持续时间</th>
+                <th style="text-align: center;width:200px">操作 </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="taskIng: ${tasksIng}">
+                <!--<td style="text-align: center;vertical-align:middle"><label class="inline"> <input th:id="page" th:checked="${taskIng.updateFlag=='1'}?'true':'false'" th:value="${taskIng.processInstanceId}" type=checkbox  class="ace" disabled="disabled"/><span class="lbl"></span></label>-->
+                <!--<i th:class="${taskIng.updateFlag=='1'}?'message-star icon-star orange2':'message-star icon-star-empty light-grey'"></i></td>-->
+                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.preOwner}"></td>
+                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.taskAssName}"></td>
+                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.typeTitle}"></td>
+                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.name}"></td>
+                <td style="text-align: center;vertical-align:middle" th:utext="${taskIng.missiveTitle}"></td>
+                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.taskStartTime}"></td>
+                <td style="text-align: center;vertical-align:middle" th:text="${taskIng.intelTime}"></td>
+                <td style="text-align: left;vertical-align:middle;width: 200px">
+                    <a th:href="@{/historyProcess/{instanceid}(instanceid=${taskIng.processInstanceId})}"  target="_blank" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp
+
+                    <a th:href="@{/pdfViewer/web/viewer.html?file=/pdf/{missivetype}/{instanceid}/{version}/pdf2Pad/{taskid}.pdf &name={missiveTittle}(missivetype=${taskIng.missiveType},instanceid=${taskIng.processInstanceId},version=${taskIng.versionNum},taskid=${taskIng.lastTaskId},missiveTittle=${taskIng.missiveTitle})}"
+                       class="btn btn-minier bigger btn-primary" target="_blank"><i class="icon-check"></i>查看公文</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="ybgw" th:class="${activeitem=='ybgw'}?'tab-pane in active':'tab-pane'">
+
+    <div id="completeDiv" style="display: none" >
+        <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top" onmousedown="trSelect()">
+            <thead>
+            <tr>
+                <th style="text-align: center;vertical-align:middle">公文类型</th>
+                <th style="text-align: center;vertical-align:middle">任务名称</th>
+
+                <th style="text-align: center;vertical-align:middle">公文标题</th>
+                <th style="text-align: center;vertical-align:middle">任务时间</th>
+                <th style="text-align: center;vertical-align:middle;width:290px"> 操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="well" style="height:595px">
+
+            <h3 class="grey lighter smaller">
+                                                                            <span class="blue bigger-125">
+                                                                                <i class="icon-sitemap"></i>
+                                                                                提示
+                                                                            </span>
+                您当前没有已完成的公文
+            </h3>
+
+            <hr />
+            <h5 class="lighter smaller">您也可以搜索并查阅历史公文</h5>
+
+            <div>
+                <form class="form-search">
+                                                                                <span class="input-icon align-middle">
+                                                                                    <i class="icon-search"></i>
+
+                                                                                    <input type="text" class="search-query" class="nav-search-input" id="nav-search-input2"  placeholder="请输入公文信息..." />
+                                                                                </span>
+
+                </form>
+
+                <div class="space"></div>
+
+            </div>
+
+            <hr />
+            <div class="space"></div>
+
+
+        </div>
+    </div>
+
+    <div id="displayDiv" style="display: none" >
+
+        <div class="dataTables_filter" id="taskTable_filter">
+            <label>快捷查询: <input type="text" class="search-query" class="nav-search-input" id="filterData" placeholder="请输入关键字" ></label>
+        </div>
+
+        <div class="table-responsive" id="completedTable" >
+            <table  class="table  table-bordered table-hover no-margin-bottom no-border-top " style="background-color: #FFFFFF" id="taskTable" onmousedown="trSelect()">
+                <thead>
+                <tr>
+                    <th style="text-align: center;vertical-align:middle;width:120px">公文类型</th>
+                    <th style="text-align: center;vertical-align:middle;width:160px">当前任务</th>
+                    <th style="text-align: center;width:170px">公文号</th>
+                    <th style="text-align: center;vertical-align:middle">公文标题</th>
+                    <th style="text-align: center;vertical-align:middle;width:170px">任务时间</th>
+                    <th style="text-align: center;vertical-align:middle;width:210px"> 操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="height:39px" th:each="taskDone: ${tasksDone}">
+                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.typeTitle}"></td>
+                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.taskCondition}"></td>
+                    <td style="text-align: center;vertical-align:middle" ></td>
+                    <td style="text-align: center;vertical-align:middle" th:utext="${taskDone.missiveTitle}"></td>
+                    <td style="text-align: center;vertical-align:middle" th:text="${taskDone.taskEndTime}"></td>
+                    <td style="text-align: left;vertical-align:middle">
+                        <a th:href="@{/historyProcess/{instanceid}(instanceid=${taskDone.processInstanceId})}" target="_blank" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp
+
+                        <a th:href="@{/pdfViewer/web/viewer.html?file=/pdf/{missivetype}/{instanceid}/{version}/pdf2Pad/{taskid}.pdf(missivetype=${taskDone.missiveType},instanceid=${taskDone.processInstanceId},version=${taskDone.versionNum},taskid=${taskDone.lastTaskId})}"
+                           class="btn btn-minier bigger btn-primary" target="_blank"><i class="icon-check"></i>查看公文</a>&nbsp
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+            <div class="modal-footer no-margin-top" style="margin-bottom: 1px" id="lessThanFive">
+                <ul class="pagination pull-right no-margin">
+
+                    <li  th:class="${DonePage==1}?'prev disabled':'prev'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${DonePage-1})}" th:onclick="${DonePage==1}?'return false'">
+                            <i class="icon-double-angle-left"></i>
+                        </a>
+                    </li>
+                    <li th:each="num1: ${#numbers.sequence(1,taskDoneTotalNum)}" th:class="${num1==DonePage}?'active'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li th:class="${DonePage==taskDoneTotalNum}?'next disabled':'next'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${DonePage+1})}" th:onclick="${DonePage==taskDoneTotalNum}?'return false'">
+                            <i class="icon-double-angle-right"></i>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+            <div class="modal-footer no-margin-top" style="margin-bottom: 1px" id="moreThanFive">
+                <ul class="pagination pull-right no-margin">
+
+                    <li  th:class="${DonePage==1}?'prev disabled':'prev'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${DonePage-1})}" th:onclick="${DonePage==1}?'return false'">
+                            <i class="icon-double-angle-left"></i>
+                        </a>
+                    </li>
+                    <!--<li  id="firstPage" th:each="num1:${#numbers.sequence(1, 1)}" th:class="${num1==DonePage}?'active'" >-->
+                    <!--<a th:href="@{/wdgw/ybgw/{pagenum}/1/1/1(pagenum=${num1})}" th:text="${num1}"></a>-->
+                    <!--</li>-->
+                    <li id="pre" th:each="num1:${#numbers.sequence(DonePage-4,DonePage-4)}" th:class="${num1==DonePage}?'active'" >
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li id="front" th:each="num1:${#numbers.sequence(DonePage-3,DonePage-3)}" th:class="${num1==DonePage}?'active'" >
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li id="first" th:each="num1:${#numbers.sequence(DonePage-2,DonePage-2)}" th:class="${num1==DonePage}?'active'" >
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li id="start" th:each="num1:${#numbers.sequence(DonePage-1,DonePage-1)}" th:class="${num1==DonePage}?'active'" >
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li th:each="num1: ${#numbers.sequence(DonePage,DonePage)}" th:class="${num1==DonePage}?'active'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+
+                    <li id="end" th:each="num1: ${#numbers.sequence(DonePage+1,DonePage+1)}" th:class="${num1==DonePage}?'active'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li id="last" th:each="num1: ${#numbers.sequence(DonePage+2,DonePage+2)}" th:class="${num1==DonePage}?'active'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li id="rear" th:each="num1: ${#numbers.sequence(DonePage+3,DonePage+3)}" th:class="${num1==DonePage}?'active'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <li id="final" th:each="num1: ${#numbers.sequence(DonePage+4,DonePage+4)}" th:class="${num1==DonePage}?'active'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${num1})}" th:text="${num1}"></a>
+                    </li>
+                    <!--<li id="lastPage"  th:each="num1: ${#numbers.sequence(taskDoneTotalNum,taskDoneTotalNum)}" th:class="${num1==DonePage}?'active'">-->
+                    <!--<a th:href="@{/wdgw/ybgw/{pagenum}/1/1/1(pagenum=${num1})}" th:text="${num1}"></a>-->
+                    <!--</li>-->
+                    <li th:class="${DonePage==taskDoneTotalNum}?'next disabled':'next'">
+                        <a th:href="@{/csgw/ybgw/1/{pagenum}(pagenum=${DonePage+1})}" th:onclick="${DonePage==taskDoneTotalNum}?'return false'">
+                            <i class="icon-double-angle-right"></i>
+                        </a>
+                    </li>
+
+
+                    <li  >
+                        <label>&nbsp共计</label>
+                        <label th:text="${PageTotal}"></label>
+                        <label>页&nbsp跳转至：</label>
+                        <input type="text" style="width: 45px;margin-top: 3px " id="redirect" class="redirect" onchange="changePage(this)">
+                    </li>
+
+
+
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="table-responsive " id="secondDiv" style="display: none" >
+            <table  id="filterTable" class="table  table-bordered table-hover no-margin-bottom no-border-top " style="background-color: #FFFFFF" >
+
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- PAGE CONTENT ENDS -->
+</div><!-- /.col -->
+</div><!-- /.row -->
+</div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+</div><!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+<!-- page specific plugin scripts -->
+
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script src="/assets/js/jquery.dataTables.bootstrap.js"></script>
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/custom/kendomultiselect-filter-plugin.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+
+<script style="javascript" th:inline="javascript">
+
+var taskList = /*[[${tasksIng}]]*/[];
+var taskId="";
+var instantId="";
+var taskName="";
+var dropDownSource=null;
+var missiveType="";
+
+var taskdoneList = /*[[${tasksDone}]]*/[];
+var missiveSend=/*[[${mainSend}]]*/[];
+var missiveCopy=/*[[${copyTo}]]*/[];
+var DonePage=/*[[${DonePage}]]*/[];
+var taskDoneTotalNum=/*[[${PageTotal}]]*/[];
+
+jQuery(function ($) {
+    if(taskdoneList.length==0){
+        $('#completeDiv').attr("style","");
+    }
+    else{
+        $('#displayDiv').attr("style","");
+    }
+    if(taskDoneTotalNum>=5){
+        $("#lessThanFive").attr("style","display:none");
+    }else if(taskDoneTotalNum<5){
+        $("#moreThanFive").attr("style","display:none");
+
+    }
+    if (DonePage == 2) {
+
+        //$("#start").attr("style", "display:none");
+        $("#first").attr("style", "display:none");
+        $("#front").attr("style","display:none");
+        $("#pre").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+    }
+    else if (DonePage == 1) {
+
+        $("#start").attr("style", "display:none");
+        $("#firstPage").attr("style", "display:none");
+        $("#first").attr("style", "display:none");
+        $("#front").attr("style","display:none");
+        $("#pre").attr("style","display:none");
+
+
+    }
+    else if (DonePage == (taskDoneTotalNum - 1)) {
+
+        // $("#end").attr("style", "display:none");
+        $("#last").attr("style", "display:none");
+        $("#pre").attr("style","display:none");
+        $("#rear").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+
+
+    }
+    else if (DonePage == taskDoneTotalNum) {
+        $("#end").attr("style", "display:none");
+        $("#last").attr("style", "display:none");
+        $("#lastPage").attr("style", "display:none");
+        // $("#front").attr("style","display:none");
+        $("#rear").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+    }else{
+        $("#front").attr("style","display:none");
+        $("#pre").attr("style","display:none");
+        $("#rear").attr("style", "display:none");
+        $("#final").attr("style", "display:none");
+
+    }
+
+
+
+});
+
+function changePage(vi){
+    if(vi.value>taskDoneTotalNum||vi.value<1){
+
+        var warnning="请输入1到"+taskDoneTotalNum+"之间的页数";
+        swal({title:'错误提示',text:warnning,type:'error',confirmButtonText:'确定'});
+        //swal("请输入1到"+taskDoneTotalNum+"之间的页数");
+    }else{
+        var pageNum=vi.value;
+        window.location.href="/csgw/wbgw/1/"+pageNum;
+    }
+
+
+}
+
+$("#filterData").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+        var searchValue = event.currentTarget.value;
+        if (searchValue != "") {
+
+            $.ajax({
+                url: "/api/searchByword/getHistoryMissiveList",
+                data: {data: searchValue},
+                success: function (result) {
+
+                    $("#completedTable").attr("style","display:none");
+                    $("#secondDiv").attr("style", "");
+                    $("#filterTable").empty(); //清空列表
+                    var head = "<thead><tr><th style='text-align: center;vertical-align:middle'>附件修改</th><th style='text-align: center;vertical-align:middle'>公文类型</th><th style='text-align: center;vertical-align:middle'>公文标题</th><th style='text-align: center;vertical-align:middle'>任务时间</th><th style='text-align: center;vertical-align:middle'> 操作</th></tr></thead>";
+                    $("#filterTable").append(head);
+
+                    for (var i = 0; i < result.length; i++) {
+
+                        var missiveUrl="http://16.64.36.50";
+                        var MissiveFlag=result[i].cardTitle;
+                        var htmlText=result[i].htmlUrl;
+                        var attachlist= result[i].updateFlag=='1'?'附件已变更':'附件未变更';
+                        var HistoryMissiveLink="/historyProcess/"+result[i].processInstanceId;
+                        var Type=result[i].missiveType;
+                        var InstantID=result[i].processInstanceId;
+                        var versionID=result[i].versionNum;
+                        var taskID= result[i].lastTaskId;
+                        var attrValue="data-taskId="+result[i].id+",data-instantId="+result[i].processInstanceId+",data-nextTaskId="+result[i].nextTaskId;
+                        var styleSample="";
+                        if(!result[i].rollBackFlag){
+                            styleSample="display:none"
+                        }
+                        var pdfLink="/pdfViewer/web/viewer.html?file=/pdf/"+Type+"/"+InstantID+"/"+versionID+"/pdf2Pad/"+taskID+".pdf";
+                        var tr = "<tr  style='height:50px'>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + attachlist + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + result[i].typeTitle + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle'>" + result[i].missiveTitle + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle;width: 200px'>" + result[i].taskEndTime + "</td>";
+                        tr += "<td style='text-align: center;vertical-align:middle;width: 370px'> <a href='"+HistoryMissiveLink+"' target='_blank' class='btn btn-minier bigger btn-success'><i class='icon-check'></i>任务信息</a>&nbsp";
+
+                        tr += "<a href='"+pdfLink+"' class='btn btn-minier bigger btn-primary' target='_blank'><i class='icon-check'></i>查看公文</a></td>"
+                        tr += "</tr>";
+
+                        $("#filterTable").append($(tr));
+                    } //end for emplo
+
+
+
+                }
+            });
+        } else {
+
+            $("#completedTable").attr("style","");
+            $("#secondDiv").attr("style", "display:none");
+            // swal("请在搜索框输入关键字！");
+        }
+    }
+
+});
+
+
+
+
+$("#nav-search-input").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+
+        var searchValue=event.currentTarget.value;
+        if(searchValue==""){
+            swal("请在搜索框输入关键字！");
+
+        }else{
+            self.location="/fullSearch/"+searchValue;
+
+        }            //alert(searchValue);
+    }
+
+});
+
+function trSelect2(){
+    var tbl = document.getElementById("sample-table-2");
+    for(var i = 1; i < tbl.rows.length; i++){
+        tbl.rows[i].onclick =function(){
+            if(window.cur) window.cur.style.background = "#FFF";
+            this.style.background = "#7DB4D8";
+            window.cur = this;
+        }
+    }
+}
+
+function trSelect(){
+    var tbl = document.getElementById("taskTable");
+    for(var i = 1; i < tbl.rows.length; i++){
+        tbl.rows[i].onclick =function(){
+            if(window.cur) window.cur.style.background = "#FFF";
+            this.style.background = "#7DB4D8";
+            window.cur = this;
+        }
+    }
+}
+
+
+
+function newFunc(vi) {
+    var text=vi.value;
+    var text2=document.getElementById("txt").innerHTML;
+    if(vi.checked){
+
+        $.ajax({
+            url: "/api/config/actRuTaskInsert",
+            data: {data: text, isTop: 1}
+        });
+    }else {
+        $.ajax({
+            url: "/api/config/actRuTaskInsert",
+            data: {data: text, isTop: 0}
+        });
+    }
+    window.location.href="/cbdb/1";
+
+}
+
+
+
+
+
+jQuery(function ($) {
+    var oTable1 = $("#sample-table-2").dataTable({
+//            "pagingType":   "iFullNumbersShowPages",
+
+
+        "aoColumns": [
+//                { "bSortable": false },
+            { "bSortable": true },
+            { "bSortable": true },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": true },
+            null,
+            { "bSortable": false }
+        ],
+        "fnDrawCallback": function(){
+            var oTable = $("#sample-table-2").dataTable();
+            $('#redirect').keyup(function(e){
+                if($(this).val() && $(this).val()>0){
+                    var redirectpage = $(this).val()-1;
+                }else{
+                    var redirectpage = 0;
+                }
+                oTable.fnPageChange( redirectpage );
+            });
+        }
+
+
+
+
+    });
+
+
+    $('table th input:checkbox').on('click', function () {
+        var that = this;
+        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+
+    });
+
+
+    $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+    function tooltip_placement(context, source) {
+        var $source = $(source);
+        var $parent = $source.closest('table')
+        var off1 = $parent.offset();
+        var w1 = $parent.width();
+
+        var off2 = $source.offset();
+        var w2 = $source.width();
+
+        if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+        return 'left';
+    }
+});
+
+
+
+</script>
+<style>
+
+    .table-hover > tbody > tr:hover > td,
+    .table-hover > tbody > tr:hover > th {
+        background-color: #f5f5f5;
+    }
+
+</style>
+
+
+</body>
+</html>

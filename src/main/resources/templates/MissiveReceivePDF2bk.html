@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script th:replace="header :: header"></script>
+
+</head>
+
+<body style="margin:0;width:1030px;height:1460px;background: none;">
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script th:inline="javascript">
+    var missiveReceiveForm=/*[[${missiveReceiveForm}]]*/ null;
+    var instanceid=/*[[${instanceid}]]*/ null;
+</script>
+<div style="width:1030px;height:1460px;background-size:contain;">
+
+
+    <img th:src=@{/api/bgPng/missiveReceive/{instanceid}(instanceid=${instanceid})}
+         th:if="${hasBgPng}"
+         style="top:0px;left:0px;width: 1030px;height:1460px"/>
+    <h4 class="lighter" style="top: 30px;left:55px;position: absolute;">
+        <i class="icon-hand-right icon-animated-hand-pointer blue"></i>
+        <a th:href="@{/pdfViewer/web/viewer.html?file=/pdf/missiveReceive/{instanceid}/{version}/pdf2Pad/{taskid}.pdf(instanceid=${instanceid},version=${newVersionId},taskid=${lastTaskId})}" data-toggle="modal" class="pink"> 查看附件 </a>
+    </h4>
+
+<div id="missiveReceive" style="position:absolute;width:891px;height:1260px;background-image:url('/img/missiveReceive.png');margin-left: 70px;margin-top:100px;background-size:contain;background-repeat:no-repeat;z-index: -1;font-family: '微软雅黑'">
+            <!--收文年月日-->
+            <div style="position:absolute;top:98px;left:310px;width:60px;height:30px">
+                <label id="receiveYears"style="width:100%;height:100%;font-size: 20px"></label>
+            </div>
+            <div style="position:absolute;top:98px;left:397px;width:30px;height:30px">
+                <lablel id="receiveMonths" style="font-size:20px;width:100%;height:100%" ></lablel>
+            </div>
+            <div style="position:absolute;top:98px;left:445px">
+                <label id="receiveDays" style="font-size:20px;width:30px;height:30px;"></label>
+            </div>
+            <!--收文号-->
+            <div style="position:absolute;top:98px;left:675px;">
+                <label id="M_receiveNums"style="font-size: 20px"></label>
+            </div>
+            <!-- 文件字号-->
+            <div id="file" style="position:absolute;top:146px;left:275px;" >
+                    <label id="missiveNums" style="font-size:20px;width:402px;height:45px"></label>
+            </div>
+            <!--文件份数-->
+            <div id="fileCount" style="position:absolute;border-style:none;top:146px;left:690px" >
+                <label id="missiveCounts"  style="margin-left:40px;margin-top:7px;font-size:20px;width:70px;height:45px"></label>
+            </div>
+            <!--紧急程度-->
+            <div id="emergencyLevelDiv" style="position:absolute;left:155px;top:199px;" >
+                <label  name="emergencyLevels" id="emergencyLevels" style="margin-left:15px;font-size:20px;width:70px;height:45px"></label>
+            </div>
+            <!--办理时限-->
+            <div style="position:absolute;top:199px;left:640px;">
+               <label id="deadlines" name="deadlines"  style="margin-left:15px;font-size:20px;width:200px;height:30px;"></label>
+            </div>
+            <!--来文摘要-->
+            <div style="width:780px;height:138px;position:absolute;top:275px;left:50px">
+               <label  id="missiveaAbstracts" name="missiveaAbstracts" style="vertical-align:middle;font-size:20px;width: 100%;height: 100%"></label>
+            </div>
+            <!--办公室拟办-->
+            <div style="width:780px;height:80px;position:absolute;top:456px;left:50px;">
+               <label  id="officeSuggests" name="officeSuggests" style="font-size:20px;width: 100%;height: 100%"></label>
+            </div>
+            <!--拟办时间-->
+            <div style="position:absolute;top:567px;left:735px;">
+                <label id="officeSuggest_Months"  style="font-size:20px;width:35px;height:30px;"></label>
+            </div>
+            <div style="position:absolute;top:567px;left:785px">
+                <label id="officeSuggest_Days" style="font-size:20px;width:35px;height:30px;"></label>
+            </div>
+            <!--领导批示-->
+            <div style="height: 156px;width: 790px;top: 640px;left: 50px;position: absolute">
+                <label id="leaderInstruct_txt" style="width: 100%;height: 100%;border: none;font-size: 20px"></label>
+            </div>
+            <div  style="height: 156px;width: 790px;top: 640px;left: 50px;position: absolute">
+                <img id="leaderInstuct_img"   style="width: 100%;height: 100%;border: none"/>
+            </div>
+
+            <div style="height: 156px;width: 790px;top: 640px;left: 50px;position: absolute;">
+                <label id="leaderInstructBase30img" name="leaderInstructBase30img" hidden="hidden" style="border:none"/>
+            </div>
+            <!--批示时间-->
+            <div style="position:absolute;top:800px;left:740px;">
+                 <label id="signMonths" style="font-size:20px;width:35px;height:30px;"></label>
+            </div>
+            <div style="position:absolute; top:800px;left:785px;">
+                <label id="signDays" style="font-size:20px;width:35px;height:30px;"></label>
+            </div>
+            <!--阅办人签字-->
+            <div style="height: 140px;width: 790px;top: 876px;left: 50px;position: absolute;">
+                <label id="lookSign_txt" style="width: 100%;height: 100%;border:none;font-size:20px"></label>
+            </div>
+            <div style="height: 140px;width: 790px;top: 876px;left: 50px;position: absolute;">
+                <img id="lookSign_img" style="width: 100%;height: 100%;border:none"/>
+            </div>
+            <div style="height: 140px;width: 790px;top: 876px;left: 50px;position: absolute">
+                <label id="lookSignBase30img_sign" hidden="hidden"/>
+            </div>
+            <!--承办情况-->
+            <div style="height: 115px;width: 790px;top: 1050px;left: 50px;position: absolute;">
+                <label id="undertake_txt" style="width: 100%;height: 100%;border:none;font-size:20px"></label>
+            </div>
+            <div style="height: 115px;width: 790px;top: 1050px;left: 50px;position: absolute;">
+                <img id="undertake_img" style="width: 100%;height: 100%;border:none"/>
+            </div>
+            <div style="height: 115px;width: 790px;top: 1050px;left: 50px;position: absolute;border-style:none">
+                <label id="undertakeBase30img_sign" hidden/>
+            </div>
+ </div>
+</div>
+
+<script>
+
+    var blankImg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAxEAAAFjCAYAAABCEoaFAAAWB0lEQVR4Xu3XoREAAAgDMbr/" +
+            "0szwPuiqHOZ3jgABAgQIECBAgAABAkFgYWtKgAABAgQIECBAgACBExGegAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIE" +
+            "CBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvw" +
+            "AAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECB" +
+            "AgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEh" +
+            "ARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAE" +
+            "CBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBAR" +
+            "PgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAg" +
+            "AABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxA" +
+            "QIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARH" +
+            "hBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkA" +
+            "RGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER" +
+            "4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISl" +
+            "zEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAg" +
+            "QIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAA" +
+            "BAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIEC" +
+            "BAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIi" +
+            "Ag/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAE" +
+            "RkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeE" +
+            "HCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcx" +
+            "AQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIEC" +
+            "BAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQ" +
+            "IECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQ" +
+            "CAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0" +
+            "CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECA" +
+            "AAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSA" +
+            "IiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBA" +
+            "gAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgA" +
+            "ABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIX" +
+            "MYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIA" +
+            "AAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAA" +
+            "RHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSQgIhKXMQE" +
+            "CBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIAAAQIECBAgICL8AAECBAgQIECAA" +
+            "AECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAgkAREROIyJkCAAAECBAgQIEBARPg" +
+            "BAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIECAAAECBAgQIEAgCYiIxGVMgAAB" +
+            "AgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAAECBAiICD9AgAABAgQIECBAg" +
+            "EASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGRuIwJECBAgAABAgQIEBARfo" +
+            "AAAQIECBAgQIAAgSQgIhKXMQECBAgQIECAAAECIsIPECBAgAABAgQIECCQBERE4jImQIAAAQIECBAgQEBE+AECBAgQIECAAAECBJKAiEhcxgQIECBAgAABAgQIiAg/QIAAAQIECBAgQIBAEhARicuYAAECBAgQIECAAAER4QcIECBAgAABAgQIEEgCIiJxGRMgQIA" +
+            "AAQIECBAgICL8AAECBAgQIECAAAECSUBEJC5jAgQIECBAgAABAgREhB8gQIAAAQIECBAgQCAJiIjEZUyAAAECBAgQIECAgIjwAwQIECBAgAABAgQIJAERkbiMCRAgQIAAAQIECBAQEX6AAAECBAgQIECAAIEkICISlzEBAgQIECBAgAABAiLCDxAgQIAAAQIECBAg" +
+            "kAREROIyJkCAAAECBAgQIEBARPgBAgQIECBAgAABAgSSgIhIXMYECBAgQIAAAQIECIgIP0CAAAECBAgQIECAQBIQEYnLmAABAgQIECBAgAABEeEHCBAgQIAAAQIECBBIAiIicRkTIECAAAECBAgQICAi/AABAgQIECBAgAABAklARCQuYwIECBAgQIAAAQIERIQfIEC" +
+            "AAAECBAgQIEAgCYiIxGVMgAABAgQIECBAgICI8AMECBAgQIAAAQIECCQBEZG4jAkQIECAAAECBAgQEBF+gAABAgQIECBAgACBJCAiEpcxAQIECBAgQIAAAQIiwg8QIECAAAECBAgQIJAERETiMiZAgAABAgQIECBAQET4AQIECBAgQIAAAQIEkoCISFzGBAgQIECAAA" +
+            "ECBAiICD9AgAABAgQIECBAgEASEBGJy5gAAQIECBAgQIAAARHhBwgQIECAAAECBAgQSAIiInEZEyBAgAABAgQIECAgIvwAAQIECBAgQIAAAQJJQEQkLmMCBAgQIECAAAECBESEHyBAgAABAgQIECBAIAmIiMRlTIAAAQIECBAgQICAiPADBAgQIECAAAECBAgkARGR" +
+            "uIwJECBAgAABAgQIEBARfoAAAQIECBAgQIAAgSTwRdcBZA2nfHIAAAAASUVORK5CYII=";
+
+
+$(function(){
+   /* if(missiveReceiveForm.bgPngPath!=null){
+        $("#missiveReceive")[0].style.backgroundImage="url(/api/bgPng/"+instanceid+")";
+    }*/
+    //收文年
+    if(missiveReceiveForm.receiveYear!=null&&missiveReceiveForm.receiveYear!=""){
+        $('#receiveYears').html(missiveReceiveForm.receiveYear);
+    }
+    //收文月
+    if(missiveReceiveForm.receiveMonth!=null&&missiveReceiveForm.receiveMonth!=""){
+        $('#receiveMonths').html(missiveReceiveForm.receiveMonth);
+    }
+    //收文日
+    if(missiveReceiveForm.receiveDay!=null&&missiveReceiveForm.receiveDay!=""){
+        $('#receiveDays').html(missiveReceiveForm.receiveDay);
+    }
+    //收文号
+    if(missiveReceiveForm.code!=null&&missiveReceiveForm.code!=""){
+        $('#M_receiveNums').html(missiveReceiveForm.code);
+    }
+    //文件字号
+    if(missiveReceiveForm.missiveNumber!=null&&missiveReceiveForm.missiveNumber!=""){
+        $('#missiveNums').html(missiveReceiveForm.missiveNumber);
+    }
+    //文件份数
+    if(missiveReceiveForm.fileCount!=null&&missiveReceiveForm.fileCount!=""){
+        $('#missiveCounts').html(missiveReceiveForm.fileCount);
+    }
+    //紧急程度
+    if(missiveReceiveForm.urgencyLevel.value!=null&&missiveReceiveForm.urgencyLevel.value!=""){
+        $('#emergencyLevels').html(missiveReceiveForm.urgencyLevel.value);
+    }
+    //办理期限
+    if(missiveReceiveForm.dealDeadline!=null&&missiveReceiveForm.dealDeadline!=""){
+        $('#deadlines').html(missiveReceiveForm.dealDeadline);
+    }
+    //来文摘要
+    if(missiveReceiveForm.missiveAbstract!=null&&missiveReceiveForm.missiveAbstract!=""){
+        var abstracts = missiveReceiveForm.missiveAbstract;
+        if(abstracts.indexOf("\\n")>0){
+            abstracts=abstracts.replace(/\\n/g,"<br/>");
+        }
+        $('#missiveaAbstracts').html(abstracts);
+    }
+    //办公室拟办
+    if(missiveReceiveForm.officeToDo!=null&&missiveReceiveForm.officeToDo!=""){
+        var officedo = missiveReceiveForm.officeToDo;
+        if(officedo.indexOf("\\n")>0){
+            officedo=officedo.replace(/\\n/g,"<br/>");
+        }
+        $('#officeSuggests').html(officedo);
+    }
+    //拟办月
+    if(missiveReceiveForm.toDoDateMonth!=null&&missiveReceiveForm.toDoDateMonth!=""){
+        $('#officeSuggest_Months').html(missiveReceiveForm.toDoDateMonth);
+    }
+    //拟办日
+    if(missiveReceiveForm.toDoDateDay!=null&&missiveReceiveForm.toDoDateDay!=""){
+        $('#officeSuggest_Days').html(missiveReceiveForm.toDoDateDay);
+    }
+    //领导批示
+    if(missiveReceiveForm.leaderInstruct.imageurl!=null&&missiveReceiveForm.leaderInstruct.imageurl!=""){
+        $('#leaderInstuct_img')[0].src=missiveReceiveForm.leaderInstruct.imageurl;
+    }
+    else{
+        $('#leaderInstuct_img')[0].src=blankImg;
+    }
+    if(missiveReceiveForm.leaderInstruct.contentText!=null&&missiveReceiveForm.leaderInstruct.contentText!=""){
+        var leadercontent = missiveReceiveForm.leaderInstruct.contentText;
+        if(leadercontent.indexOf('\\n')>0){
+            leadercontent=leadercontent.replace(/\\n/g,"<br/>");
+        }
+        var leadertextT = leadercontent.replace(/\s/g,"");
+        if(leadercontent.length!=leadertextT.length){
+            leadercontent=leadercontent.replace(/\s/g,"&nbsp");
+        }
+        $('#leaderInstruct_txt').html(leadercontent);
+    }
+    if(missiveReceiveForm.leaderInstruct.base30url!=null&&missiveReceiveForm.leaderInstruct.base30url!=""){
+        $('#leaderInstructBase30img')[0].value=missiveReceiveForm.leaderInstruct.base30url;
+    }
+    /*if(missiveReceiveForm.leaderInstruct.contentText!=null&&missiveReceiveForm.leaderInstruct.contentText!=""){
+        $('#lookSign_txt').html(missiveReceiveForm.leaderInstruct.contentText);
+    }*/
+    //批示月
+    if(missiveReceiveForm.instructDateMonth!=null&&missiveReceiveForm.instructDateMonth!=""){
+        $('#signMonths').html(missiveReceiveForm.instructDateMonth);
+    }
+    //批示日
+    if(missiveReceiveForm.instructDateDay!=null&&missiveReceiveForm.instructDateDay!=""){
+        $('#signDays').html(missiveReceiveForm.instructDateDay);
+    }
+    //阅办人签字
+    if(missiveReceiveForm.lookerSign.imageurl!=null&&missiveReceiveForm.lookerSign.imageurl!=""){
+        $('#lookSign_img')[0].src=missiveReceiveForm.lookerSign.imageurl;
+    }
+    else{
+        $('#lookSign_img')[0].src=blankImg;
+    }
+    if(missiveReceiveForm.lookerSign.contentText!=null&&missiveReceiveForm.lookerSign.contentText!=""){
+        var lookercontext= missiveReceiveForm.lookerSign.contentText;
+        if(lookercontext.indexOf("\\n")>0){
+            lookercontext=lookercontext.replace(/\\n/g,"<br/>");
+        }
+        var lookercontextT = lookercontext.replace(/\s/g,"");
+        if(lookercontext.length!=lookercontextT.length){
+            lookercontext= lookercontext.replace(/\s/g,"&nbsp");
+        }
+        $('#lookSign_txt').html(lookercontext);
+    }
+   /* if(missiveReceiveForm.lookerSign.contentText!=null&&missiveReceiveForm.contentText!=""){
+        $('#lookSign_txt')[0].value=missiveReceiveForm.lookerSign.contentText;
+    }*/
+    if(missiveReceiveForm.lookerSign.base30url!=null&&missiveReceiveForm.lookerSign.base30url!=""){
+        $('#lookSignBase30img_sign').html(missiveReceiveForm.lookerSign.base30url);
+    }
+    //承办情况
+    if(missiveReceiveForm.undertake.imageurl!=null&&missiveReceiveForm.undertake.imageurl!=""){
+        $('#undertake_img')[0].src=missiveReceiveForm.undertake.imageurl;
+    }
+
+    else{
+        $('#undertake_img')[0].src=blankImg;
+    }
+    /*if(missiveReceiveForm.undertake.contentText!=null&&missiveReceiveForm.undertake.contentText!=""){
+        $('#lookSign_txt').html(missiveReceiveForm.undertake.contentText);
+    }*/
+    if(missiveReceiveForm.undertake.contentText!=null&&missiveReceiveForm.undertake.contentText!=""){
+        var undertakeText = missiveReceiveForm.undertake.contentText;
+        if(undertakeText.indexOf("\\n")>0){
+            undertakeText=undertakeText.replace(/\\n/g,"<br/>");
+        }
+        var undertaketextT = undertakeText.replace(/\s/g,"");
+        if(undertakeText.length!=undertaketextT.length){
+            undertakeText=undertakeText.replace(/\s/g,"&nbsp");
+        }
+        $('#undertake_txt').html(undertakeText);
+        //$('#undertake_txt')[0].value=missiveReceiveForm.undertake.contentText;
+    }
+    if(missiveReceiveForm.undertake.base30url!=null&&missiveReceiveForm.undertake.base30url!=""){
+        $('#undertakeBase30img_sign').html(missiveReceiveForm.undertake.base30url);
+    }
+
+
+})
+
+
+
+</script>
+
+
+
+</body>
+</html>

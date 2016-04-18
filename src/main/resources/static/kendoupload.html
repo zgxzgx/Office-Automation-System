@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>123</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kendo.all.min.js"></script>
+    <link href="styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="styles/kendo.default.min.css" rel="stylesheet" />
+    <link href="styles/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="styles/kendo.dataviz.default.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+
+<div id="example">
+    <div class="box">
+        <h4>Information</h4>
+        <p>
+            The Upload is able to upload files out-of-band using the
+            HTML5 File API with fallback for legacy browsers.
+        </p>
+        <p>
+            You need to configure save action that will receive
+            the uploaded files.
+            An optional remove action is also available.
+        </p>
+    </div>
+
+    <div>
+        <div class="demo-section k-header">
+            <input name="files" id="files" type="file" />
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#files").kendoUpload({
+                async: {
+                    saveUrl: "/upload/4",
+                    removeUrl: "remove",
+                    autoUpload: true
+                }
+            });
+        });
+    </script>
+</div>
+
+
+</body>
+</body>
+</html>

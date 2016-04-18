@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="我的任务"></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="refresh" content="240" /><!--一分钟刷新页次页面-->
+   <script th:replace="header :: header"></script>
+
+
+
+</head>
+
+<body>
+<script th:inline="javascript">
+
+    var userbase64 = [[${userbase64}]];
+
+    var user=/*[[${user.userName}]]*/null;
+
+
+
+</script>
+
+<div th:replace="navbar :: navbar(${ud})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'dbzx-wdrw'})"></div>
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="/">首页</a>
+            </li>
+
+            <li>
+                <a href="#">我的任务</a>
+            </li>
+
+        </ul><!-- .breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+            <span class="input-icon">
+                <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </div><!-- #nav-search -->
+    </div>
+
+    <div class="page-content">
+        <div id="DelegateWin" style="text-align: center;display: none;width:300px;height:250px">
+                <div style="margin-top:50px;margin-left:40px;position: absolute">
+                    <label class="blue" style="float: left;margin-left:10px;font-size: 16px;margin-top:-30px">
+                        <span class="lbl" style="font: 16px;width: 100px"> 请输入回退理由：</span>
+                    </label>
+                    <!--<input style="margin-top:30px;float:left;width:200px;float:left;position: absolute" id="selectDelegater" required validationMessage="回退理由不能为空！"/>-->
+                    <input  id="selectDelegater" name="selectDelegater" style="float: left;margin-left:10px;font-size: 16px" class="vali_input" required validationMessage="回退理由不能为空！"/>
+                    <span class="k-invalid-msg" data-for="selectDelegater"></span>
+                </div>
+                <div style="margin-top:130px;margin-left:45px;position: absolute;">
+                    <button class="btn btn-info" type="button" onclick="submitDelegate()">
+                        <i class="icon-ok bigger-110"></i>
+                        提交
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button class="btn" type="reset" onclick="closeWin()">
+                        <i class="icon-undo bigger-110"></i>
+                        取消
+                    </button>
+                </div>
+
+
+        </div>
+
+        <div id="DeletedWin" style="text-align: center;display: none;width:300px;height:250px">
+            <div style="margin-top:50px;margin-left:40px;position: absolute">
+                <label class="blue" style="float: left;margin-left:10px;font-size: 16px;margin-top:-30px">
+                    <span class="lbl" style="font: 16px;width: 100px"> 请输入删除理由：</span>
+                </label>
+                <!--<input style="margin-top:30px;float:left;width:200px;float:left;position: absolute" id="selectDelegater" required validationMessage="回退理由不能为空！"/>-->
+                <input  id="deleteReason" name="deleteReason" style="float: left;margin-left:10px;font-size: 16px" class="vali_input" required validationMessage="删除理由不能为空！"/>
+                <span class="k-invalid-msg" data-for="deleteReason"></span>
+            </div>
+            <div style="margin-top:130px;margin-left:45px;position: absolute;">
+                <button class="btn btn-info" type="button" onclick="submitDelete() ">
+                    <i class="icon-ok bigger-110"></i>
+                    提交
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn" type="reset" onclick="closeWin2()">
+                    <i class="icon-undo bigger-110"></i>
+                    取消
+                </button>
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-16">
+
+                    <div id="completeDiv" style="display: none" >
+
+                        <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top" >
+                            <thead>
+                            <tr>
+                                <th style="text-align: center">状态</th>
+                                <th style="text-align: center">公文类型</th>
+                                <th style="text-align: center">任务名称</th>
+                                <th style="text-align: center">公文标题</th>
+                                <th style="text-align: center">任务时间</th>
+                                <th style="text-align: center">持续时间</th>
+                                <th style="text-align: center;width:330px">操作 </th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <div class="well" style="height:595px">
+
+                            <h3 class="grey lighter smaller">
+											<span class="blue bigger-125">
+												<i class="icon-sitemap"></i>
+												提示
+											</span>
+                                您当前没有需要传阅及处理的公文
+                            </h3>
+
+                            <hr />
+                            <h5 class="lighter smaller">您也可以搜索并查阅历史公文</h5>
+
+                            <div>
+                                <form class="form-search">
+												<span class="input-icon align-middle">
+													<i class="icon-search"></i>
+
+													<input type="text" class="search-query" class="nav-search-input" id="nav-search-input2"  placeholder="请输入公文信息..." />
+												</span>
+
+                                </form>
+
+                                <div class="space"></div>
+
+                            </div>
+
+                            <hr />
+                            <div class="space"></div>
+
+
+                        </div>
+                    </div>
+
+                    <div id="displayDiv" style="display: none" >
+                        <div class="table-responsive">
+                        <table class="table table-bordered table-hover no-margin-bottom no-border-top" id="taskTable" style="background-color: #FFFFFF" onmousedown="trSelect()">
+                        <thead>
+                        <tr>
+                            <!--<th style="text-align: center;width:90px">修改附件</th>-->
+                            <th style="text-align: center;width:110px">传送人</th>
+                            <th style="text-align: center;width:120px">公文类型</th>
+                            <th style="text-align: center;width:170px">任务名称</th>
+                            <th style="text-align: center">公文标题</th>
+                            <th style="text-align: center;width:130px">任务时间</th>
+                            <th style="text-align: center;width:130px">持续时间</th>
+                            <th style="text-align: center;width:200px">操作 </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="taskIng: ${tasksIng}">
+                            <!--<td style="text-align: center;vertical-align:middle"><label class="inline"> <input th:id="page" th:checked="${taskIng.updateFlag=='1'}?'true':'false'" th:value="${taskIng.processInstanceId}" type=checkbox  class="ace" disabled="disabled"/><span class="lbl"></span></label>-->
+                                <!--<i th:class="${taskIng.updateFlag=='1'}?'message-star icon-star orange2':'message-star icon-star-empty light-grey'"></i></td>-->
+                            <!--<td style="text-align: center;vertical-align:middle" th:text="${taskIng.preOwner}"></td>-->
+                            <td style="text-align: center;vertical-align:middle" th:text="${taskIng.preOwner}"></td>
+                            <td style="text-align: center;vertical-align:middle" th:text="${taskIng.typeTitle}"></td>
+                            <td style="text-align: center;vertical-align:middle" th:text="${taskIng.name}"></td>
+                            <td style="text-align: center;vertical-align:middle" th:utext="${taskIng.missiveTitle}"></td>
+                            <td style="text-align: center;vertical-align:middle" th:text="${taskIng.taskStartTime}"></td>
+                            <td style="text-align: center;vertical-align:middle" th:text="${taskIng.intelTime}"></td>
+                            <td style="text-align: left;vertical-align:middle;width: 200px"> <a th:href="@{/historyProcess/{instanceid}(instanceid=${taskIng.processInstanceId})}"  target="_blank" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp
+                                <a th:href="${taskIng.taskUrl}"
+                                        class="btn btn-minier bigger btn-primary"><i class="icon-check"></i>处理公文</a>&nbsp
+                                <p></p>
+
+                               <a class="btn btn-minier bigger btn-warning" th:attr="data-taskId=${taskIng.id}"  onclick="delegateTask(this)"><i class="icon-check"></i>任务回退</a>&nbsp
+                               <a class="btn btn-minier bigger btn-danger" onclick="deleteTask(this)" th:attr="data-taskName=${taskIng.name},data-processId=${taskIng.processInstanceId},data-title=${taskIng.missiveTitle},data-taskId=${taskIng.id},data-taskType=${taskIng.typeTitle}" ><i class="icon-check"></i>删除</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--<div class="modal-footer no-margin-top" style="margin-bottom: 1px">-->
+                    <!--<ul class="pagination pull-right no-margin">-->
+                        <!--<li  th:class="${LookPage==1}?'prev disabled':'prev'">-->
+                            <!--<a th:href="@{/dbzx/{pagenum}(pagenum=${LookPage-1})}" th:onclick="${LookPage==1}?'return false'">-->
+                                <!--<i class="icon-double-angle-left"></i>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li th:each="num: ${#numbers.sequence(1,taskIngTotalNum)}" th:class="${num==LookPage}?'active'">-->
+                            <!--<a th:href="@{/dbzx/{pagenum}(pagenum=${num})}" th:text="${num}"></a>-->
+                        <!--</li>-->
+                        <!--<li th:class="${LookPage==taskIngTotalNum}?'next disabled':'next'">-->
+                            <!--<a th:href="@{/dbzx/{pagenum}(pagenum=${LookPage+1})}" th:onclick="${LookPage==taskIngTotalNum}?'return false'">-->
+                                <!--<i class="icon-double-angle-right"></i>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                </div>
+            </div>
+        </div>
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+</div><!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+<!-- page specific plugin scripts -->
+
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script src="/assets/js/jquery.dataTables.bootstrap.js"></script>
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/custom/kendomultiselect-filter-plugin.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+
+<script style="javascript" th:inline="javascript">
+    var taskId="";
+
+    var taskList = /*[[${tasksIng}]]*/[];
+    var authorityFlag = /*[[${AuthorityFlag}]]*/null;
+
+    /*    if(taskList.length!=0){
+
+     document.getElementById("completeDiv").style.display='none';
+
+     }else{
+     document.getElementById("displayDiv").style.display='none';
+
+     }*/
+    if(taskList.length==0){
+        $('#completeDiv').attr("style","");
+    }
+    else{
+        $('#displayDiv').attr("style","");
+    }
+    $("#nav-search-input2").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+            self.location="/fullSearch/"+searchValue;
+            //alert(searchValue);
+        }
+
+    });
+
+    //搜索监听
+    $("#nav-search-input").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+            var searchValue=event.currentTarget.value;
+            if(searchValue==""){
+                swal("请在搜索框输入关键字！");
+
+            }else{
+                self.location="/fullSearch/"+searchValue;
+
+            }            //alert(searchValue);
+        }
+
+    });
+    var selectLeaderDataSource = new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: "/api/user/getalluser",
+                dataType: "json"
+            }
+        }
+    });
+//    $('#selectDelegater').kendoMultiFilterMultiSelect({
+//        maxSelectedItems: 1,
+//        theme: "[bootstrap]",
+//        placeholder: "任务委托人",
+//        filter:'contains',
+//        searchFilters:["Name","userName"],
+//        dataTextField: "Name",
+//        dataValueField: "userName",
+//        autoBind: false,
+//        dataSource: selectLeaderDataSource,
+//        tagTemplate: '#: Name #'
+//    });
+    var validator = $('#selectDelegater').kendoValidator().data("kendoValidator");
+    var validator1=$('#deleteReason').kendoValidator().data("kendoValidator");
+    function delegateTask(e){
+         taskId=$(e).attr("data-taskId");
+//         $.ajax({
+//            type:'post',
+//            url:'/api/taskRollBack/'+taskId,
+//            success:function(){
+//
+//                swal("任务回退成功！");
+//                window.location.reload();
+//
+//            }
+//          });
+
+        $('#DelegateWin').kendoWindow({
+            title: '任务撤回',
+            position: {
+                top: screen.height / 3,
+                left: screen.width / 3
+            },
+            modal: true
+
+        });
+        $("#DelegateWin").data("kendoWindow").open();
+    }
+    function closeWin(){
+        $("#DelegateWin").data("kendoWindow").close();
+    }
+
+    var processId;
+    var taskId1;
+    var taskName1;
+    var type;
+    function deleteTask(e){
+        taskId1=$(e).attr("data-taskId");
+        var taskName = $(e).attr("data-taskName");
+        processId = $(e).attr("data-processId");
+        var title=$(e).attr("data-title");
+        taskName1=$(e).attr("data-taskName");
+        type=$(e).attr("data-taskType");
+        $('#DeletedWin').kendoWindow({
+            title: '任务删除',
+            position: {
+                top: screen.height / 3,
+                left: screen.width / 3
+            },
+            modal: true
+
+        });
+        $("#DeletedWin").data("kendoWindow").open();
+    }
+    function closeWin2(){
+        $("#DeletedWin").data("kendoWindow").close();
+    }
+
+    function submitDelegate(){
+        if(validator.validate()){
+            var delegator="退回任务：";
+             delegator+= $('#selectDelegater').val();
+            $.ajax({
+                 type:'post',
+                url:'/api/taskRollBack/'+taskId+"/"+delegator,
+                success:function(){
+                    $("#DelegateWin").data("kendoWindow").close();
+                    swal("任务退回成功！");
+                    window.location.reload();
+
+                }
+            });
+
+        }
+    }
+
+    function submitDelete(){
+        if(validator1.validate()) {
+            var deleteReason = $('#deleteReason').val();
+            $("#DeletedWin").data("kendoWindow").close();
+            swal(
+                        {
+                            title: "确认删除?",
+                            text: "删除公文后无法复原，是否继续删除？",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "确定!",
+                            cancelButtonText: "取消",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        }, function (isConfirm) {
+
+                        if (isConfirm) {
+                            console.log("submit delete!");
+                                        $.ajax({
+                                            type:'post',
+                                            url:'/api/taskDelete/'+processId+"/"+deleteReason+"/"+taskId1+"/"+type,
+                                            success:function(){
+                                                //$("#DeletedWin").data("kendoWindow").close();
+                                               // swal("任务删除成功！");
+                                                swal({title: "成功", text: "任务删除成功!", type: "success", timer: 3000 },function(){
+                                                    window.location.reload()
+                                                });
+                                            },
+                                            error: function () {
+                                                swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                                            }
+                                        });
+                        } else {
+                                swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                            }
+                    }
+            )
+
+
+
+
+
+
+        }
+    }
+
+
+    function trSelect(){
+        var tbl = document.getElementById("taskTable");
+        for(var i = 1; i < tbl.rows.length; i++){
+            tbl.rows[i].onclick =function(){
+                if(window.cur) window.cur.style.background = "#FFF";
+                this.style.background = "#7DB4D8";
+                window.cur = this;
+            }
+        }
+    }
+
+
+    function deleteMissive(e){
+       var taskName = $(e).attr("data-taskName");
+       var processId = $(e).attr("data-processId");
+        var title=$(e).attr("data-title");
+        if((taskName==("办公室登记")||taskName=="处室拟稿")&&(title==""||title=="暂无标题")) {
+                swal(
+                        {
+                            title: "确认删除?",
+                            text: "删除公文后无法复原，是否继续删除？",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "确定!",
+                            cancelButtonText: "取消",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $.ajax({
+                                    type: 'post',
+                                    url: '/api/deleteMissive/' + processId,
+                                    success: function () {
+                                        swal({title: "删除成功!", text: '', type: "success", timer: 3000 });
+                                        window.location.reload();
+                                    },
+                                    error: function () {
+                                        swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                                    }
+
+                                });
+                            }
+                            else {
+                                swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                            }
+                        }
+                )
+        }
+        else if(authorityFlag=="true") {
+            swal(
+                    {
+                        title: "确认删除?",
+                        text: "删除公文后无法复原，是否继续删除？",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定!",
+                        cancelButtonText: "取消",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: 'post',
+                                url: '/api/deleteMissive/' + processId,
+                                success: function () {
+                                    swal({title: "删除成功!", text: '', type: "success", timer: 3000 });
+                                    window.location.reload();
+                                },
+                                error: function () {
+                                    swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                                }
+
+                            });
+                        }
+                        else {
+                            swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                        }
+                    }
+            )
+        }
+        else{
+            swal({title: "失败!", text: "您没有删除权限!", type: "error", timer: 3000 });
+        }
+    }
+
+
+    jQuery(function ($) {
+        var oTable1 = $("#taskTable").dataTable({
+//            "pagingType":   "iFullNumbersShowPages",
+
+
+            "aoColumns": [
+//                { "bSortable": false },
+                { "bSortable": true },
+                { "bSortable": true },
+                { "bSortable": false },
+                { "bSortable": false },
+                { "bSortable": true },
+                null,
+                { "bSortable": false }
+            ],
+            "fnDrawCallback": function(){
+                var oTable = $("#taskTable").dataTable();
+                $('#redirect').keyup(function(e){
+                    if($(this).val() && $(this).val()>0){
+                        var redirectpage = $(this).val()-1;
+                    }else{
+                        var redirectpage = 0;
+                    }
+                    oTable.fnPageChange( redirectpage );
+                });
+            }
+
+
+
+
+        });
+
+
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                    .each(function () {
+                        this.checked = that.checked;
+                        $(this).closest('tr').toggleClass('selected');
+                    });
+
+        });
+
+
+        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+        function tooltip_placement(context, source) {
+            var $source = $(source);
+            var $parent = $source.closest('table')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+
+            var off2 = $source.offset();
+            var w2 = $source.width();
+
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+    });
+
+
+</script>
+
+<style>
+
+    .table-hover > tbody > tr:hover > td,
+    .table-hover > tbody > tr:hover > th {
+        background-color: #f5f5f5;
+    }
+
+</style>
+
+</body>
+</html>

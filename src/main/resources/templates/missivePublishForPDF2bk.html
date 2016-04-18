@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="${title}"></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+    <script th:replace="header :: header"></script>
+
+    <link rel="stylesheet" href="/css/myTableCSS/myTableCSS.css"/>
+    <link rel="stylesheet" href="/css/myTableCSS/wlsh.defult.css" title="Default Styles" media="screen"/>
+
+</head>
+
+<body style="font-family:'微软雅黑';width:1030px;height:1460px;margin:0;background: none;">
+<div style="width:1030px;height:1460px;">
+    <img th:src=@{/api/bgPng/missivePublish/{instanceID}(instanceID=${instanceID})}
+         th:if="${hasBgPng}"
+         style="float:left;position:absolute;top:0px;left:0px;width:1030px;height:1460px;"/>
+    <h4 class="lighter" style="top: 30px;left:55px;position: absolute;">
+        <i class="icon-hand-right icon-animated-hand-pointer blue"></i>
+        <a th:href="@{/pdfViewer/web/viewer.html?file=/pdf/missivePublish/{instanceid}/{version}/pdf2Pad/{taskid}.pdf(instanceid=${instanceID},version=${newVersionId},taskid=${lastTaskId})}" data-toggle="modal" class="pink"> 查看附件 </a>
+    </h4>
+<div style="width:891px;height:1260px;position:absolute;margin-left: 70px;margin-top:100px;background-image: url('/img/missivePublish.png');background-size:contain;background-repeat:no-repeat;z-index: -1
+">
+<!-- PAGE CONTENT BEGINS -->
+    <div id="missiveForm" style="font-family:'微软雅黑';width:891px;height:1260px;z-index: -1" >
+    <!--<img th:src="${missivePublishForm.backgroudImage!=null?missivePublishForm.backgroudImage:blankImage}"-->
+         <!--style="width: 891px; height: 1260px; position: absolute; margin-left: 0px; background-size: contain; background-repeat: no-repeat;">-->
+    <!--</img>-->
+
+
+    <!--<div style="height: 40px;width: 70px;top: 112px;position: absolute;left: 186px;text-align: center;">-->
+        <!--<label style="font-family:'微软雅黑';" th:text="${missivePublishForm.missiveInfo!=null?missivePublishForm.missiveInfo.missiveNum:''}"></label>-->
+    <!--</div>-->
+    <div style="height: 30px;width: 26px;top: 112px;position: absolute;left: 168px;text-align: center;">
+        <label style="color: red;font-size: 19px;font-family:'微软雅黑';" th:text="${missiveNumber1!=null?missiveNumber1:''}"></label>
+    </div>
+    <div style="height: 30px;width: 53px;top: 112px;position: absolute;left: 200px;text-align: center;">
+        <label th:text="${missiveNumber2!=null?missiveNumber2:''}" style=" font-family:'微软雅黑';"></label>
+    </div>
+    <div style="height: 30px;width: 43px;top: 112px;position: absolute;left: 260px;text-align: center;">
+        <label th:text="${missiveNumber3!=null?missiveNumber3:''}" style=" font-family:'微软雅黑';"></label>
+    </div>
+    <div style="height: 40px;width: 100px;top: 113px;left: 480px;position: absolute;">
+        <label style="font-family:'微软雅黑';"
+               th:text="${missivePublishForm.missiveInfo.secretLevel.secretLevelName!=null?missivePublishForm.missiveInfo.secretLevel.secretLevelName:''}">
+
+        </label>
+    </div>
+    <div style="height: 40px;width: 100px;top: 112px;left: 720px;position: absolute;">
+        <label style="font-family:'微软雅黑';" th:text="${missivePublishForm.missiveInfo.missiveType.typeName!=null?missivePublishForm.missiveInfo.missiveType.typeName:''}">
+
+        </label>
+    </div>
+    <!--签发place-->
+    <div style="height: 189px;width: 410px;top: 192px;left: 45px;position: absolute;">
+        <img th:src="${missivePublishForm.signIssueContent!=null
+                        &&missivePublishForm.signIssueContent.imageurl!=null?missivePublishForm.signIssueContent.imageurl:blankImage}"
+                id="signIssue_img" style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none"/>
+    </div>
+    <div style="height: 189px;width: 410px;top: 192px;left: 45px;background:none;position: absolute;">
+        <textarea
+                th:text="${missivePublishForm!=null
+                            &&missivePublishForm.signIssueContent!=null
+                            &&missivePublishForm.signIssueContent.contentText!=null?missivePublishForm.signIssueContent.contentText:''}"
+                  style="font-family:'微软雅黑';width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none;border:none"></textarea>
+
+    </div>
+
+
+
+
+
+    <!--会签place-->
+    <div  style="height: 189px;width: 410px;top: 192px;left: 460px;position: absolute;">
+        <label id="counterSignBase30img" hidden/>
+    </div>
+    <div  style="height: 189px;width: 410px;top: 192px;left: 460px;;position: absolute;">
+        <img th:src="${missivePublishForm.counterSignContent!=null
+                        &&missivePublishForm.counterSignContent.imageurl!=null?missivePublishForm.counterSignContent.imageurl:blankImage}"
+             style="font-family:'微软雅黑';width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none;"/>
+    </div>
+    <div style="height: 189px;width: 410px;top: 192px;left: 460px;background:none;position: absolute;">
+        <textarea th:text="${missivePublishForm!=null
+                            &&missivePublishForm.counterSignContent!=null
+                            &&missivePublishForm.counterSignContent.contentText!=null?missivePublishForm.counterSignContent.contentText:''}"
+                style="font-family:'微软雅黑';width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none;border: none"></textarea>
+    </div>
+
+
+    <!--主送place-->
+    <div style="top: 450px;left: 80px;position: absolute;">
+        <label th:text="${mainsendGroup!=null?mainsendGroup:''}"
+               style="font-family:'微软雅黑';word-wrap: break-word;width: 355px;"></label>
+    </div>
+    <div style="top: 450px;left: 490px;position: absolute;">
+        <label th:text="${copytoGroup!=null?copytoGroup:''}" style="font-family:'微软雅黑'; word-wrap: break-word;width: 355px;"></label>
+    </div>
+
+    <!---->
+    <div style="height: 35px;width: 280px;top: 618px;left: 160px;position: absolute;">
+        <label  th:text="${missivePublishForm.drafterUser!=null
+                            &&missivePublishForm.drafterUser.group!=null
+                            &&missivePublishForm.drafterUser.group.groupName!=null?missivePublishForm.drafterUser.group.groupName:''}"
+               style="width: 280px;font-family:'微软雅黑';"></label>
+    </div>
+    <div style="height: 35px;width: 280px;top: 665px;left: 145px;position: absolute;">
+        <label th:text="${missivePublishForm.drafterUser!=null
+                            &&missivePublishForm.drafterUser.name!=null?missivePublishForm.drafterUser.name:''}"
+               style="font-family:'微软雅黑';width: 280px;/* border: solid */"></label>
+    </div>
+    <div style="height: 35px;width: 280px;top: 715px;left: 125px;position: absolute;">
+        <label  th:text="${missivePublishForm.drafterUser!=null
+                            &&missivePublishForm.drafterUser.tel!=null?missivePublishForm.drafterUser.tel:''}"
+               style="width: 280px;font-family:'微软雅黑';"></label>
+    </div>
+    <div style="height: 35px;width: 280px;top: 760px;left: 125px;position: absolute;">
+        <label th:text="${missivePublishForm.composeUser!=null
+                            &&missivePublishForm.composeUser.name!=null?missivePublishForm.composeUser.name:''}"
+               style="width: 280px;font-family:'微软雅黑';"></label>
+    </div>
+
+    <div style="height: 35px;width: 250px;top: 618px;left: 608px;position: absolute;">
+        <label th:text="${missivePublishForm.dep_LeaderCheckUser!=null
+                            &&missivePublishForm.dep_LeaderCheckUser.name!=null?missivePublishForm.dep_LeaderCheckUser.name:''}"
+               style="width: 250px;font-family:'微软雅黑'; "></label>
+    </div>
+    <div style="height: 35px;width: 270px;top: 665px;left: 585px;position: absolute;">
+        <label  th:text="${missivePublishForm.officeCheckUser!=null
+                            &&missivePublishForm.officeCheckUser.name!=null?missivePublishForm.officeCheckUser.name:''}"
+               style="width: 270px;font-family:'微软雅黑';"></label>
+    </div>
+    <div style="height: 35px;width: 80px;top: 712px;left: 570px;position: absolute;">
+        <!--<input th:Disabled="${#lists.contains(currentEditableField,'printCount')}?false:true" id="printCount" style="width: 80px;">-->
+        <label id="printCount_lable"th:text="${missivePublishForm.printCount!=null?missivePublishForm.printCount:''}"
+               style="width: 270px;font-family:'微软雅黑';"></label>
+    </div>
+    <div style="height: 35px;width: 270px;top: 760px;left: 530px;position: absolute;">
+        <label id="CheckReader_lable"th:text="${missivePublishForm.checkReader!=null
+                            &&missivePublishForm.checkReader.name!=null?missivePublishForm.checkReader.name:''}"
+               style="font-family:'微软雅黑';width: 280px;"></label>
+    </div>
+
+
+    <!--公开属性-->
+    <div th:if="${missivePublishForm.gov_info_attr==1}" style="font-family:'微软雅黑';position: absolute;height: 18px;width: 18px;top:818px;left: 224px;
+    background-image: url('/img/selected.png');background-size:contain;background-repeat:no-repeat"></div>
+    <div th:if="${missivePublishForm.gov_info_attr==2}" style="font-family:'微软雅黑';position: absolute;height: 18px;width: 18px;top:818px;left: 467px;
+    background-image: url('/img/selected.png');background-size:contain;background-repeat:no-repeat"></div>
+    <div th:if="${missivePublishForm.gov_info_attr==3}" style="font-family:'微软雅黑';position: absolute;height: 18px;width: 18px;top:868px;left: 224px;
+    background-image: url('/img/selected.png');background-size:contain;background-repeat:no-repeat"></div>
+    <!--标题-->
+    <div style="height: 113px;width: 770px;top: 980px;left: 95px;position: absolute;">
+                        <pre style="background: none;border: none">
+                        <label th:text="${missivePublishForm.missiveTittle!=null?missivePublishForm.missiveTittle:''}"
+                               style="font-family:'微软雅黑';word-wrap: break-word;width: 740px;"></label>
+                        </pre>
+        <!--<textarea th:Disabled="${#lists.contains(currentEditableField,'missiveTittle')}?false:true" id="missiveTittle" style="width: 100%;height: 100%;position: absolute;;"></textarea>-->
+    </div>
+    <!--附件标题-->
+    <div style="height: 75px;width: 770px;top: 1130px;left: 95px;position: absolute;">
+                        <pre style="background: none;border: none">
+                        <label  th:text="${missivePublishForm.attachmentTittle!=null?missivePublishForm.attachmentTittle:''}"
+                               style="word-wrap: break-word;width: 740px;font-family:'微软雅黑';"></label>
+                        </pre>
+    </div>
+
+
+
+
+    </div>
+
+</div>
+
+
+    </div>
+<!--发文稿纸-->
+
+<!-- inline scripts related to this page -->
+<style>
+    #missiveForm div label,#missiveForm div pre label,#missiveForm div textarea{
+        font-size: 18px;
+        font-family: "SimSun";
+        color: #666;
+    }
+    #missiveForm div{
+        margin-left: -12px;
+        color: #666;
+    }
+
+</style>
+</body>
+</html>

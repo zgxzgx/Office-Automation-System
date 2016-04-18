@@ -1,0 +1,43 @@
+[
+    {
+        "id":"title",
+        "name": "标题",
+        "type": "textarea",
+        "default": "",
+        "info": "",
+        "avable": "true",
+        "label": "标题"
+    },
+    {
+        "name": "主送部门",
+        "type": "user select",
+        "default": "",
+        "info": "",
+        "savable": "true",
+        "label": "主送部门"
+    },
+    {
+        "name": "抄送部门",
+        "type": "user select",
+        "default": "",
+        "info": "",
+        "savable": "true",
+        "label": "抄送部门"
+    },
+    {
+        "name": "抄送",
+        "type": "text input",
+        "default": "",
+        "info": "",
+        "savable": "true",
+        "label": "抄送"
+    },
+    {
+        "name": "主送",
+        "type": "text input",
+        "default": "",
+        "info": "",
+        "savable": "true",
+        "label": "主送"
+    }
+]

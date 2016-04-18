@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>jstest</title>
+
+    <script src="assets/js/jquery-2.1.1.min.js"></script>
+    <script src="js/jSignature.min.js"></script>
+</head>
+<body>
+<div style="width: 800px;height: 600px; border-style: solid" id="signdiv"></div>
+<script>
+
+    $(function() {
+        $("#signdiv").jSignature({
+            'width' : 800
+            ,'height' : 600
+            ,'decor-color': '#FFF'
+            ,'showUndoButton': true
+
+        });
+
+    });
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>公文检索</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+   <script th:replace="header :: header"></script>
+
+    <style type="text/css">
+
+        #itemContainer em {background:#ffff00;font-style: normal;}
+
+    </style>
+
+</head>
+
+<body>
+
+<div th:replace="navbar :: navbar(${session.user})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'wzpb'})"></div>
+
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="/">首页</a>
+            </li>
+            <li class="active">全文检索</li>
+        </ul><!-- .breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+                <span class="input-icon">
+                    <input type="text" style="text-align: left;" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                    <i class="icon-search nav-search-icon"></i>
+                </span>
+        </div><!-- #nav-search -->
+    </div>
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <!--<input id="datepicker" value="10/10/2011" style="width:150px;" />-->
+                <form class="form-search">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <div class="input-group">
+                                <input class="form-control" id="searchValue" th:value="${searchValue}" style="text-align:left;width: 100%;height: 130%"/>
+                                <span class="input-group-btn">
+                                    <button type="button"
+                                            class="btn btn-purple btn-sm" id="searchBtn" style="padding: 2px 9px;">
+                                        搜索
+                                        <i class="icon-search icon-on-right bigger-110"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="space-2"></div>
+
+                <div class="row">
+                    <div class="col-xs-8">
+
+                        <ul class="message-content" id="itemContainer" style="border: 0;">
+
+                        </ul><!-- /.message-content -->
+                        <div class="message-footer clearfix hide" id="pageFooter">
+
+                            <div class="row" >
+                                <ul class="pagination" style="text-align: center;font-size: 16px;margin-left: 40px;"></ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/bootstrap-paginator.js"></script>
+<!--<script src="/js/jPages.js"></script>-->
+
+<script>
+
+    jQuery(function($) {
+        // create DatePicker from input HTML element
+        var searchVal=$("#searchValue")[0].value;
+        if(searchVal!=""){
+            searchFunc(searchVal,0,5);
+        }
+        var availableTags = [
+            "发文流程",
+            "收文流程",
+            "签报流程",
+            "传真电报"
+        ];
+
+        $("#search").kendoAutoComplete({
+            dataSource: availableTags,
+            filter: "startswith",
+            placeholder: "公文检索..."
+        });
+
+    });
+
+    //查询click事件
+    $("#searchBtn").click(function(){
+
+        var searchValue=$("#searchValue").val();
+        searchFunc(searchValue,0,5);
+
+    });
+
+    //查询 enter事件
+    $("#searchValue").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+
+            searchFunc(searchValue,0,5);
+        }
+
+    });
+
+    //navbar 搜索框
+    $("#nav-search-input").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+            $("#searchValue")[0].value=searchValue;
+            searchFunc(searchValue,0,5);
+        }
+
+    });
+
+    //查询，失去焦点事件
+//    $("#nav-search-input").blur(function(event){
+//
+//        var searchValue=event.currentTarget.value;
+//        searchFunc(searchValue);
+//    });
+
+    function searchFunc(searchValue,from,size){
+
+        $.ajax({
+
+            url:"/api/fullSearch/search",
+            type:"POST",
+            dataType:"json",
+            data:{searchValue:searchValue,from:from,size:size},
+            success:function(result){
+
+                var resultHtml="";
+                var backLength=result.hits.hits.length;
+
+                var backResult=result.hits.hits;
+
+                var total=parseInt(result.hits.total/size);
+
+                //init paginator
+                $('.pagination').paginator({
+                    current_page: from,    //当前所在的页码
+                    page_count: total,     //总页数
+                    button_number:size,    //需要显示的页码数目
+                    pager_click: func1    //回调函数
+                });
+
+                function func1(page_id) {
+                    //alert( '跳转: ' + page_id );
+                    searchFunc(searchValue,page_id,size);
+                }
+
+
+                if(backLength>0){
+
+                    $.each(backResult,function(index, value)
+                    {
+                        //console.log(value);
+                        $.each(value.highlight,function(key,value2)
+                        {
+                            value._source[key]=value2[0];
+                        });
+                    });
+
+                    for(var i=0;i<backLength;i++){
+
+                        var result1=backResult[i]._source;
+
+                        resultHtml+='<li><div class="message-header clearfix"><div class="pull-left"><div class="space-2"></div><i class="icon-star orange2 mark-star"></i>&nbsp;<a id="pdfUrl" href="@#@#" target="_blank" class="sender">'
+                                +result1.missiveTitle+'</a>&nbsp;&nbsp;&nbsp;&nbsp;<span  style="color: #006621">'+'公文编号：'+dealNull(result1.missiveNum)+
+                                '</span></div></div><div class="message-header clearfix"><div class="pull-left"><div class="space-2"></div>&nbsp;&nbsp;<span style="color: #006621">'+'归档时间:'+dealNull(result1.time)+
+                                '</span>&nbsp;&nbsp;&nbsp;<span style="color: #006621">'+'归档人:'+dealNull(result1.author)+'</span>&nbsp;&nbsp;&nbsp;<span style="color: #006621">'+'公文类型:'+dealNull(result1.missiveType)+'</span>&nbsp;&nbsp;&nbsp;</div></div><div class="message-body"><p>'+subMissiveContent(result1.missiveContent,0,10)+
+                                '</p></div><div class="hr"></div></li>';
+
+                        //alert($("#pdfUrl"));
+
+                        if(result1.missivePdfUrl==null){
+                            resultHtml=resultHtml.replace("@#@#","#");
+                        }else{
+                            resultHtml=resultHtml.replace("@#@#",result1.missivePdfUrl);
+                        }
+
+                    }
+
+                    $("#itemContainer").html("");
+                    $("#itemContainer").append(resultHtml);
+
+                }
+                else{
+
+                    var errorHtml='<div>非常抱歉：未找到关于<strong style="color: #ff0000">"'+searchValue+'"</strong>的搜索结果!</div>';
+
+                    $("#itemContainer").html("");
+                    $("#itemContainer").append(errorHtml);
+
+                }
+
+                $("#pageFooter").removeClass("hide");
+
+            },
+            error:function(){
+
+                var errorHtml='<div>未找到关于<strong style="color: #ff0000">'+searchValue+'</strong>的搜索结果</div>';
+
+                $("#itemContainer").html("");
+                $("#itemContainer").append(errorHtml);
+            }
+
+        });
+        //截取公文内容
+        function subMissiveContent(content,start,len){
+            if(content!=null && content.length>20){
+                return content.substring(start,len);
+            }else{
+                return content==null?"":content;
+            }
+
+        }
+        function dealNull(value){
+            if(value==null){
+                return "";
+            }else{
+                return value;
+            }
+        }
+
+
+    }
+
+
+</script>
+
+<!-- inline scripts related to this page -->
+</body>
+</html>

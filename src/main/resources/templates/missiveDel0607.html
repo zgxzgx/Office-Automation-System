@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title th:text="流程管理"></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--<meta http-equiv="refresh" content="240" />&lt;!&ndash;一分钟刷新页次页面&ndash;&gt;-->
+   <script th:replace="header :: header"></script>
+
+
+
+</head>
+
+<body>
+<script th:inline="javascript">
+
+    var userbase64 = [[${userbase64}]];
+
+    var user=/*[[${user.userName}]]*/null;
+
+
+
+</script>
+
+<div th:replace="navbar :: navbar(${user})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'xtsz-gwsc'})"></div>
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="/">首页</a>
+            </li>
+
+            <li>
+                <a href="#">流程管理</a>
+            </li>
+
+        </ul><!-- .breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+            <span class="input-icon">
+                <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </div><!-- #nav-search -->
+    </div>
+
+    <div class="page-content">
+        <div id="DelegateWin" style="text-align: center;display: none;width: 550px;height:400px">
+            <div style="margin-top:100px;margin-left:100px">
+                <label class="blue" style="float:left;font-size: 20px">
+                    <span class="lbl"> 当前任务节点：</span>
+                </label>
+                <label style="margin-left:15px;float:left" id="currentNodeData" contenteditable="false"/>
+            </div>
+            <div style="margin-top:200px;margin-left:100px">
+                <label class="blue" style="float:left;font-size: 20px">
+                    <span class="lbl"> 选择任务节点：</span>
+                </label>
+                <select style="margin-left:20px;width:200px;float:left" id="selectDelegater" required validationMessage="委托人不能为空！"></select>
+            </div>
+            <div style="margin-top:300px;margin-left:260px">
+                <button class="btn btn-info" type="button" onclick="submitDelegate()">
+                    <i class="icon-ok bigger-110"></i>
+                    提交
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn" type="reset" onclick="closeWin()">
+                    <i class="icon-undo bigger-110"></i>
+                    取消
+                </button>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="table-responsive">
+                <table  id="sample-table-2" class="table table-bordered table-hover no-margin-bottom no-border-top" style="background-color: #FFFFFF">
+                    <thead>
+                    <tr>
+                        <!--<th style="text-align: center;vertical-align:middle"> 置顶</th>-->
+                        <th style="text-align: center;width:110px">任务人</th>
+                        <th style="text-align: center;width:110px">类型</th>
+                        <th style="text-align: center;width:170px">任务名称</th>
+                        <th style="text-align: center">公文标题</th>
+                        <th style="text-align: center;width:130px">任务时间</th>
+                        <th style="text-align: center;width:130px">持续时间</th>
+                        <!--<th style="text-align: center">延误设定</th>-->
+                        <!--<th style="text-align: center">延误提醒</th>-->
+                        <th style="text-align: center;width:200px">查看任务 </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="height:50px" th:each="taskIng: ${tasksIng}">
+                        <!--<td style="text-align: center;vertical-align:middle"><label class="inline"> <input th:id="page" th:checked="${taskIng.description=='1'}?'true':'false'" th:value="${taskIng.processInstanceId}" type=checkbox  class="ace" onclick="newFunc(this)"/><span class="lbl"></span></label>-->
+                        <!--<i th:class="${taskIng.description=='1'}?'message-star icon-star orange2':'message-star icon-star-empty light-grey'"></i></td>-->
+                        <td id="txt" style="text-align: center;vertical-align:middle" th:text="${taskIng.taskAssName}"></td>
+                        <td style="text-align: center;vertical-align:middle" th:text="${taskIng.typeTitle} "></td>
+                        <td style="text-align: center;vertical-align:middle" th:text="${taskIng.name}"></td>
+                        <td style="text-align: center;vertical-align:middle" th:text="${taskIng.missiveTitle}"></td>
+                        <td style="text-align: center;vertical-align:middle" th:text="${taskIng.taskStartTime}"></td>
+                        <td style="text-align: center;vertical-align:middle" th:text="${taskIng.intelTime}"></td>
+                        <!--<td style="text-align: center;vertical-align:middle" th:text="${taskIng.DelayNum}"></td>-->
+                        <!--<td style="text-align: center;vertical-align:middle" th:text="${taskIng.DelayWarm}"></td>-->
+                        <td style="text-align: left;vertical-align:middle">
+                            <a th:href="@{/historyProcess/{instanceid}(instanceid=${taskIng.processInstanceId})}"
+                               target="_blank" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp
+                            <a th:attr="data-taskId=${taskIng.id},data-processId=${taskIng.processInstanceId},data-taskName=${taskIng.name},data-missiveType=${taskIng.typeTitle}" onclick="delegateTask(this)"
+                               target="_blank" class="btn btn-minier  btn-warning"><i class="icon-check"></i>流程跳转</a>&nbsp
+
+
+                             <a class="btn btn-minier bigger btn-danger" onclick="deleteMissive(this)" th:attr="data-taskName=${taskIng.name},data-processId=${taskIng.processInstanceId},data-title=${taskIng.missiveTitle}" ><i class="icon-check"></i>删除</a></td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--<div class="modal-footer no-margin-top" style="margin-bottom: 1px">-->
+            <!--<ul class="pagination pull-right no-margin">-->
+            <!--<li  th:class="${LookPage==1}?'prev disabled':'prev'">-->
+            <!--<a th:href="@{/xtsz/gwsc/{pageNum}(pageNum=${LookPage-1})}" th:onclick="${LookPage==1}?'return false'">-->
+            <!--<i class="icon-double-angle-left"></i>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li th:each="num: ${#numbers.sequence(1,taskIngTotalNum)}" th:class="${num==LookPage}?'active'">-->
+            <!--<a th:href="@{/xtsz/gwsc/{pageNum}(pageNum=${num})}" th:text="${num}"></a>-->
+            <!--</li>-->
+            <!--<li th:class="${LookPage==taskIngTotalNum}?'next disabled':'next'">-->
+            <!--<a th:href="@{/xtsz/gwsc/{pageNum}(pageNum=${LookPage+1})}"th:onclick="${LookPage==taskIngTotalNum}?'return false'">-->
+            <!--<i class="icon-double-angle-right"></i>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--</ul>-->
+            <!--</div>-->
+        </div>
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+</div><!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+<!-- page specific plugin scripts -->
+
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script src="/assets/js/jquery.dataTables.bootstrap.js"></script>
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/custom/kendomultiselect-filter-plugin.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+
+<script style="javascript" th:inline="javascript">
+
+var taskList = /*[[${tasksIng}]]*/[];
+var taskId="";
+var instantId="";
+var taskName="";
+var dropDownSource=null;
+var missiveType="";
+var SignData = [
+    {text: "处室拟稿", value: "BureauDraft"},
+    {text: "处室领导审核", value: "BureauLeaderCheck"},
+    {text: "相关部门会签", value: "DepartCouSign"},
+    {text: "办公室审核及编号", value: "OfficeCheck"},
+    {text: "领导审批", value: "LeaderSign"},
+    {text: "处室处理", value: "BureauHandle"}
+
+];
+var PublishData = [
+    {text: "处室拟稿", value: "BureauDraft"},
+    {text: "处室领导审核", value: "BureauLeaderCheck"},
+    {text: "相关部门会签", value: "DepartCouSign"},
+    {text: "办公室审核及编号", value: "OfficeCheck"},
+    {text: "领导审批", value: "LeaderSign"},
+    {text: "文印室套红排版打印", value: "SetLayout"},
+    {text: "拟稿处室分发", value: "BureauIssue"}
+
+];
+var ReceiveData = [
+    {text: "办公室登记", value: "OfficeRegist"},
+    {text: "办公室拟办及审核", value: "ChargerCheck"},
+    {text: "领导批示", value: "LeaderSign"},
+    {text: "办公室处理", value: "OfficeDispose"},
+    {text: "分发阅办", value: "usertask1"},
+    {text: "承办处理", value: "usertask2"}
+
+];
+
+
+
+
+//    var selectLeaderDataSource = new kendo.data.DataSource({
+//        transport: {
+//            read: {
+//                url: "/api/user/getalluser",
+//                dataType: "json"
+//            }
+//        }
+//    });
+
+
+
+var validator = $('#selectDelegater').kendoValidator().data("kendoValidator");
+function delegateTask(e){
+    taskId=$(e).attr("data-taskId");
+    instantId=$(e).attr("data-processId");
+    taskName=$(e).attr("data-taskName");
+    missiveType=$(e).attr("data-missiveType");
+    if(missiveType=="收文流程"){
+        dropDownSource=ReceiveData;
+    }else if(missiveType=="发文流程"){
+        dropDownSource=PublishData;
+    }else dropDownSource=SignData;
+    $('#selectDelegater').kendoMultiFilterMultiSelect({
+        maxSelectedItems: 1,
+        theme: "[bootstrap]",
+        placeholder: "选择跳转结点",
+        filter:'contains',
+        searchFilters:["text","value"],
+        dataTextField: "text",
+        dataValueField: "value",
+        autoBind: false,
+        dataSource: dropDownSource,
+        tagTemplate: '#: text #'
+    });
+
+
+    $('#currentNodeData').html(taskName);
+//         $.ajax({
+//            type:'post',
+//            url:'/api/taskRollBack/'+taskId,
+//            success:function(){
+//
+//                swal("任务回退成功！");
+//                window.location.reload();
+//
+//            }
+//          });
+//        $.ajax({
+//            type:'post',
+//            url:'/api/getCurrentNode/'+taskId+'/'+instantId,
+//            success:function(result){
+//
+//
+//
+//            }
+//        });
+
+    $('#DelegateWin').kendoWindow({
+        title: '流程跳转',
+        position: {
+            top: screen.height / 3,
+            left: screen.width / 3
+        },
+        modal: true
+
+    });
+    $("#DelegateWin").data("kendoWindow").open();
+}
+function closeWin(){
+    $("#DelegateWin").data("kendoWindow").close();
+}
+function submitDelegate(){
+    if(validator.validate()){
+        var delegator = $('#selectDelegater').val()[0];
+        $.ajax({
+            type:'post',
+            url:'/api/getCurrentNode/'+taskId+'/'+instantId+'/'+delegator,
+            success:function(){
+
+                swal("任务跳转成功！");
+                window.location.reload();
+
+            }
+        });
+
+    }
+}
+
+
+
+
+$("#nav-search-input").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+
+        var searchValue=event.currentTarget.value;
+        if(searchValue==""){
+            swal("请在搜索框输入关键字！");
+
+        }else{
+            self.location="/fullSearch/"+searchValue;
+
+        }            //alert(searchValue);
+    }
+
+});
+
+function newFunc(vi) {
+    var text=vi.value;
+    var text2=document.getElementById("txt").innerHTML;
+    if(vi.checked){
+
+        $.ajax({
+            url: "/api/config/actRuTaskInsert",
+            data: {data: text, isTop: 1}
+        });
+    }else {
+        $.ajax({
+            url: "/api/config/actRuTaskInsert",
+            data: {data: text, isTop: 0}
+        });
+    }
+    window.location.href="/cbdb/1";
+
+}
+
+function deleteMissive(e){
+    var taskName = $(e).attr("data-taskName");
+    var processId = $(e).attr("data-processId");
+    var title=$(e).attr("data-title");
+    swal(
+            {
+                title: "确认删除?",
+                text: "删除公文后无法复原，是否继续删除？",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定!",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/api/deleteMissiveByAdmin/' + processId,
+                        success: function () {
+                            swal({title: "删除成功!", text: '', type: "success", timer: 3000 });
+                            window.location.reload();
+                        },
+                        error: function () {
+                            swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                        }
+
+                    });
+                }
+                else {
+                    swal({title: "失败!", text: "处理已经被取消!", type: "error", timer: 3000 });
+                }
+            }
+    )
+
+}
+
+
+
+jQuery(function ($) {
+    var oTable1 = $("#sample-table-2").dataTable({
+        "aoColumns": [
+            { "bSortable": false },
+            { "bSortable": true },
+            { "bSortable": false },
+            { "bSortable": false },
+            { "bSortable": true },
+            null,
+            { "bSortable": false }
+        ] });
+
+
+    $('table th input:checkbox').on('click', function () {
+        var that = this;
+        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+
+    });
+
+
+    $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+    function tooltip_placement(context, source) {
+        var $source = $(source);
+        var $parent = $source.closest('table')
+        var off1 = $parent.offset();
+        var w1 = $parent.width();
+
+        var off2 = $source.offset();
+        var w2 = $source.width();
+
+        if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+        return 'left';
+    }
+});
+
+
+
+</script>
+
+
+
+</body>
+</html>

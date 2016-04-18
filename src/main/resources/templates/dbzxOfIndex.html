@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="/assets/css/ace.min.css" rel="stylesheet"/>
+    <link href="/css/kendo.default.min.css"rel="stylesheet"/>
+    <script src="/js/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/kendo.all.min.js"></script>
+    <script src="/js/cultures/kendo.culture.zh-CN.min.js"></script>
+
+</head>
+<body>
+<script th:inline="javascript">
+    var user=/*[[${user.userName}]]*/null;
+</script>
+<div >
+    <div class="row">
+        <div class="col-xs-12">
+            <!--主要内容-->
+            <div style="margin: 40px auto;margin-left:5.1%">
+                <ul class="item-list">
+
+                    <li class="item-red clearfix" style="width:760px;">
+                        <label class="inline">
+                            <span class="lbl" style="font-size:17px;">流程类型&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp任务名称&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp公文标题</span>
+                        </label>
+                    </li>
+                </ul>
+                <div id ="listView"></div>
+            </div>
+        </div>
+    </div>
+
+        <div style="width:200px">
+        <input id="deadline" name="deadline" required validationMessage="请输入办理时限" style="font-size:18px;width:200px;height:30px;"/>
+        </div>
+
+</div>
+<script type="text/kendo-x-tmpl" id="template">
+    <div>
+        <ul class="item-list">
+
+           <li class="item-red clearfix" style="width:760px">
+                <label class="inline" style="width:600px;float:left">
+                    <div class="lbl" style="font-size:13px;width:100px;float:left">#:processname#</div><div class="lbl" style="font-size:13px;margin-left:20px;width:130px;float:left">#:name#</div><div class="lbl" style="font-size:13px;margin-left:260px;width:300px">#:title#</div>
+                </label>
+
+                <div class="inline pull-right position-relative dropdown-hover">
+                     <a href="/historyProcess/#:instanceid#" class="btn btn-minier bigger btn-success"><i class="icon-check"></i>任务信息</a>&nbsp&nbsp<a href="#:taskurl#" class="btn btn-minier bigger btn-primary"><i class="icon-check"></i>处理</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script style="javascript">
+    //var user="dinghong";
+    //var userCode="Basic dGlzc290OnRpc3NvdA==";
+    var taskList=[];
+    var tasks=[];
+    var taskId="";
+    var taskName="";
+    var processId="";
+    var mTitle="";
+    var processInstanceId="";
+    var processName="";
+    var taskUrl="";//任务的跳转地址
+    $(function(){
+        //办理时限控件
+        $('#deadline').kendoDatePicker();
+        //获取待办任务数组
+        $.ajax({
+            url:'/api/getTasks/'+user,// serverActi+"activiti-rest/service/runtime/tasks?assignee="+user+"&size=30",    //请求的url地址http://demos.telerik.com/kendo-ui/service/Products
+            dataType: "json",   //返回格式为json
+            async: false,//请求是否异步，默认为异步，这也是ajax重要特性
+            type: "GET",   //请求方式
+            /*  beforeSend : function(req) {
+             req.setRequestHeader('Authorization', userCode);
+             },*/
+            success:function(result){
+                tasks=result;
+                var dataNum = tasks.length>5?5:tasks.length;
+                for(var i=0; i<dataNum;i++)
+                {
+                    taskId=tasks[i].id;//任务编号
+                    taskName=tasks[i].name;//任务名称
+                    processInstanceId=tasks[i].processInstanceId;//流程实例id
+                    processId=tasks[i].processDefinitionId;//.split(":")[0];//获取流程类型
+                    process=tasks[i].processDefinitionId.split(":")[0];
+                    mTitle=tasks[i].missiveTitle==null?"无标题":tasks[i].missiveTitle;
+
+                    //processName=tasks[i].description;//流程名
+                    switch(process){
+                        case "FaxId":
+                            processName="传真电报";
+                            taskUrl= "/FaxCable/"+taskId+"/"+processInstanceId;
+                            break;
+                        case "PublishMissiveId":
+                            processName="发文流程";
+                            taskUrl="/missive/missivePublish/"+processInstanceId+"/"+taskId;
+                            break;
+                        case "ReceiptId":
+                            processName="收文流程";
+                            taskUrl="/"+processId+"/"+processInstanceId+"/"+taskId;
+                            break;
+                        case "SignId":
+                            processName="签报流程";
+                            taskUrl="/missiveSign/SignMissive/"+processInstanceId+"/"+taskId;
+                            break;
+                    }
+                    pushArray();
+                }
+            },
+            error:function(){
+                //请求出错处理
+            }
+        });
+        //生成待办任务列表
+        $("#listView").kendoListView({
+            dataSource: taskList,
+            template: kendo.template($("#template").html())
+
+        });
+        function pushArray(){
+            taskList.push({
+                name:taskName,
+                processid:processId,
+                taskid:taskId,
+                instanceid:processInstanceId,
+                processname:processName,
+                title:mTitle,
+                taskurl:taskUrl
+            });
+        }
+
+
+
+    });
+
+</script>
+</body>
+</html>

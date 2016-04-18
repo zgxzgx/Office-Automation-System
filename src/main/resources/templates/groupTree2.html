@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>国家海洋局东海预报中心办公系统</title>
+    <link rel="icon" href="img/owl1.ico" type="image/x-icon">
+
+    <link rel="Bookmark" href="img/owl1.ico" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/assets/js/html5shiv.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+
+    <!-- basic styles -->
+    <script th:replace="header :: header"></script>
+    <!--kendo styles-->
+    <link href="/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
+    <link href="/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+
+    <script src="/js/jquery-2.1.1.min.js"></script>
+
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/kendo.all.min.js"></script>
+</head>
+<body>
+<div th:replace="navbar :: navbar(${user})"></div>
+    <div class="main-container" id="main-container">
+        <script type="text/javascript">
+            try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+        </script>
+        <div class="main-container-inner">
+            <a class="menu-toggler" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+            </a>
+            <div th:replace="slider :: slidermenu(${'dbzx'})"></div>
+            <div class="main-content">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <script type="text/javascript">
+                        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                    </script>
+
+                    <ul class="breadcrumb">
+                        <li>
+                            <i class="icon-home home-icon"></i>
+                            <a href="#">首页</a>
+                        </li>
+                        <li class="active">控制台</li>
+                    </ul><!-- .breadcrumb -->
+
+                    <div class="nav-search" id="nav-search">
+                        <span class="input-icon">
+                            <input type="text" placeholder="搜索..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                            <i class="icon-search nav-search-icon"></i>
+                        </span>
+                    </div><!-- #nav-search -->
+                </div>
+                <div class="page-content">
+                    <div id="treeview" style="overflow:visible;float:left;width:15%" ></div>
+                    <div id="tabstrip" style="float: left;width:80%">
+                        <ul>
+                            <li id="tabUser">下属用户</li>
+                            <li>下属组</li>
+                        </ul>
+                        <div>
+                            <div  id="gridUser"></div>
+                        </div>
+                        <div>
+                            <div  id="gridGroup"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<script>
+    var serviceRoot = "/api/group";//根地址
+    var groupId=1;
+    var homogeneous;  //左侧树形数据源
+    var gridUserData;//用户数据源
+    var gridGroupData;//组数据源
+
+    //程序主入口
+    $(function($){
+
+
+        setDataSource();//设置用户数据源
+        setUserGrid();//设置用户grid
+
+        setGroupDataSource();//设置组数据源
+        setGroupGrid();//设置组grid
+        setTreeView();//设置树形控件
+        var tree=$("#treeview").data("kendoTreeView");
+        tree.expand(".k-state-hover");
+
+        tree.select($("#treeView").find(".k-item").first());
+
+        $("#treeview").on("click", ".k-in", function(e) {
+            tree.toggle($(e.target).closest(".k-item"));
+        });
+    })
+    //搜索监听
+    $("#nav-search-input").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+            if(searchValue==""){
+                swal("请在搜索框输入关键字！");
+
+            }else{
+                self.location="/fullSearch/"+searchValue;
+
+            }            //alert(searchValue);
+        }
+
+    });
+    function onRowBound() {
+        $(".k-grid-view").find("span").addClass("k-icon k-view");
+    }
+
+    //设置用户grid
+    function setUserGrid(){
+        var gridUser=$("#gridUser").kendoGrid({
+            dataSource:gridUserData,
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        startswith: "选择条件",
+                        eq: "等于",
+                        neq: "不等于"
+
+                    }
+                },
+                messages: {
+                    info: "筛选",
+                    and: "且",
+                    or: "或",
+                    filter: "搜索",
+                    clear: "取消"
+                }
+
+            },
+            toolbar:[{name:"create",text:"添加新用户"}],
+            columns:[
+                {field :"name",title:"姓名"},
+                {field :"userName",title:"用户名"},
+                {hidden: true,field :"password",title:"密码",
+                    //密码编辑输入暗文形式
+                    editor: function (container, options) {
+                        $('<input data-text-field="' + options.field + '" ' +
+                                'class="k-input k-textbox" ' +
+                                'type="password" ' +
+                                'data-value-field="' + options.field + '" ' +
+                                'data-bind="value:' + options.field + '"/>')
+                                .appendTo(container)
+                    }
+                },
+
+                {field:"sex",title:"性别",editor: sexDropDownEditor,template: "#=sex#"},
+                {field:"tel",title:"手机"},
+                {field:"email",title:"邮箱"},
+
+
+                {command:[
+                    {name:"view",text:"查看",
+                        click:function(e){
+
+                            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                            var url ="/user/info/"+dataItem.id+".html";
+                            window.open(url);
+                        }
+                    },
+                    { name: "edit",text: { edit: "编辑", cancel: "取消", update: "更新" } },
+
+                    { name: "destroy", text: "删除",click: function (e) {
+
+                        var entityGrid = $("#gridUser").data("kendoGrid");
+                        var row=entityGrid.select();
+                        var data=entityGrid.dataItem(row);
+                        if (confirm('你确定要删除用户：'+data.name)) {
+                            var dataSource = $("#gridUser").data("kendoGrid").dataSource;
+                            dataSource.remove(data);
+                            dataSource.sync();
+                        }
+                    }}
+
+                ],width:250}
+            ],
+            dataBound: onRowBound,
+            pageable: {
+                pageSize: 10,
+                buttonCount:10,
+                input: true,
+                messages:{
+                    display:"共{2}条记录",
+                    first:"第一页",
+                    last:"最后一页",
+                    next:"下一页",
+                    previous:"前一页",
+                    empty:"没有数据",
+                    morePages:"更多页",
+                    itemsPerPage:"项数据每页",
+                    page:"第",
+                    of:"页"
+                }
+            },
+            selectable: "row",
+            editable: {
+                mode:"popup",
+                confirmation: "确认删除这条记录?"
+            }
+        }).data("kendoGrid");
+
+
+    }
+    //设置用户据数据源
+    function setDataSource(){
+        gridUserData=new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url:serviceRoot+"/user?groupId="+groupId,
+                    dataType:"json"
+                },
+                create: {
+                    url:serviceRoot+"/createUser?groupId="+groupId,
+                    dataType:"json"
+                },
+                update: {
+                    url:serviceRoot+"/updateUser",
+                    dataType:"json"
+                },
+                destroy:{
+                    url:serviceRoot+"/deleteUser",
+                    dataType:"json"
+                },
+                parameterMap: function(options, operation) {
+
+
+                    var sexField="";
+                    if (operation !== "read" ) {
+                        console.log("myoperation:"+operation);
+
+                        if(options.sex.sex==undefined){
+                            sexField=options.sex;
+                        }else{
+                            sexField=options.sex.sex;
+                        }
+                        var data={id:options.id,
+                            name:options.name,
+                            userName:options.userName,
+                            password:options.password,
+                            sex:sexField,
+                            tel:options.tel,
+                            email:options.email
+                        };
+                        return data;
+                    }
+                    else{
+                        return groupId;
+                    }
+                }
+            },
+            pageSize: 10,
+            schema:{
+                model:{
+                    id:"id",
+                    fields:{
+                        id:{editable:false,nullable:true},
+                        name:{validation:{required: { message: "必须填写真实姓名" } }},
+                        userName:{validation:{required: { message: "必须填写用户名" } }},
+                        sex:{defaultValue:{sex:"男"} },
+                        tel:{type:"string",
+                            validation:{required: { message: "必须填写手机号" } }
+                        },
+                        email:{type:"email",
+                            validation:{required:{ message: "必须填写邮箱" } }
+                        },
+                        password:{type:"password",validation:{
+                            required:{ message: "必须填写至少6位密码" },
+                            validatePassword: function (input) {
+//                                alert(input.attr("data-bind"));
+                                if (input.attr("data-bind") == "value:password") { // check if this is the element to validate
+//                                    alert(input.val().length);
+                                    if (input.val().length < 6) {
+                                        input.attr("data-validatePassword-msg", "必须填写至少6位密码");
+                                        return false;
+                                    }
+                                    else
+                                        return true;
+                                }
+                                return true;
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        });
+    }
+    //设置组grid
+    function setGroupGrid(){
+        var gridGroup=$("#gridGroup").kendoGrid({
+            dataSource:gridGroupData,
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        startswith: "选择条件",
+                        eq: "等于",
+                        neq: "不等于"
+
+                    }
+                },
+                messages: {
+                    info: "筛选",
+                    and: "且",
+                    or: "或",
+                    filter: "搜索",
+                    clear: "取消"
+                }
+
+            },
+            toolbar:[{name:"create",text:"添加新组"}],
+            columns:[
+                {field:"groupName",title:"组名"},
+                {field:"description",title:"描述"},
+                { command: [
+                    { name: "edit",text: { edit: "编辑", cancel: "取消", update: "更新" } },
+                    {name: "destroy", text: "删除", click: function(e){
+                        var entityGrid = $("#gridGroup").data("kendoGrid");
+                        var row=entityGrid.select();
+                        var data=entityGrid.dataItem(row);
+//                          console.log("deleteGroupID"+data.id);
+//                          alert(data.id);
+                            if (confirm('你确定要删除组：'+data.groupName)) {
+                            var dataSource = $("#gridGroup").data("kendoGrid").dataSource;
+                            dataSource.remove(data);
+                            dataSource.sync();
+                        }
+                    } }
+
+                ],
+                    title: "&nbsp;" }
+            ],
+            pageable: {
+                buttonCount:3,
+                input: true,
+
+                messages:{
+                    display:"共{2}条记录",
+                    first:"第一页",
+                    last:"最后一页",
+                    next:"下一页",
+                    previous:"前一页",
+                    morePages:"更多页",
+                    refresh:"刷新表格",
+                    empty:"没有数据",
+                    itemsPerPage:"项数据每页",
+                    page:"第",
+                    of:"页"
+                }
+            },
+            selectable: "row",
+            editable: {
+                mode:"popup",
+                update:'true',
+                confirmation: "确认删除这条记录?"
+            }
+        });
+    }
+    //设置组数据源
+    function setGroupDataSource(){
+        gridGroupData=new kendo.data.DataSource({
+            transport:{
+                read:{
+                    url:serviceRoot+"/gridGroup?parentGroup="+groupId,
+                    dataType:"json"
+                },
+                create:{
+                    url:serviceRoot+"/createGroup?parentGroup="+groupId,
+                    dataType:"json"
+                },
+                update:{
+                    url:serviceRoot+"/updateGroup",
+                    dataType:"json"
+                },
+                destroy:{
+                    url:serviceRoot+"/deleteGroup",
+                    dataType:"json"
+
+                },
+                parameterMap: function(options, operation) {
+
+
+
+                    if (operation !== "read" && options.models ) {
+
+                        return {id:options.models[0].id,groupName:options.models[0].groupName,description:options.models[0].description};
+                    }
+                    else{
+                        return groupId;
+                    }
+                }
+            },
+            sync: function(e) {
+                console.log("data sync!");
+
+                homogeneous.read();
+                console.log("lefetData:"+homogeneous);
+
+            },
+            batch: true,
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "id",
+                    fields: {
+                        id: { editable: false, nullable: true },
+                        groupName: { validation: { required: true } },
+                        description: {  validation: { required: false} }
+
+                    }
+                }
+            }
+        });
+    }
+
+    function treeExpandFirst(){
+
+
+//        $(".k-top").find("span").addClass("k-state-selected");
+        $("#treeview").data("kendoTreeView").expand(".k-state-hover");
+
+    }
+
+    //设置左侧树形数据
+    function setTreeView(){
+        //树形数据源
+        homogeneous = new kendo.data.HierarchicalDataSource({
+            transport: {
+                read: {
+                    url: serviceRoot + "/treeview",
+                    dataType: "json"
+//                    expanded:true
+                }
+            },
+            schema: {
+                model: {
+                    id: "id",
+                    hasChildren: "hasGroups",       //group java类中有getHasGroup 类型是布尔值
+                    expanded:true,       //默认展开
+                    fields: {
+
+                    }
+                }
+            }
+
+        });
+        $("#treeview").kendoTreeView({
+            select:onSelect,
+            dataSource: homogeneous,
+            dataTextField: "groupName",
+            dataBound: treeExpandFirst
+
+
+        });
+
+    }
+    //选择树形事件
+    function onSelect(e){
+
+
+
+
+        groupId =$("#treeview").getKendoTreeView().dataItem(e.node).id;   //点击树视图，获取组ID
+        var userData=$("#gridUser").data("kendoGrid");//用户数据源
+        var groupData=$("#gridGroup").data("kendoGrid");//组数据源
+        setDataSource();//设定选择组下面的用户数据
+        setGroupDataSource();//设定选择组下面的组数据
+        userData.setDataSource(gridUserData);//重新设置用户数据源
+        groupData.setDataSource(gridGroupData);//重新设置组数据源
+
+    }
+    //grid中的性别下拉
+    function sexDropDownEditor(container, options) {
+        $('<input required data-value-field="sex" name="sex" data-text-field="sex" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: false,
+                    dataSource:[
+                        {sex:"1",sex:"男"},
+                        {sex:"2",sex:"女"}
+
+                    ]
+                });
+    }
+    //用户与组tab选择
+    var tabToActivate=$("#tabUser");
+    $("#tabstrip").kendoTabStrip().data("kendoTabStrip").activateTab(tabToActivate);
+
+
+</script>
+
+
+
+
+</body>
+</html>

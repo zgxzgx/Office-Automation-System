@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>问题反馈</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script th:replace="header :: header"></script>
+
+
+</head>
+
+<body>
+<div class="navbar navbar-default" id="navbar">
+    <script type="text/javascript">
+        try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="navbar-container" id="navbar-container">
+        <div class="navbar-header pull-left">
+            <a href="#" class="navbar-brand">
+                <small>
+                    <i class="icon-leaf"></i>
+                    国家海洋局东海预报中心办公系统
+                </small>
+            </a><!-- /.brand -->
+        </div><!-- /.navbar-header -->
+
+
+    </div><!-- /.container -->
+</div>
+
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+
+
+
+        <div class="main-content" style="margin-left: 0px;">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <script type="text/javascript">
+                    try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                </script>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="icon-home home-icon"></i>
+                        <a href="/">首页</a>
+                    </li>
+
+                    <li class="active">用户反馈</li>
+                </ul><!-- .breadcrumb -->
+
+
+            </div>
+
+            <div class="page-content">
+                <form class="form-horizontal" >
+                    <div id="user-profile-3" class="user-profile row">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs padding-16">
+                            <li class="active">
+                                <a data-toggle="tab" href="#edit-basic">
+                                    <i class="green icon-edit bigger-125"></i>
+                                    提交反馈
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content profile-edit-tab-content">
+                            <div id="edit-basic" class="tab-pane in active">
+                                <h4 class="header blue bolder smaller">选择与问题描述（必填项）</h4>
+
+                                <div class="row">
+
+                                    <div class="vspace-xs"></div>
+
+                                        <div class="form-group">
+
+                                            <label class="col-sm-3 control-label no-padding-right" for="qsM">问题反馈<span class="message-star icon-star orange2">*</span></label>
+
+                                            <div class="col-sm-9">
+                                                <select id="qsM" name="sQues"  style="width:200px;" required validationMessage="问题反馈不能为空">
+                                                   <!-- <option>网页版OA办公系统</option>
+                                                    <option>客户端OA系统</option>-->
+                                                </select>&nbsp;&nbsp;&nbsp;&nbsp;                                            </div>
+                                        </div>
+
+                                        <div class="space-4"></div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="s1">反馈类型<span class="message-star icon-star orange2">*</span></label>
+
+                                            <div class="col-sm-9">
+                                                <select id="s1" name="sFeedType"  style="width:200px;" required validationMessage="反馈类型不能为空">
+                                                   <!-- <option>-请选择-</option>
+                                                    <option>下载和安装过程</option>
+                                                    <option>界面问题</option>
+                                                    <option>具体功能</option>
+                                                    <option>安全问题</option>
+                                                    <option>隐私问题</option>
+                                                    <option>其他</option>-->
+                                                </select>&nbsp;&nbsp;
+                                                    <span class="errItm" style="font-size:12px;" id="s1_err"></span>
+                                            </div>
+                                        </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="s2">提交类型<span class="message-star icon-star orange2">*</span></label>
+
+                                        <div class="col-sm-9">
+                                            <td><select id="s2" name="sSubmitType" style="width:200px;" required validationMessage="提交类型不能为空">
+                                               <!-- <option>-请选择-</option>
+                                                <option>发现一个错误</option>
+                                                <option>提交改进建议</option>
+                                                <option>其他</option>-->
+                                            </select>&nbsp;&nbsp;
+                                                <span class="errItm" style="font-size:12px;" id="s2_err"></span>
+                                            </td>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="txtcont">反馈内容<span class="message-star icon-star orange2">*</span><span class="f12" style="display:block;">(限1000个字符)</span></label>
+
+                                        <div class="col-sm-9">
+                                            <textarea id="txtcont" name="sFeedCon" cols="60"  maxlength="4000" rows="10" draggable="false"></textarea>
+                                            <div class="errItm" id="txtcont_err"></div>                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+
+
+                                        <label class="col-sm-3 control-label no-padding-right" for="files">上传图片<span class="message-star icon-star orange2">*</span></label>
+
+                                        <div class="col-sm-9">
+                                            <input type="file" id="files" name="files" >
+                                            <div class="space-8"></div>
+                                            <span style="position:relative;top:-20px;font-size:12px;color:#999;">您可以上传2M以内的jpg、jpeg、png和gif格式的图片文件</span><br><span class="errItm" id="file_pic_err" style="position:relative;top:-25px;"></span>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+                                <div class="space-4"></div>
+
+
+                                <div class="space"></div>
+                                <h4 class="header blue bolder smaller">填写用户信息(选填)</h4>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="username">账户名</label>
+
+                                    <div class="col-sm-9">
+                                        <span class="input-icon input-icon-right">
+                                            <input style="width:194px;" type="text" name="sUserName" id="username" th:value="*{ud} ? *{ud.userName} : '(no user specified)'" />
+                                            <i class="icon-user"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="phone">手机号</label>
+
+                                    <div class="col-sm-9">
+                                        <span class="input-icon input-icon-right">
+                                            <input style="width:194px;" name="sPhone" class="input-medium input-mask-phone" type="text" id="phone" th:value="*{ud} ? *{ud.tel} : '(no user specified)'" />
+                                            <i class="icon-phone icon-flip-horizontal"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="apartment">部门</label>
+
+                                    <div class="col-sm-9">
+                                          <span class="input-icon input-icon-right">
+                                            <input style="width:194px;" name="sDepart" class="input-medium " type="text" id="apartment" th:value="*{ud} ? *{ud.getGroup().groupName} : '(no user specified)'" />
+                                        </span>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="clearfix form-actions">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button class="btn btn-info" type="button" onclick="donesubmit()">
+                                <i class="icon-ok bigger-110"></i>
+                                提交
+                            </button>
+
+                            &nbsp; &nbsp;
+                            <button class="btn" type="reset">
+                                <i class="icon-undo bigger-110"></i>
+                                重置
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+
+    </div><!-- /.main-container-inner -->
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+
+
+<!-- inline scripts related to this page -->
+<script th:inline="javascript">
+
+    var userID=/*[[${ud.id}]]*/[];
+
+    var SubmitForm=null;
+    var saveUrl = "/upload/feedback/" + userID;
+    var imageStr="";
+
+
+
+    function donesubmit() {
+
+
+        var questionFed = $("#qsM option:selected").text();  //问题反馈
+        var FeedType = $("#s1 option:selected").text();  //反馈类型
+        var SubmitType = $("#s2 option:selected").text(); //反馈类型
+        var FeedContent =$("#txtcont").val();  //反馈类型
+        var userName = $("#username").val();  //反馈类型
+        var phoneNum = $("#phone").val();    //反馈类型
+        var Depart =$("#apartment").val();
+
+
+
+        $.ajax({
+            url: "/user/edit/feedback/"+userID,
+            type: "post",
+            dataType :"json",
+            data: {sQues:questionFed, sFeedType:FeedType, sSubmitType:SubmitType, sFeedCon:FeedContent,
+                sUserName:userName,
+                sPhone:phoneNum,
+                sDepart:Depart,
+                sImagePath:imageStr},
+            success: function (req) {
+                swal({title: "提交成功!", text: '即将刷新界面!', type: "success", timer: 20000 });
+                window.location.reload();
+            },
+            error: function () {
+                swal({title: "提交成功!", text: '即将刷新界面!', type: "success", timer: 20000 });
+                window.location.reload();
+            }
+        });
+    }
+
+
+    $("#files").kendoUpload({
+        multiple: false,
+        async: {
+            saveUrl: '/feedbackupload/' + userID,
+            autoUpload: false
+        },
+        showFileList: true,
+        localization: {
+            select: "上传图片",
+            uploadSelectedFiles: "上传",
+            cancel: "取消",
+            headerStatusUploaded: "",
+            statusUploaded: ""
+        },
+        upload: onUpload,
+        cancel: onCancel,
+        success: onSuccess,
+        error: onError
+    });
+
+
+
+
+    function onUpload(e) {
+        // Array with information about the uploaded files
+
+        var files = e.files;
+
+        // Check the extension of each file and abort the upload if it is not image 仅能上传图片
+        $.each(files, function () {
+            if ((this.extension.toLowerCase() != ".jpg") & (this.extension.toLowerCase() != ".png") & (this.extension.toLowerCase() != ".img") & (this.extension.toLowerCase() != ".gif")) {
+                swal("不支持的文件格式","请上传 [ png, jpg, gif ] 的 图像文件","error");
+                e.preventDefault();
+            }
+        });
+    }
+
+    //取消
+    function onCancel(e) {
+        // Array with information about the uploaded files
+        var files = e.files;
+        swal("取消");
+        // Process the Cancel event
+    }
+    //上传成功
+    function onSuccess(e) {
+        var files = e.files;
+
+        console.log(files);
+
+        imageStr = e.files[0].name;
+        swal({title: "上传成功!", text: "请点击并提交信息!", type: "success", timer: 3000 });
+
+
+    }
+    //错误 仅在异步模式下起作用
+    function onError(e) {
+        // Array with information about the uploaded files
+        var files = e.files;
+
+        alert("上传错误");
+        if (e.operation == "upload") {
+            alert("Failed to upload " + files.length + " files");
+        }
+    }
+
+
+
+    function onSelect(e) {
+        var file_extentAllowed=[".png",".jpg",".gif"];
+        var resualt=e.files;
+        console.log(resualt)
+        $.each(resualt,function(index,val){
+            var upfile_extent=val.extension;
+            console.log(upfile_extent)
+            if(!($.inArray(upfile_extent, file_extentAllowed) > -1)){
+                swal("不支持的文件格式","请上传 [ png, jpg, gif ] 的 图像文件","error");
+                e.preventDefault();
+            }
+        })
+    }
+
+    var data2 = [
+        {text: "下载和安装过程", value: 1},
+        {text: "界面问题", value: 2},
+        {text: "具体功能", value: 3},
+        {text: "安全问题", value: 4},
+        {text: "隐私问题", value: 5},
+        {text: "其他", value: 6}
+
+    ];
+
+    var data1 = [
+        {text: "网页端OA办公系统", value: 1},
+        {text: "移动端OA系统", value: 2}
+
+
+    ];
+
+    var data3 = [
+        {text: "发现一个错误", value: 1},
+        {text: "提交改进建议", value: 2},
+        {text: "其他", value: 3}
+
+
+
+    ];
+
+    $("#qsM").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        autoBind: true,
+        dataSource: data1
+
+    });
+    $("#s1").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        autoBind: true,
+        dataSource: data2,
+        optionLabel: "请选择反馈类型..."
+
+
+    });
+    $("#s2").kendoDropDownList({
+        dataTextField: "text",
+        dataValueField: "value",
+        autoBind: true,
+        dataSource: data3,
+        optionLabel: "请选择提交类型..."
+
+
+    });
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <!--<title th:text="${title}"></title>-->
+    <title>通知公告</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script th:replace="header :: header"></script>
+
+
+</head>
+
+<body>
+
+<div th:replace="navbar :: navbar(${ud})"></div>
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+   <a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+   <div th:replace="slider :: slidermenu(${'tzgg'})"></div>
+   <div class="main-content">
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="/">首页</a>
+        </li>
+
+        <li>
+            <a href="#">通知公告</a>
+        </li>
+        <!--<li class="active">Blank Page</li>-->
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+        <form class="form-search">
+                <span class="input-icon">
+                    <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                    <i class="icon-search nav-search-icon"></i>
+                </span>
+        </form>
+    </div><!-- #nav-search -->
+</div>
+
+<div class="page-content">
+<div class="row">
+<div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+<!--<input id="datepicker" value="10/10/2011" style="width:150px;" />-->
+
+<div class="page-content">
+<!--ALERT()弹出框-->
+<div class="alert alert-block alert-success hide" id="alertSuccess" style="width: 100%;">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="icon-remove"></i>
+    </button>
+
+    <p>
+        <strong>
+            <i class="icon-ok"></i>
+            Well done!
+        </strong>
+        成功
+    </p>
+</div>
+
+<div class="alert alert-danger hide" id="alertError">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="icon-remove"></i>
+    </button>
+
+    <strong>
+        <i class="icon-remove"></i>
+        公告内容异常
+    </strong>
+
+    失败
+    <br/>
+</div>
+
+
+<!--弹出消息框-->
+<!-- ui-dialog -->
+<div id="dialog" title="删除确认" style="z-index: 30;background-color: white">
+    <p>删除公告后将无法恢复，您确定要删除吗？</p>
+</div>
+
+
+<!--<div class="page-header">
+    <h1>
+        通知公告
+    </h1>
+</div>&lt;!&ndash; /.page-header &ndash;&gt;-->
+
+<div class="row">
+<div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+
+<div class="row">
+<div class="col-xs-12">
+<div class="tabbable">
+<ul id="inbox-tabs" class="inbox-tabs nav nav-tabs padding-16 tab-size-bigger tab-space-1">
+    <li class="li-new-mail pull-right">
+        <a data-toggle="tab" href="#write" data-target="write" class="btn-new-mail">
+                <span class="btn bt1n-small btn-purple no-border">
+                    <i class=" icon-envelope bigger-130"></i>
+                    <span class="bigger-110">发布公告</span>
+                </span>
+        </a>
+    </li><!-- ./li-new-mail -->
+
+    <li class="active">
+        <a data-toggle="tab" href="#inbox" id="noti" data-target="inbox" onclick="inboxFunc()">
+            <i class="blue icon-inbox bigger-130"></i>
+            <span class="bigger-110">公告</span>
+        </a>
+    </li>
+
+    <li>
+        <a data-toggle="tab" href="#sent" data-target="sent" id="sent" onclick="sentFunc()">
+            <i class="orange icon-location-arrow bigger-130 "></i>
+            <span class="bigger-110">已发送</span>
+        </a>
+    </li>
+
+</ul>
+
+<div class="tab-content no-border no-padding">
+<div class="tab-pane in active">
+<div class="message-container">
+<div id="id-message-list-navbar" class="message-navbar align-center clearfix">
+    <div class="message-bar">
+        <div class="message-infobar" id="id-message-infobar">
+            <span class="blue bigger-150">公告</span>
+            <label id="unReadNum"></label>
+            <span class="grey bigger-110">条未读信息</span>
+
+        </div>
+
+        <div class="message-toolbar hide">
+
+            <a href="#" class="btn btn-xs btn-message">
+                <i class="icon-trash bigger-125"></i>
+                <span class="bigger-110" id="delete" onclick="deleteFunc()">删除</span>
+            </a>
+        </div>
+
+    </div>
+
+    <div>
+        <div class="messagebar-item-left">
+            <label class="inline middle">
+                <input type="checkbox" id="id-toggle-all" class="ace" />
+                <span class="lbl"></span>
+            </label>
+
+            &nbsp;
+            <div class="inline position-relative">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    <i class="icon-caret-down bigger-125 middle"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-lighter dropdown-100">
+                    <li>
+                        <a id="id-select-message-all" href="#">全选</a>
+                    </li>
+
+                    <li>
+                        <a id="id-select-message-none" href="#">不选</a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a id="id-select-message-unread" href="#">未读</a>
+                    </li>
+
+                    <li>
+                        <a id="id-select-message-read" href="#">已读</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="nav-search minimized">
+            <form class="form-search">
+                    <span class="input-icon">
+                        <input type="text" autocomplete="off" class="input-small nav-search-input" id="notifiSearch" placeholder="公告查询 ..." />
+                        <i class="icon-search nav-search-icon"></i>
+                    </span>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="id-message-item-navbar" class="hide message-navbar align-center clearfix">
+    <div class="message-bar">
+        <div class="message-toolbar">
+        </div>
+    </div>
+
+    <div>
+        <div class="messagebar-item-left">
+            <a href="#" class="btn-back-message-list">
+                <i class="icon-arrow-left blue bigger-110 middle"></i>
+                <b class="bigger-110 middle">返回</b>
+            </a>
+        </div>
+
+        <div class="messagebar-item-right">
+            <i class="icon-time bigger-110 orange middle"></i>
+            <span class="time grey">当前时刻:</span>
+            <label id="currentTime"></label>
+        </div>
+    </div>
+</div>
+
+<div id="id-message-new-navbar" class="hide message-navbar align-center clearfix">
+    <div class="message-bar">
+    </div>
+
+    <div class="message-item-bar">
+        <div class="messagebar-item-left">
+            <a href="#" class="btn-back-message-list no-hover-underline">
+                <i class="icon-arrow-left blue bigger-110 middle"></i>
+                <b class="middle bigger-110">返回</b>
+            </a>
+        </div>
+
+        <div class="messagebar-item-right">
+                <span class="inline btn-send-message">
+                    <button type="button" class="btn btn-sm btn-primary no-border" id="submitNo" onclick="submitNo()">
+                        <span class="bigger-110">发布</span>
+
+                        <i class="icon-arrow-right icon-on-right"></i>
+                    </button>
+                </span>
+        </div>
+    </div>
+</div>
+
+<div class="message-list-container">
+    <div class="message-list" id="message-list" style="width:100%;height: 100%;min-height: 350px; overflow-y: scroll">
+    </div>
+</div><!-- /.message-list-container -->
+
+<div class="message-footer clearfix" style="height: 55px;">
+    <!--<div class="pull-left"> 151 messages total </div>-->
+
+    <div class="pull-right">
+
+        <div class="gigantic pagination" id="paginations">
+            <a href="#" class="first" data-action="first">&laquo;</a>
+            <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+            <input type="text" readonly="readonly"/>
+            <a href="#" class="next" data-action="next">&rsaquo;</a>
+            <a href="#" class="last" data-action="last">&raquo;</a>
+        </div>
+
+    </div>
+</div>
+
+
+</div><!-- /.message-container -->
+</div><!-- /.tab-pane -->
+</div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+</div><!-- /.col -->
+</div><!-- /.row -->
+<!--发布公告框-->
+<form id="id-message-form" class="hide form-horizontal message-form  col-xs-12">
+    <div class="" style="width:100%;height: 100%;min-height: 350px;">
+
+        <div class="form-group" >
+            <label class="col-sm-1 control-label no-padding-right">收件人:</label>
+
+            <div class="col-sm-11">
+
+                <select id="mutilUser" name="selectUser"></select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label no-padding-right">收件组:</label>
+
+            <div class="col-sm-11">
+
+                <select id="mutilGroup" name="selectGroup" ></select>
+
+            </div>
+        </div>
+
+
+
+        <div class="hr hr-18 dotted"></div>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label no-padding-right" for="form-field-subject">
+                标题:</label>
+
+            <div class="col-sm-11 col-xs-12">
+                <div class="input-icon block col-xs-12 no-padding">
+                    <input maxlength="100" type="text" class="col-xs-12" name="subject" id="form-field-subject" style="padding-left: 4px;" validate required validationMessage="必须填写通知标题" />
+                    <!--<i class="icon-comment-alt"></i>-->
+                </div>
+            </div>
+        </div>
+
+        <div class="hr hr-18 dotted"></div>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label no-padding-right">
+                <span class="inline space-24 hidden-480"></span>
+                内容:
+            </label>
+
+            <div class="col-sm-11">
+                <div class="wysiwyg-editor"></div>
+            </div>
+        </div>
+
+        <div class="hr hr-18 dotted"></div>
+
+        <div class="space"></div>
+    </div>
+</form>
+
+<div class="hide message-content" id="id-message-content" style="width:100%;height: 100%;min-height: 350px;">
+    <div class="message-header clearfix">
+        <div class="pull-left">
+
+            <div class="space-4"></div>
+
+            &nbsp;
+            <i class="icon-star orange2 mark-star" id="status-star"></i>
+            <span class="blue bigger-110"> 标题：<label id="titleGG" style="margin-bottom: 2px"></label><br/></span>
+
+            &nbsp;
+            <i class="icon-time bigger-110 orange middle"></i>
+            <span class="blue bigger-110">时间：<label id="Time" style="margin-bottom: 2px"></label><br/></span>
+
+        </div>
+
+    </div>
+
+    <div class="hr hr-double"></div>
+
+    <div class="message-body">
+        <label id="NotiContent"></label><br/>
+    </div>
+
+    <!-- PAGE CONTENT ENDS -->
+</div><!-- /.col -->
+</div><!-- /.row -->
+</div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+</div><!-- /.main-container-inner -->
+</div>
+</div>
+<!--[if !IE]> -->
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script language=" javascript"   type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<script src="/assets/js/bootstrap-tag.min.js"></script>
+<script src="/assets/js/jquery.hotkeys.min.js"></script>
+<script src="/assets/js/bootstrap-wysiwyg.min.js"></script>
+<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/assets/js/jquery.slimscroll.min.js"></script>
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+
+<!-- inline scripts related to this page -->
+
+<script type="text/javascript">
+
+var pageTotal=0;
+var flag = true;//设置标志位
+var flag1=true;//查询分页标志位
+
+var currentPage=0; //设置当前页
+
+
+//存放选择公告的ID 生成json对象
+var jsonDEL=[];
+var formvalidator;
+var tagFlag="";
+
+function showLocale(objD)
+{
+    var str,colorhead,colorfoot;
+    var yy = objD.getYear();
+    if(yy<1900) yy = yy+1900;
+    var MM = objD.getMonth()+1;
+    if(MM<10) MM = '0' + MM;
+    var dd = objD.getDate();
+    if(dd<10) dd = '0' + dd;
+    var hh = objD.getHours();
+    if(hh<10) hh = '0' + hh;
+    var mm = objD.getMinutes();
+    if(mm<10) mm = '0' + mm;
+    var ss = objD.getSeconds();
+    if(ss<10) ss = '0' + ss;
+    var ww = objD.getDay();
+    if  ( ww==0 )  colorhead="<color=\"#FF0000\">";
+    if  ( ww > 0 && ww < 6 )  colorhead="<color=\"#373737\">";
+    if  ( ww==6 )  colorhead="<color=\"#008000\">";
+    if  (ww==0)  ww="星期日";
+    if  (ww==1)  ww="星期一";
+    if  (ww==2)  ww="星期二";
+    if  (ww==3)  ww="星期三";
+    if  (ww==4)  ww="星期四";
+    if  (ww==5)  ww="星期五";
+    if  (ww==6)  ww="星期六";
+    colorfoot="</font>"
+    str = colorhead + yy + "-" + MM + "-" + dd + " " + hh + ":" + mm + ":" + ss + "  " + ww + colorfoot;
+    return(str);
+}
+
+function tick()
+{
+    var today;
+    today = new Date();
+    document.getElementById("currentTime").innerHTML = showLocale(today);
+    window.setTimeout("tick()", 1000);
+}
+tick();
+
+
+jQuery(function($){
+
+
+
+    $("#mutilGroup").kendoMultiSelect({
+        placeholder: "选择用户组...",
+        dataTextField: "groupname",
+        dataValueField: "id",
+        autoBind: false,
+        dataSource: {
+            type: "json",
+            serverFiltering: true,
+            transport: {
+                read: {
+                    url: "/api/group/nodeGroup"
+                }
+            }
+        }
+    });
+    //搜索监听
+    $("#nav-search-input").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+            if(searchValue==""){
+                swal("请在搜索框输入关键字！");
+
+            }else{
+                self.location="/fullSearch/"+searchValue;
+
+            }            //alert(searchValue);
+        }
+
+    });
+    $("#mutilUser").kendoMultiSelect({
+        placeholder: "选择用户...",
+        dataTextField: "name",
+        dataValueField: "id",
+        autoBind: false,
+        dataSource: {
+            type: "json",
+            serverFiltering: true,
+            transport: {
+                read: {
+                    url: "/api/user/getalluser"
+                }
+            }
+        }
+    });
+
+    //$("#mutilUser").kendoValidator().data("kendoValidator");
+
+     formvalidator = $("#id-message-form").kendoValidator({
+
+        validateOnBlur: true,
+        rules: {
+            multiSelectUser: function (select) {
+                //console.log("in rules:"+select.attr("id"));
+                //console.log(select.val());
+                if (select.is("[name=selectUser]")&&select.val()==null && $("#mutilGroup").val()==null) {
+                    //console.log("select User false;")
+                    return false;
+                }
+                if (select.is("[name=selectGroup]")&&select.val()==null  && $("#mutilUser").val()==null) {
+                    //console.log("select Group false;")
+                    return false;
+                }
+
+                return true;
+            }
+
+        },
+        messages: {
+            multiSelectUser: "收件人和收件组不能都为空！！"
+
+        }
+
+
+    }).data("kendoValidator");
+
+
+    //handling tabs and loading/displaying relevant messages and forms
+    //not needed if using the alternative view, as described in docs
+    //切换公告标签和写公告
+    var prevTab = 'inbox'
+    $('#inbox-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+        var currentTab = $(e.target).data('target');
+        if(currentTab == 'write') {
+            Inbox.show_form();
+        }
+        else {
+            if(prevTab == 'write')
+                Inbox.show_list();
+
+        }
+        prevTab = currentTab;
+    })
+
+    jsonDEL.length=0; //初始化时，将数据清空
+
+    //任意点选chekbox控件
+    //basic initializations 初始化
+    $('.message-list .message-item input[type=checkbox]').removeAttr('checked');
+    $('.message-list').delegate('.message-item input[type=checkbox]' , 'click', function() {
+        $(this).closest('.message-item').toggleClass('selected');
+
+        //获取到该条数据在数据库表中的id
+        var noticeObj=$(this).closest('.message-item');
+
+        noticeID=noticeObj[0].childNodes[5].innerHTML;
+
+        //任意点选checkbox控件将id添加到json数组
+
+        var delObjID={};
+        $(delObjID).attr('id',noticeID);
+        jsonDEL.push(delObjID);
+
+        if(this.checked) Inbox.display_bar(1);//display action toolbar when a message is selected
+        else {
+            Inbox.display_bar($('.message-list input[type=checkbox]:checked').length);
+            //determine number of selected messages and display/hide action toolbar accordingly
+        }
+    });
+
+    //check/uncheck all messages选择、反选所有公告
+    $('#id-toggle-all').removeAttr('checked').on('click', function(){
+        if(this.checked) {
+            Inbox.select_all();
+        } else Inbox.select_none();
+    });
+
+    //select all 全选
+    $('#id-select-message-all').on('click', function(e) {
+        e.preventDefault();
+        Inbox.select_all();
+    });
+
+    //select none全不选
+    $('#id-select-message-none').on('click', function(e) {
+        e.preventDefault();
+        Inbox.select_none();
+    });
+
+    //select read 选择已读
+    $('#id-select-message-read').on('click', function(e) {
+
+        e.preventDefault();
+        Inbox.select_read();
+
+    });
+
+    //select unread 选择未读
+    $('#id-select-message-unread').on('click', function(e) {
+        e.preventDefault();
+        Inbox.select_unread();
+    });
+
+    //back to message list返回公告列表
+    $('.btn-back-message-list').on('click', function(e) {
+        e.preventDefault();
+        //显示切换标签页
+        $('#noti').removeClass('hide');
+        $('#sent').removeClass('hide');
+        Inbox.show_list();
+        $('#inbox-tabs a[data-target="inbox"]').tab('show');
+
+       // window.location.reload("back-message-list");
+    });
+
+    var Inbox = {
+        //displays a toolbar according to the number of selected messages选择公告后显示操作工具栏，隐藏信息栏
+        display_bar : function (count) {
+            if(count == 0) {  //如果 count==0,全选按钮取消选择状态；删除按钮隐藏，信息条出现 count是为了控制删除按钮的隐藏与否
+                $('#id-toggle-all').removeAttr('checked');
+                $('#id-message-list-navbar .message-toolbar').addClass('hide');
+                $('#id-message-list-navbar .message-infobar').removeClass('hide');
+            }
+            else {
+                $('#id-message-list-navbar .message-infobar').addClass('hide');
+                $('#id-message-list-navbar .message-toolbar').removeClass('hide');
+            }
+        }
+        ,
+        select_all : function() { //全选
+
+            jsonDEL.length=0; //初始化时，将数据清空
+            var count = 0;
+            $('.message-item input[type=checkbox]').each(function(){
+                this.checked = true;
+                $(this).closest('.message-item').addClass('selected');
+
+                //点选全选checkbox控件将id添加到json数组
+                //获取到该条数据在数据库表中的id
+                var noticeObj=$(this).closest('.message-item');
+
+                noticeID=noticeObj[0].childNodes[5].innerHTML;
+
+                //jsonDEL.length=0; //初始化时，将数据清空
+
+                var delObjID={};
+                $(delObjID).attr('id',noticeID);
+                jsonDEL.push(delObjID);
+
+                count++;
+
+            });
+
+            $('#id-toggle-all').get(0).checked = true;
+
+            Inbox.display_bar(count);
+        }
+        ,
+        select_none : function() { //全不选
+            $('.message-item input[type=checkbox]').removeAttr('checked').closest('.message-item').removeClass('selected');
+            $('#id-toggle-all').get(0).checked = false;
+
+            Inbox.display_bar(0);
+        }
+        ,
+        select_read : function() { //选择已读
+
+            jsonDEL.length=0; //初始化时，将数据清空
+
+            $('.message-unread input[type=checkbox]').removeAttr('checked').closest('.message-item').removeClass('selected');
+
+            var count = 0;
+            $('.message-item:not(.message-unread) input[type=checkbox]').each(function(){
+                this.checked = true;
+                $(this).closest('.message-item').addClass('selected');
+
+                //点选已读checkbox控件将id添加到json数组
+                //获取到该条数据在数据库表中的id
+                var noticeObj=$(this).closest('.message-item');
+
+                noticeID=noticeObj[0].childNodes[5].innerHTML;
+
+                //jsonDEL.length=0; //初始化时，将数据清空
+
+                var delObjID={};
+                $(delObjID).attr('id',noticeID);
+                jsonDEL.push(delObjID);
+
+                count++;
+            });
+            Inbox.display_bar(count);
+        }
+        ,
+        select_unread : function() {  //选择未读
+
+            jsonDEL.length=0; //初始化时，将数据清空
+
+            $('.message-item:not(.message-unread) input[type=checkbox]').removeAttr('checked').closest('.message-item').removeClass('selected');
+
+            var count = 0;
+            $('.message-unread input[type=checkbox]').each(function(){
+                this.checked = true;
+                $(this).closest('.message-item').addClass('selected');
+
+                //点选未读checkbox控件将id添加到json数组
+                //获取到该条数据在数据库表中的id
+                var noticeObj=$(this).closest('.message-item');
+
+                noticeID=noticeObj[0].childNodes[5].innerHTML;
+
+                var delObjID={};
+                $(delObjID).attr('id',noticeID);
+                jsonDEL.push(delObjID);
+
+                count++;
+
+            });
+
+            Inbox.display_bar(count);
+        }
+    }
+
+    //show message list (back from writing mail or reading a message)从写公告或者阅读信息后返回到公文列表
+    Inbox.show_list = function() {
+        $('.message-navbar').addClass('hide');
+        $('#id-message-list-navbar').removeClass('hide');
+
+        $('.message-footer').addClass('hide');
+        $('.message-footer:not(.message-footer-style2)').removeClass('hide');
+
+        $('.message-list').removeClass('hide').next().addClass('hide');
+        //hide the message item / new message window and go back to list
+    }
+
+    //show write mail form
+    Inbox.show_form = function() {
+
+        $('#submitNo').removeClass('disabled');
+
+        if($('.message-form').is(':visible')) return;
+        if(!form_initialized) {
+            initialize_form();
+        }
+
+        var message = $('.message-list');
+        $('.message-container').append('<div class="message-loading-overlay"><i class="icon-spin icon-spinner orange2 bigger-160"></i></div>');
+
+        setTimeout(function() {
+            message.next().addClass('hide');
+
+            $('.message-container').find('.message-loading-overlay').remove();
+
+            $('.message-list').addClass('hide');
+            $('.message-footer').addClass('hide');
+            $('.message-form').removeClass('hide').insertAfter('.message-list');
+
+            $('.message-navbar').addClass('hide');
+            $('#id-message-new-navbar').removeClass('hide');
+
+
+            //reset form??
+            $('.message-form .wysiwyg-editor').empty();
+
+            $('.message-form .ace-file-input').closest('.file-input-container:not(:first-child)').remove();
+            $('.message-form input[type=file]').ace_file_input('reset_input');
+
+            $('.message-form').get(0).reset();
+
+        }, 300 + parseInt(Math.random() * 300));
+    }
+
+    var form_initialized = false;
+    function initialize_form() {
+        if(form_initialized) return;
+        form_initialized = true;
+
+        //intialize wysiwyg editor
+        $('.message-form .wysiwyg-editor').ace_wysiwyg({
+            toolbar:
+                    [
+                        'font',
+                        null,
+                        'fontSize',
+                        null,
+                        {name:'bold', className:'btn-info'},
+                        {name:'italic', className:'btn-info'},
+                        {name:'strikethrough', className:'btn-info'},
+                        {name:'underline', className:'btn-info'},
+                        null,
+                        {name:'insertunorderedlist', className:'btn-success'},
+                        {name:'insertorderedlist', className:'btn-success'},
+                        {name:'outdent', className:'btn-purple'},
+                        {name:'indent', className:'btn-purple'},
+                        null,
+                        {name:'justifyleft', className:'btn-primary'},
+                        {name:'justifycenter', className:'btn-primary'},
+                        {name:'justifyright', className:'btn-primary'},
+                        {name:'justifyfull', className:'btn-inverse'},
+                        null,
+                        {name:'createLink', className:'btn-pink'},
+                        {name:'unlink', className:'btn-pink'},
+                        null,
+//                            {name:'insertImage', className:'btn-success'},
+                null,
+                'foreColor',
+                null,
+                {name:'undo', className:'btn-grey'},
+                {name:'redo', className:'btn-grey'}
+            ]
+        }).prev().addClass('wysiwyg-style2');
+
+        //file input
+        $('.message-form input[type=file]').ace_file_input()
+            //and the wrap it inside .span7 for better display, perhaps
+                .closest('.ace-file-input').addClass('width-90 inline').wrap('<div class="row file-input-container"><div class="col-sm-7"></div></div>');
+
+        //the button to add a new file input
+        $('#id-add-attachment').on('click', function(){
+            var file = $('<input type="file" name="attachment[]" />').appendTo('#form-attachments');
+            file.ace_file_input();
+            file.closest('.ace-file-input').addClass('width-90 inline').wrap('<div class="row file-input-container"><div class="col-sm-7"></div></div>')
+                    .parent(/*.span7*/).append('<div class="action-buttons pull-right col-xs-1">\
+                                <a href="#" data-action="delete" class="middle">\
+                                    <i class="icon-trash red bigger-130 middle"></i>\
+                                </a>\
+                            </div>').find('a[data-action=delete]').on('click', function(e){
+                        //the button that removes the newly inserted file input
+                        e.preventDefault();
+                        $(this).closest('.row').hide(300, function(){
+                            $(this).remove();
+                        });
+                    });
+        });
+    }//initialize_form
+
+    //初始化显示第一页
+    initPageFunc(0,8);
+
+}); //初始化结束
+
+//初始化加载公文列表
+function initPageFunc(page,size){
+
+    $.ajax({
+        url:'db/notification_get1',
+        type:'POST',
+        data:{page:page,size:size},
+        dataType:"json",
+
+        success:function(result){
+
+            $.ajax({
+                url:"db/notification_unread",
+                type:"GET",
+                dataType:"json",
+                success:function(req){
+
+                    $("#unReadNum").text(req);
+                }
+
+            });
+
+            var itemHtml="";
+
+            if (flag)
+            {//得到总页数
+                pageTotal=result.totalPages;
+                //分页设置
+                $('#paginations').jqPagination({
+                    link_string	: '/?page={page_number}',
+                    max_page	: pageTotal,
+                    paged		: function(page) {
+
+                        currentPage=page;
+
+                        initPageFunc(page-1,size);
+
+                    }
+                });
+                flag=false;
+            }
+
+            for(var i=0;i<result.content.length;i++) {
+                var status =result.content[i].status;
+                if(status==true) {
+
+                    itemHtml += '<div class="message-item message-read" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star-empty light-grey" ></i>&nbsp;&nbsp;<span class="sender" >'
+                            + result.content[i].notification.writer + '</span><label attr="h1" hidden >'+result.content[i].id+'</label><span class="time" style=width:20%>'
+                            + result.content[i].notification.time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">' +
+                            result.content[i].notification.title + '</span></span></div>'
+                }
+
+                else {
+                    itemHtml += '<div class="message-item message-unread" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star orange2"></i>&nbsp;&nbsp;<span class="sender">'
+                            + result.content[i].notification.writer + '</span><label attr="h1"  hidden>' + result.content[i].id + '</label><span class="time" style=width:20%>'
+                            + result.content[i].notification.time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">'
+                            + result.content[i].notification.title + '</span></span></div>'
+                }
+
+            }
+            $('#message-list').html("");
+            $('#message-list').append(itemHtml);
+
+            tagFlag="recive";
+
+        }
+    });
+}
+//收件箱按钮点击事件
+function inboxFunc(){
+
+    initPageFunc(0,8);
+    tagFlag="recive";
+}
+
+    //已发送按钮点击事件
+    function sentFunc(){
+        sentNotification(0,8);
+        tagFlag="send";
+    }
+    function sentNotification(page,size){
+
+        $.ajax({
+
+            url:"/db/notification_send",
+            type:"POST",
+            dataType:"json",
+            data:{page:page,size:size},
+            success:function(result){
+
+                var itemHtml="";
+
+                if (flag1)
+                {//得到总页数
+                    pageTotal=result.totalPages;
+                    //分页设置
+                    $('#paginations').jqPagination({
+                        link_string	: '/?page={page_number}',
+                        max_page	: pageTotal,
+                        paged		: function(page) {
+
+                            currentPage=page;
+
+                            searchNotice(page-1,size);
+
+                        }
+                    });
+                    flag1=false;
+                }
+
+                for(var i=0;i<result.content.length;i++) {
+                    //var status =result.content[i].status;
+                    //if(status==true) {
+
+                        /*itemHtml += '<div class="message-item message-read" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star-empty light-grey" ></i>&nbsp;&nbsp;<span class="sender" title="Alex John Red Smith">'
+                                + result.content[i].notification.writer + '</span><label attr="h1" hidden >'+result.content[i].id+'</label><span class="time" style=width:20%>'
+                                + result.content[i].notification.time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">' +
+                                result.content[i].notification.title + '</span></span></div>'*/
+                        itemHtml += '<div class="message-item message-read" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star-empty light-grey" ></i>&nbsp;&nbsp;<span class="sender" >'
+                                + result.content[i].writer + '</span><label attr="h1" hidden >'+result.content[i].id+'</label><span class="time" style=width:20%>'
+                                + result.content[i].time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">' +
+                                result.content[i].title + '</span></span></div>'
+                    //}
+
+                    /*else {
+                        itemHtml += '<div class="message-item message-unread" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star orange2"></i>&nbsp;&nbsp;<span class="sender" title="Alex John Red Smith">'
+                                + result.content[i].notification.writer + '</span><label attr="h1"  hidden>' + result.content[i].id + '</label><span class="time" style=width:20%>'
+                                + result.content[i].notification.time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">'
+                                + result.content[i].notification.title + '</span></span></div>'
+                        itemHtml += '<div class="message-item message-unread" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star orange2"></i>&nbsp;&nbsp;<span class="sender" title="Alex John Red Smith">'
+                                + result.content[i].writer + '</span><label attr="h1"  hidden>' + result.content[i].id + '</label><span class="time" style=width:20%>'
+                                + result.content[i].time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">'
+                                + result.content[i].title + '</span></span></div>'
+                    }*/
+
+                }
+                $('#message-list').html("");
+                $('#message-list').append(itemHtml);
+
+            }
+
+        });
+
+    }
+
+//删除公文
+function deleteFunc(){
+
+    // Link to open the dialog
+    $( "#dialog" ).dialog( "open" );
+
+}
+
+$( "#dialog" ).dialog({
+    autoOpen: false,
+    width: 400,
+    buttons: [
+        {
+            text: "确认",
+            click: function() {
+                $( this ).dialog( "close" );
+
+                var multiID="";
+
+                for(var i=0;i<jsonDEL.length;i++){
+
+                    multiID+=jsonDEL[i].id+",";
+                }
+
+                multiID=multiID.substring(0,multiID.length-1);
+
+               // alert(multiID);
+
+                //删除记录请求
+                $.ajax({
+                    url:"/db/notification_delete",
+                    type:"POST",
+                    data:{multiID:multiID},
+                    success:function(result){
+
+                        if(currentPage==0)
+                        {
+                            if(tagFlag=="recive"){
+                                initPageFunc(currentPage,8);
+                                window.location.reload("back-message-list");
+                            }
+                            else if(tagFlag=="send"){
+
+                                sentNotification(0,8);
+                                window.location.reload("back-message-list");
+                            }
+
+                        }
+                        else
+                        {
+
+
+                            if(tagFlag=="recive"){
+                                initPageFunc(currentPage-1,8);
+                                window.location.reload("back-message-list");
+                            }
+                            else if(tagFlag=="send"){
+
+                                sentNotification(currentPage-1,8);
+                                window.location.reload("back-message-list");
+                            }
+
+
+                        }
+
+                        $('#alertSuccess').removeClass('hide').fadeOut(4000);
+
+                    },
+                    error:function(){
+
+                        $('#alertError').removeClass('hide').fadeOut(4000);
+
+                    }
+
+                });
+
+
+            }
+        },
+        {
+            text: "取消",
+            click: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    ]
+});
+
+//点击标题事件
+function newFunc(rows){
+
+    //show the loading icon
+    $('.mess').append('<div class="message-loading-overlay"><i class="icon-spin icon-spinner orange2 bigger-160"></i></div>');
+
+    $('.message-inline-open').removeClass('message-inline-open').find('.message-content').remove();
+
+    var message_list = $('.message-list .message-item').closest('.message-list');
+
+    //some waiting
+    setTimeout(function () {
+
+        //hide everything that is after .message-list (which is either .message-content or .message-form)
+        message_list.next().addClass('hide');
+        $('.message-container').find('.message-loading-overlay').remove();
+
+        //close and remove the inline opened message if any!
+
+        //hide all navbars
+        $('.message-navbar').addClass('hide');
+        //now show the navbar for single message item
+        $('#id-message-item-navbar').removeClass('hide');
+
+        //hide all footers
+        $('.message-footer').addClass('hide');
+        //now show the alternative footer
+        $('.message-footer-style2').removeClass('hide');
+
+        //禁用切换标签页 已发送
+        $('#sent').addClass('hide');
+        $('#noti').addClass('hide');
+
+
+
+        //获取隐藏控件的ID
+        var selectID=$('.message-list .message-item:eq('+rows+') label')[1].innerHTML;
+
+        //点击公告之后，设置该公告为已读
+        $.ajax({
+            url:'db/notification_update',
+            type:'POST',
+            async:'false',
+            data:{id:selectID},
+            success:function(){
+                //设定已读的状态
+                $('.message-list .message-item:eq('+rows+')').removeClass('message-item message-unread').addClass('message-item message-read');
+                //改变星星 测试成功
+                $('.message-list .message-item:eq('+rows+') .message-star').removeClass('message-star icon-star orange2').addClass('message-star icon-star-empty light-grey');
+                //$('#alertSuccess').removeClass('hide').fadeOut(5000);
+                $.ajax({
+                    url:"db/notification_unread",
+                    type:"post",
+                    dataType:"json",
+                    success:function(req){
+                        $("#unReadNum").text(req);
+                    }
+                });
+            },
+            error:function(){
+                $('#alertError').removeClass('hide').fadeOut(5000);
+            }
+        });
+        //点选标题之后查看内容
+        $.ajax({
+            url: 'db/notification_getDetail',
+            type: 'POST',
+            data:{selectID:selectID},
+            success: function (req) {
+                $("#titleGG").html(req.title);
+                $("#Time").html(req.time);
+                $('#NotiContent').html(req.contentHtml);
+            }
+        });
+        //move .message-content next to .message-list and hide .message-list
+        message_list.addClass('hide').after($('.message-content')).next().removeClass('hide');
+        //add scrollbars to .message-body
+        $('.message-content .message-body').slimScroll({
+            height: 200,
+            railVisible: true
+        });
+
+    }, 500 + parseInt(Math.random() * 500));
+
+} //循环结束
+
+//发布按钮事件
+function submitNo() {
+
+    $('#id-message-form').append('<div class="message-loading-overlay"><i class="icon-spin icon-spinner orange2 bigger-160"></i></div>');
+
+
+        var noUser1=$("#mutilUser").data("kendoMultiSelect").value();//公告发布者
+        var noUserGroup1=$("#mutilGroup").data("kendoMultiSelect").value();//发送组
+
+        var noUser="";
+        var noUserGroup="";
+
+        if(noUser1.length==0){
+
+            noUser=[0];
+
+        }else{
+
+            noUser=noUser1;
+
+        }
+
+        if(noUserGroup1.length==0){
+
+            noUserGroup=[0];
+
+        }else{
+
+            noUserGroup=noUserGroup1;
+
+        }
+
+        //alert("user"+noUser+";group"+noUserGroup);
+
+        var noTitle = $('#form-field-subject').val();//公告标题
+        var noContentHtml = $('.wysiwyg-editor').html();//公告网页内容
+        var noContent=$('.wysiwyg-editor').text();//公告文本内容
+        var dt = new Date();
+        var year = dt.getFullYear();
+        var month=dt.getMonth()+1;
+        var day=dt.getDate();
+        var hour = dt.getHours();
+        hour=hour>9?hour:"0"+hour;
+        var minute = dt.getMinutes();
+        minute=minute>9?minute:"0"+minute;
+        var noTime=year+"年"+month+"月"+day+"日 "+hour+":"+minute;
+
+        //console.log("formvalidator is：")
+        //console.log(formvalidator);
+        if (formvalidator.validate())
+        {$.ajax({
+            url:'db/notification_new',
+            type:'POST',
+            data:{user:noUser,userGroup:noUserGroup,title:noTitle,contentHtml:noContentHtml,content:noContent,time:noTime},
+            success:function(){
+                $('.wysiwyg-editor').text="";
+                $('#form-field-subject').val="";
+
+                $('#alertSuccess').removeClass('hide').fadeOut(5000);
+                $('#submitNo').addClass('disabled');
+                $('#id-message-form').find('.message-loading-overlay').remove();
+
+                window.location.reload("back-message-list");
+
+            },
+            error:function(){
+
+                $('#id-message-form').find('.message-loading-overlay').remove();
+
+                $('#alertError').removeClass('hide').fadeOut(5000);
+            }
+        });}
+        else
+            $('#id-message-form').find('.message-loading-overlay').remove();
+
+}
+
+//查询，失去焦点事件
+$("#notifiSearch").blur(function(event){
+
+    var searchValue="%"+event.currentTarget.value+"%";
+    searchNotice(searchValue,0,8);
+
+});
+
+//查询 enter事件
+$("#notifiSearch").keypress(function(event) {
+    if ( event.which == 13 ) {
+        event.preventDefault();
+
+     var searchValue="%"+event.currentTarget.value+"%";
+        searchNotice(searchValue,0,8);
+    }
+
+});
+
+//查询请求
+function searchNotice(searchValue,page,size){
+
+    $.ajax({
+
+        url:"/db/notification_search",
+        type:"POST",
+        dataType:"json",
+        data:{searchValue:searchValue,page:page,size:size},
+        success:function(result){
+
+            var itemHtml="";
+
+            if (flag1)
+            {//得到总页数
+                pageTotal=result.totalPages;
+                //分页设置
+                $('#paginations').jqPagination({
+                    link_string	: '/?page={page_number}',
+                    max_page	: pageTotal,
+                    paged		: function(page) {
+
+                        currentPage=page;
+
+                        searchNotice(searchValue,page-1,size);
+
+                    }
+                });
+                flag1=false;
+            }
+
+            for(var i=0;i<result.content.length;i++) {
+                var status =result.content[i].status;
+                if(status==true) {
+
+                    itemHtml += '<div class="message-item message-read" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star-empty light-grey" ></i>&nbsp;&nbsp;<span class="sender">'
+                            + result.content[i].notification.writer + '</span><label attr="h1" hidden >'+result.content[i].id+'</label><span class="time" style=width:20%>'
+                            + result.content[i].notification.time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">' +
+                            result.content[i].notification.title + '</span></span></div>'
+                }
+
+                else {
+                    itemHtml += '<div class="message-item message-unread" ><label class="inline"> <input type=checkbox  class="ace"/><span class="lbl"></span></label></i>&nbsp;&nbsp;<i class="message-star icon-star orange2"></i>&nbsp;&nbsp;<span class="sender" >'
+                            + result.content[i].notification.writer + '</span><label attr="h1"  hidden>' + result.content[i].id + '</label><span class="time" style=width:20%>'
+                            + result.content[i].notification.time + '</span><span class="summary">&nbsp;&nbsp;&nbsp;&nbsp;<span onclick=newFunc('+i+') class="text">'
+                            + result.content[i].notification.title + '</span></span></div>'
+                }
+
+            }
+            $('#message-list').html("");
+            $('#message-list').append(itemHtml);
+
+        }
+
+    });
+
+}//searchNotice end 查询通知结束
+
+
+</script>
+</div>
+</div>
+</div>
+</body>
+</html>

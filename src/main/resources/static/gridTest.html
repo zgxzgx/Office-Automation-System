@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>编辑字段1</title>
+    <link href="styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="styles/kendo.silver.min.css" rel="stylesheet" />
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kendo.all.min.js"></script>
+    <script src="js/kendo.columnmenu.min.js"></script>
+</head>
+<body>
+<div id="example">
+    <div id="grid" style="width: 720px"></div>
+
+    <script>
+        $(document).ready(function () {
+            var dataSource = new kendo.data.DataSource({
+                transport: {
+                    read:  {
+                        url:"http://localhost:8888/missiveField",
+                        dataType: "json"
+                    },
+
+                    update:function(options){
+                        alert(123);
+                        console.log(options);
+
+//                        url: function(options){
+//                            console.log(options);
+//
+//                            return options._links.self.href;
+//                        },
+//                        dataType: "json", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
+//                        type:"PUT"
+                    },
+                    parameterMap: function(options, operation) {
+
+                        //console.log(options);
+
+                        if (operation == "read") {
+
+                            // send take as "$top" and skip as "$skip"
+                            return {
+                                size: options.pageSize ,
+                                page: options.page- 1
+                            }
+                        }
+
+
+
+
+                    }
+
+                },
+
+                schema: {
+                    data: function(response) {
+                        // alert("read");
+                        return response._embedded.missiveField; // twitter's response is { "results": [ /* results */ ] }
+                    },
+                    total: function(response){
+                        return response.page.totalElements; // total is returned in the "total" field of the response
+                    },
+
+                    model: {
+
+                        fields: {
+
+                            inputType: { validation: { required: true } },
+                            inputId: { type: "string", validation: { required: true} },
+                            name: { type: "string" }
+                        }
+                    }
+                },
+                pageSize: 10,
+                serverPaging: true
+
+            });
+
+            $("#grid").kendoGrid({
+
+                dataSource: dataSource,
+                resizable: true,
+
+                columnMenu: true,
+                pageable: {
+                    //refresh:true,
+                    pageSizes:true,
+                    buttonCount:5,
+                    messages: {
+                        display: "{0}-{1} 共 {2} 记录",
+                        empty: "无记录显示" ,
+                        itemsPerPage: "每页"
+                    }
+
+                },
+                height: 570,
+                toolbar: [
+                    {name:"create",text:"添加新字段"}
+                ],
+            columns: [
+                    { field:"inputType", title: "流程类型",width:"120px"},
+                    { field: "inputId", title:"任务编号", width: "120px" },
+                    { field: "name", title:"字段名称", width: "120px",editor: fieldDropDown, template: "#=name#"},//,editor: fieldDropDown, template: "#=fieldName#"
+                    { command: [{name:"edit",text:{
+                        edit:"编辑",
+                        cancel:"取消",
+                        update:"更新"
+                    }
+                    }, {name:"destroy",text:"删除"}
+                    ], title: "&nbsp;", width: "120px" }],
+
+                editable  : {
+                    mode : "popup",
+
+                    window : {
+                        title: "编辑"  // Localization for Edit in the popup window
+                    },
+                    confirmation: "您确定删除这条记录吗?"
+                }
+
+            });
+
+        });
+
+        //add dropdownlist event
+        function fieldDropDown(container, options) {
+
+            var dataSource=[];
+
+            $.ajax({
+                url: "http://localhost:8888/missiveField",    //请求的url地址http://demos.telerik.com/kendo-ui/service/Products
+                dataType: "json",   //返回格式为json
+                async: true,//请求是否异步，默认为异步，这也是ajax重要特性
+                type: "GET",   //请求方式
+
+                success:function(req){
+                    //请求成功时处理
+                    for(var i=0; i<req._embedded.missiveField.length;i++)
+                    {
+
+                        dataSource.push({
+                            fieldID: i,
+                            name: req._embedded.missiveField[i].name
+                        });
+
+                    }
+
+                    // console.log(dataSource);
+
+                    $('<input required  name="' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoDropDownList({
+                                dataTextField: "name",
+                                dataValueField: "fieldID",
+                                dataSource: dataSource
+                            });
+
+                },
+                error:function(){
+                    //请求出错处理
+                }
+
+            });
+
+        }
+
+    </script>
+</div>
+
+</body>
+</html>

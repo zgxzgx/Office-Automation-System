@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>我的日程</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+   <script th:replace="header :: header"></script>
+
+
+
+
+</head>
+
+<body>
+<script th:inline="javascript">
+
+    var userbase64 = [[${userbase64}]];
+    kendo.culture("zh-CN");
+
+
+</script>
+
+<div th:replace="navbar :: navbar(${ud})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'wdrc'})"></div>
+
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="/">首页</a>
+            </li>
+
+            <li>
+                <a href="#">我的日程</a>
+            </li>
+
+        </ul><!-- .breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+            <span class="input-icon">
+                <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </div><!-- #nav-search -->
+    </div>
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-6">
+                <!-- PAGE CONTENT BEGINS -->
+                <div style="maring-left:10%;margin-top:1%;width:100%;">
+                    <div id="myTasks">
+                        <div>
+                            <label class="control-label bolder blue">您今日已办公文：</label><br/>
+                            <label id="taskList" th:utext="${taskList}"></label><br/>
+                            <label class="control-label bolder blue">今日已办公文数：</label>
+                            <label id="tasksNum" th:text="${tasksNum}"></label>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+            <div class="col-xs-6">
+                <!-- PAGE CONTENT BEGINS -->
+                <div style="maring-left:10%;margin-top:1%;width:100%;">
+                    <div id="mySchedule"></div>
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div>
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+</div><!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/messages/kendo.messages.zh-CN.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script th:inline="javascript">
+    var userName=[[${ud.userName}]];;
+    var scheduleData="";
+    $(function() {
+        $.ajax({
+            url: 'db/richeng_get',
+            type: 'post',
+            data: {user: userName},
+            async: false,
+            success: function (result) {
+                scheduleData = eval("(" + result + ")");
+            }
+        });
+        $('#mySchedule').kendoScheduler({
+            date: new Date(),
+            startTime: new Date("2013/6/13 07:00 AM"),
+            height:'500px',
+            editable: {
+                destroy: true
+            },
+            message: {
+                cancel: '取消'
+            },
+            dataSource: scheduleData,
+            views: [
+                {type: "agenda", title: "日程"},
+                {type: "day", title: '日'},
+                {type: "week", title: "周"},
+                {type: "month", title: "月", selected: true}
+            ],
+            save: function (e) {
+                var eventId = e.event.id;
+                if (eventId == 0) {
+                    //新建日程
+                    var title = e.event.title;
+                    var startTime = e.event.start;
+                    var endTime = e.event.end;
+                    var content = e.event.description;
+                    //var createPeo = "海洋小子";
+                    $.ajax({
+                        url: 'db/richeng_new',
+                        type: 'post',
+                        data: {noTitle: title, noStart: startTime, noEnd: endTime, noCon: content, noPeo: userName}
+                    });
+
+                }
+                else {
+                    //修改日程
+                    var title = e.event.title;
+                    var startTime = e.event.start;
+                    var endTime = e.event.end;
+                    var content = e.event.description;
+                    $.ajax({
+                        url: 'db/richeng_edit',
+                        type: 'post',
+                        data: {noTitle: title, noStart: startTime, noEnd: endTime, noCon: content, id: eventId, user: userName}
+                    });
+
+                }
+            },
+            moveEnd: function (e) {
+                var nStart = e.slot.start;
+                var nEnd = e.slot.end;
+                var eventId = e.event.id;
+                $.ajax({
+                    url: 'db/richeng_move',
+                    type: 'post',
+                    data: {start: nStart, end: nEnd, id: eventId}
+                });
+            },
+            remove: function (e) {
+                var rId = e.event.id;
+                $.ajax({
+                    url: 'db/richeng_del',
+                    type: 'post',
+                    data: {id: rId}
+                });
+
+            }
+
+        });
+    });
+    //搜索监听
+    $("#nav-search-input").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+            if(searchValue==""){
+                swal("请在搜索框输入关键字！");
+
+            }else{
+                self.location="/fullSearch/"+searchValue;
+
+            }            //alert(searchValue);
+        }
+
+    });
+</script>
+<!-- inline scripts related to this page -->
+</body>
+</html>

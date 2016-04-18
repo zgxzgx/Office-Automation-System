@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>用户信息</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script th:replace="header :: header"></script>
+
+    <link rel="stylesheet" href="/css/image-circle.css"/>
+
+</head>
+
+<body>
+<script>
+
+    var userbase64 = "[[${userbase64}]]";
+
+</script>
+
+<div id="changeNag">
+    <div id ="NagBar" th:replace="navbar :: navbar(${ud})"></div>
+
+</div>
+
+
+
+
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+
+
+        <div th:replace="slider :: slidermenu(${'dbzx'})"></div>
+
+
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <script type="text/javascript">
+                    try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                </script>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="icon-home home-icon"></i>
+                        <a href="/">首页</a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/user/info/{userId}.html(userId=${usr.id})}">个人设置</a>
+                    </li>
+
+                </ul><!-- .breadcrumb -->
+
+                <div class="nav-search" id="nav-search">
+                    <form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<i class="icon-search nav-search-icon"></i>
+								</span>
+                    </form>
+                </div><!-- #nav-search -->
+            </div>
+
+            <div class="page-content">
+                <div id="diyPhaseWin" style="display:none">
+                    <div id="urgentLevelGrid"  ></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="tab-content no-border padding-24" style="font-size: 14px;background-color:#fff;width:800px;font-family: Microsoft YaHei">
+                            <h2 class="header blue bolder smaller center">用户基本信息</h2>
+                            <div class="row">
+                                <div class="col-xs-12  col-sm-3 center" >
+                                   <!-- <div>
+                                        <span class="profile-picture">
+                                            <img id="avatar" class="editable img-responsive" alt="Alex's Avatar" th:src="'/user/image/'+${ud.id}+''" />
+                                        </span>
+                                        <span class="profile-picture">
+                                            <img class="editable img-responsive" alt="Alex's Avatar" id="avatar2" th:src="'/user/image/'+${ud.id}+''" />
+                                        </span>
+
+                                        <div class="space-4"></div>
+                                    </div>-->
+
+                                    <div style="margin:0 auto;float: left" id="avatar1" class="img-circle1">
+                                        <div id="avatar" class="img-circle"
+                                             ></div>
+                                       <!-- th:style="'background-image:url(/user/image/'+${usr.id}+');'"
+                                        '/controllername?t=' + (new Date().getTime());-->
+                                        <div class="space space-6"></div>
+                                        <div id="fileRemove">
+                                        <input style="width: 200px;" type="file" name="files" id="files"/> <!--上传头像-->
+                                        </div>
+                                    </div>
+
+
+                                    <div style="margin:0 auto; padding-top:60px;float: left" id="signature1" class="square">
+                                        <div id="signature" class="img-circle"
+                                             ></div>
+                                        <!--th:style="'background-image:url(/user/getSignImg/'+${usr.id}+');background-size:contain;'"-->
+                                        <div id="signRemove">
+                                        <input style="width: 200px; " type="file" name="files" id="signfiles"/> <!--上传签名-->
+                                        </div>
+                                    </div>
+
+                                    <div class="space space-4"></div>
+
+
+
+
+
+                                </div>
+                                <div class="col-xs-12 col-sm-9">
+
+                                    <div class="profile-user-info">
+                                        <input name="id" type="hidden" th:value="*{usr} ? *{usr.id} : '0'"/>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 用户名 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr} ? *{usr.userName} : '(no user specified)'"></label>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 姓名 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr} ? *{usr.Name} : '(no user specified)'"></label>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 性别 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr} ? *{usr.sex} : '(no user specified)'"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 邮箱 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr} ? *{usr.email} : '(no user specified)'"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 手机 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr} ? *{usr.tel} : '(no user specified)'"></label>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">隶属单位/科室 </div>
+
+                                            <div class="profile-info-value">
+
+                                                <!--<label  th:text="*{user != null and user.group != null and user.group.group !=null or user.group.group.group !=null}?*{user.group.groupName}:'(no user specified)'"></label>-->
+                                                <label  th:text="*{usr != null and usr.group != null and usr.group.groupName!=null}?*{usr.group.groupName}:'(no user specified)'"></label>
+
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 短信提醒 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr.msgSend}==true?'是':'否'"></label>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 邮件提醒 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr.emailSend}==true?'是' : '否'"></label>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 手写板 </div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{usr.padEnable}==true?'是' : '否'"></label>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> 延时提醒</div>
+
+                                            <div class="profile-info-value">
+                                                <label th:text="*{delayWarm}"></label>
+                                            </div>
+                                        </div>
+                                        <!--<div class="profile-info-row">-->
+                                        <!--<div class="profile-info-name">职务 </div>-->
+
+                                        <!--<div class="profile-info-value">-->
+
+                                        <!--<label th:text="*{user != null and user.group != null}?*{user.group.groupName}:'(no user specified)'"></label>-->
+
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                    </div>
+                                    <div class="hr hr-8 dotted"></div>
+                                  <!--  <div class="center" style="width: 600px"><a th:href="@{/user/edit/{userid}.html(userid=${ud.id})}" class="btn btn-primary">修改</a></div>-->
+                                    <a th:href="@{/user/edit/{userid}/{userId}.html(userid=${usr.id},userId=${ud.id})}" class="btn btn-sm btn-block btn-primary" style="display: inline;width: 200px;margin-left: 55px">
+                                        <i class="icon-plus-sign bigger-120"></i>
+                                        <span class="bigger-110">编辑个人信息</span>
+                                    </a>&nbsp&nbsp
+                                        <a style="display: inline" href="#" class="btn btn-sm btn-block btn-primary" id="undo">
+                                            <i class="icon-envelope-alt bigger-110"></i>
+                                            <span class="bigger-110">编辑快捷短语</span>
+                                        </a>&nbsp&nbsp
+
+                                        <a style="display: inline" href="#" class="btn btn-sm btn-block btn-primary" id="undo2">
+                                            <i class="icon-minus-sign bigger-120"></i>
+                                            <span class="bigger-110">修改密码</span>
+                                        </a>
+                                </div><!-- /span -->
+                            </div><!-- /row-fluid -->
+                        </div>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+
+    </div><!-- /.main-container-inner -->
+
+<!--    <div id="window" hidden=hidden >
+             <div id="urgentLevelGrid"  ></div>
+    </div>-->
+
+    <div id="window2" hidden="hidden" style="max-width: 346px;max-height: 300px; margin-top: 40px;margin-left: 20px"  resizable="false">
+
+
+
+
+        <div   id="myform">
+            <div class="profile-user-info">
+                <!--<input id="userID" name="id" type="hidden" th:value="*{ud} ? *{ud.id} : '0'"/>-->
+
+                <p>
+                    <label for='Password1'>原密码：</label>
+                    <input type="password" id="Password1" name="Password1" onfocus="this.type='password'"  required="true" data-required-msg="初始密码不能为空" autocomplete="off"/>
+                </p>
+                <p>
+                    <label for='Password2'>新密码：</label>
+                    <input type="password" id="Password2" name="Password2" onfocus="this.type='password'" required="true" data-required-msg="请输入密码" autocomplete="off"/>
+                </p>
+                <p>
+                    <label for='Password3'>请确认：</label>
+                    <input type="password" id="Password3" name="Password3" onfocus="this.type='password'" required="true" data-required-msg="请再次输入密码" autocomplete="off" />
+                </p>
+            </div>
+            <div class="space space-10"></div>
+            <div class="center"><input style="left: -30px;" type="submit" id="submitBtn" class="btn btn-sm btn-primary" value="提交" onclick="updatePassword()"/>
+                <a  class="btn btn-sm btn-danger" onclick="closeWindow()">取消</a></div>
+            <div class="space space-10"></div>
+
+
+        </div>
+
+
+
+    </div>
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+
+<!-- inline scripts related to this page -->
+<script th:inline="javascript">
+
+    var userID=/*[[${usr.id}]]*/[];
+    var userPassword=/*[[${usr.password}]]*/[];
+
+
+    //$("changeNag").append('<div id ="NagBar" replace="navbar :: navbar('+ud+')"/>');
+
+    var crudServiceBaseUrl = "/diyphase";  //根地址
+    var phaseGridDataSource;        //声明短语类型 数据源变量
+    var urgentLevelGridDataSource;        //声明紧急程度数据源变量
+    var saveUrl = "/upload/" + userID;
+    var saveURLSign="/uploadSign/"+userID;
+
+
+
+    $(function($){
+
+        $('#avatar').css("background-image", "");
+        $('#avatar').css("background-image", "url(/user/image/" + userID + "?"+new Date().getTime()+")");
+
+        $('#signature').css("background-image", "");
+        $('#signature').css("background-image", "url(/user/getSignImg/" + userID + "?"+new Date().getTime()+")");
+        $('#signature').css("background-size", "contain");
+
+
+
+    });
+
+
+    function updatePassword() {
+        var pass2 = $("#Password2").val();
+        var pass1 = $("#Password1").val();
+        var pass3=  $("Password3").val();
+        if (pass1!= "" && pass2!="" &&pass3!="") {
+            $.ajax({
+                url: '/api/user/PassWordEdit2/',
+                type: 'post',
+                data: {id: userID, password: pass2},
+                success: function () {
+                    $("#window2").data("kendoWindow").close();
+                    //swal("您已更新密码，请重新登陆", "", "success");
+                     swal({title: "提交成功!", text: '您已更新密码，即将登出!', type: "success", timer: 60000 });
+                    window.location.href = "/logout";
+                    window.event.returnValue = false;
+
+
+                },
+                error: function () {
+                  //  $("#window2").data("kendoWindow").close();
+                 //   swal("密码更新失败!请再次操作", "", "error");
+                    window.location.href = "/logout";
+
+                    window.event.returnValue = false;
+                }
+            });
+
+        }
+    }
+
+    function closeWindow(){
+
+        $("#window2").data("kendoWindow").close();
+
+    }
+
+
+    $(document).ready(function() {
+        $('#undo').bind('click',function(){
+            $('#diyPhaseWin').kendoWindow({
+                position: {
+                    top: screen.height / 4,
+                    left: screen.width / 4
+
+                },
+                width: "900px",
+                title: "用户自定义短语",
+                modal:true
+
+            });
+
+            $('#diyPhaseWin').data("kendoWindow").open();
+            setUrgentLevelGridDataSource();
+            setUrgentLevelGrid();
+        });
+
+    });
+    $(function(){
+        $('#undo2').bind("click", function () {
+            $('#window2').kendoWindow({
+                title: "修改密码",
+                position: {
+                    top: screen.height / 4,
+                    left: screen.width / 2
+
+                },
+                resizable: true,
+                draggable: true,
+                modal: true
+
+            });
+            $('#window2').data("kendoWindow").open();
+        });
+    });
+
+    //自定义短语函数
+    function setUrgentLevelGrid(){
+        $("#urgentLevelGrid").kendoGrid({
+            dataSource:urgentLevelGridDataSource,
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        startswith: "选择条件",
+                        eq: "等于",
+                        neq: "不等于"
+
+                    }
+                },
+                messages: {
+                    info: "筛选",
+                    and: "且",
+                    or: "或",
+                    filter: "搜索",
+                    clear: "取消"
+                }
+
+            },
+            toolbar:[{name:"create",text:"添加快捷短语"}],
+            columns:[
+                {field:"id",title:"编号",hidden:true},
+                {field:"phaseContent",title:"短语内容",width:"400px"},
+                { command: [
+                    { name: "edit",text: { edit: "编辑", cancel: "取消", update: "更新" } },
+                    { name: "destroy", text: "删除", click: function(e){
+                        var entityGrid = $("#urgentLevelGrid").data("kendoGrid");
+                        var row=entityGrid.select();
+                        var data=entityGrid.dataItem(row);
+
+                        if (confirm('你确定要删除：'+data.phaseContent)) {
+                            var dataSource = $("#urgentLevelGrid").data("kendoGrid").dataSource;
+                            dataSource.remove(data);
+                            dataSource.sync();
+                        }
+                    } }
+
+                ],
+                    title: "&nbsp;" ,width: "300px" }
+            ],
+            pageable: {
+                buttonCount:3,
+                input: true,
+
+                messages:{
+                    display:"共{2}条记录",
+                    first:"第一页",
+                    last:"最后一页",
+                    next:"下一页",
+                    previous:"前一页",
+                    morePages:"更多页",
+                    refresh:"刷新表格",
+                    empty:"没有数据",
+                    itemsPerPage:"项数据每页",
+                    page:"第",
+                    of:"页"
+                }
+            },
+            resizable:false,
+            selectable: "row",
+            editable: {
+                mode:"inline",
+                update:'true',
+                confirmation: "确认删除这条记录?"
+            }
+        });
+    }
+
+
+    //上载
+    function onUpload(e) {
+        // Array with information about the uploaded files
+
+        var files = e.files;
+
+        // Check the extension of each file and abort the upload if it is not image 仅能上传图片
+        $.each(files, function () {
+            if ((this.extension.toLowerCase() != ".jpg") & (this.extension.toLowerCase() != ".png") & (this.extension.toLowerCase() != ".img") & (this.extension.toLowerCase() != ".gif")) {
+                alert("文件格式不正确！");
+                e.preventDefault();
+            }
+        });
+    }
+
+    //取消
+    function onCancel(e) {
+        // Array with information about the uploaded files
+        var files = e.files;
+        alert("取消");
+        // Process the Cancel event
+    }
+    //上传成功
+    function onSuccess(e) {
+        // Array with information about the uploaded files
+        var files = e.files;
+
+        console.log(files);
+
+        var imageStr = e.files[0].name;
+
+
+        $.ajax({
+            url: "/user/edit/image",
+            type: "POST",
+            data: {imagePath: imageStr, id: userID},
+            success: function (req) {
+
+
+                reloadKendoUpload();
+
+                $('#avatar').css("background-image", "");
+                $('#avatar').css("background-image", "url(/user/image/" + userID + "?"+new Date().getTime()+")");
+                console.log("url(/user/image/" + userID + "?"+new Date().getTime()+")");
+
+            }
+
+        });
+    }
+
+
+    function reloadKendoUpload(){
+        //$('#avatar').css("background-image", "");
+        $("#fileRemove").empty();
+        $("#fileRemove").append($('<input style="width: 200px;" type="file" name="files" id="files"/>'))
+
+        $("#files").kendoUpload({
+            multiple: false,
+            async: {
+                saveUrl: saveUrl,
+                removeUrl: "/remove",
+                autoUpload: true
+            },
+            showFileList: false,
+            localization: {
+                select: "上传头像",
+                uploadSelectedFiles: "上传",
+                cancel: "取消",
+                headerStatusUploaded: "",
+                statusUploaded: ""
+            },
+            upload: onUpload,
+            cancel: onCancel,
+            success: onSuccess,
+            error: onError
+        });
+
+    }
+
+    //错误 仅在异步模式下起作用
+    function onError(e) {
+        // Array with information about the uploaded files
+        var files = e.files;
+
+        alert("上传错误");
+        if (e.operation == "upload") {
+            alert("Failed to upload " + files.length + " files");
+        }
+    }
+
+    function addExtensionClass(extension) {
+        switch (extension) {
+            case '.jpg':
+            case '.img':
+            case '.png':
+            case '.gif':
+                return "img-file";
+            default:
+                return "default-file";
+        }
+    }
+
+    //紧急程度 数据源函数
+    function setUrgentLevelGridDataSource(){
+        urgentLevelGridDataSource=new kendo.data.DataSource({
+            transport: {
+                read:  {
+                    url: crudServiceBaseUrl + "/phasegrid",
+                    dataType: "json"
+                },
+                create:{
+                    url:crudServiceBaseUrl+"/createPhase",
+                    dataType:"json"
+                },
+                update:{
+                    url:crudServiceBaseUrl+"/updatePhaseList",
+                    dataType:"json"
+                },
+                destroy:{
+                    url:crudServiceBaseUrl+"/deletePhaseList",
+                    dataType:"json"
+
+                },
+                parameterMap: function(options, operation) {
+                    if (operation !== "read" && options.models) {
+                        return {id:options.models[0].id,phaseContent:options.models[0].phaseContent};
+
+                    }
+                }
+            },
+            batch: true,
+            pageSize: 20,
+            schema: {
+                model: {
+                    id: "id",
+                    fields: {
+                        id: { editable: false, nullable: true },
+                        phaseContent: { validation: { required: true } }
+
+                    }
+                }
+            }
+        });
+    }
+
+    $("#myform").kendoValidator({
+        rules: {
+            customRule1: function(input) {
+                //only 'Tom' will be valid value for the username input
+                if (input.is("[name=Password3]")) {
+                    var pass1 = document.getElementById("Password2").value;
+                    return input.val() === pass1;
+                }
+                return true;
+            },
+            customRule2: function(input) {
+                //only 'Tom' will be valid value for the username input
+                if (input.is("[name=Password1]")) {
+
+//                    $.ajax({
+//                        url: "/user/editPassport",
+//                        type: "POST",
+//                        data: {password: input.val()},
+//                        success: function (req) {
+//                             if(req=="true"){
+//                                 return true;
+//                             }  else return false;
+//
+//                        }
+//
+//                    });
+                    return input.val() === userPassword;
+                }
+                return true;
+            }
+
+        },
+        messages: {
+            customRule1: "两次输入密码不一致，请修改",
+            customRule2: "您的密码输入错误"
+        }
+    });
+    $("#files").kendoUpload({
+        multiple: false,
+        async: {
+            saveUrl: saveUrl,
+            removeUrl: "/remove",
+            autoUpload: true
+        },
+        showFileList: false,
+        localization: {
+            select: "上传头像",
+            uploadSelectedFiles: "上传",
+            cancel: "取消",
+            headerStatusUploaded: "",
+            statusUploaded: ""
+        },
+        upload: onUpload,
+        cancel: onCancel,
+        success: onSuccess,
+        error: onError
+    });
+
+    $("#signfiles").kendoUpload({
+        multiple: false,
+        async: {
+            saveUrl: saveURLSign,
+            autoUpload: true
+        },
+        showFileList: false,
+        localization: {
+            select: "上传签名",
+            uploadSelectedFiles: "上传",
+            cancel: "取消",
+            headerStatusUploaded: "",
+            statusUploaded: ""
+        },
+        success: onSuccess2
+
+    });
+
+    function onSuccess2(e) {
+        // Array with information about the uploaded files
+        var files = e.files;
+
+        console.log(files);
+
+        var imageStr = e.files[0].name;
+        reloadSignKendoUpload();
+        $('#signature').css("background-image", "");
+        $('#signature').css("background-image", "url(/user/getSignImg/" + userID + "?"+new Date().getTime()+")");
+        $('#signature').css("background-size", "contain");
+
+
+    }
+
+    function reloadSignKendoUpload(){
+        //$('#avatar').css("background-image", "");
+        $("#signRemove").empty();
+        $("#signRemove").append($('<input style="width: 200px; " type="file" name="files" id="signfiles"/>'))
+
+        $("#signfiles").kendoUpload({
+            multiple: false,
+            async: {
+                saveUrl: saveURLSign,
+                autoUpload: true
+            },
+            showFileList: false,
+            localization: {
+                select: "上传签名",
+                uploadSelectedFiles: "上传",
+                cancel: "取消",
+                headerStatusUploaded: "",
+                statusUploaded: ""
+            },
+            success: onSuccess2
+
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

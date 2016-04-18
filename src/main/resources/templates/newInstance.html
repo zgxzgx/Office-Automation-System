@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>新建流程</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+   <script th:replace="header :: header"></script>
+
+
+
+</head>
+
+<body>
+<script th:inline="javascript">
+
+    var userbase64 = [[${userbase64}]];
+
+
+</script>
+
+<div th:replace="navbar :: navbar(${ud})"></div>
+
+
+<div class="main-container" id="main-container">
+<script type="text/javascript">
+    try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+</script>
+
+<div class="main-container-inner">
+<a class="menu-toggler" id="menu-toggler" href="#">
+    <span class="menu-text"></span>
+</a>
+
+
+<div th:replace="slider :: slidermenu(${'dbzx-xjgw'})"></div>
+
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="/">首页</a>
+            </li>
+
+            <li>
+                <a href="#">新建流程</a>
+            </li>
+
+        </ul><!-- .breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+            <span class="input-icon">
+                <input type="text" placeholder="搜索 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </div><!-- #nav-search -->
+    </div>
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <div id="main" >
+                    <table border="0" margin="0">
+                        <tr>
+                            <td >
+                                <div id="sendfile" align="center">
+                                    <a href="#"   onclick="createPublishMissive()">
+                                        <img src="/img/missivePublish_small.png" width="230px" height="340px"  style="padding: 10px;border: 10px;border-radius: 4px" /></br>
+                                        <label for="send" class="word">发文流程</label>
+                                        <span></span>
+                                    </a>
+                                </div>
+                            </td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+
+                            <td>
+                                <div id="getfile" align="center">
+                                    <a href="#" onclick="createReceiveMissive()">
+                                        <img src="/img/missiveReceive_small.png" width="230px" height="340px"  style="padding: 10px;border: 10px;border-radius: 4px"  /></br>
+                                        <label for="get" class="word">收文流程</label>
+                                        <span></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!--<a href="#"  class="btn btn-app btn-success btn-sm" onclick="createPublishMissive()">
+                    <i  class="icon-share-alt bigger-130"></i>
+                    发文流程
+                </a>&nbsp&nbsp&nbsp
+                <a href="#"  class="btn btn-app btn-primary btn-sm" onclick="createReceiveMissive()">
+                    <i  class="icon-folder-open-alt bigger-130"></i>
+                    收文流程
+                </a>&nbsp&nbsp&nbsp
+                <a href="#"  class="btn btn-app btn-warning btn-sm" onclick="createSign();">
+                    <i  class="icon-edit bigger1230"></i>
+                    签报流程
+                </a>&nbsp&nbsp&nbsp-->
+                <!--<a href="#" class="btn btn-app btn-danger btn-sm" onclick="createFax()" >-->
+                    <!--<i  class="icon-print bigger-130"></i>-->
+                    <!--传真电报-->
+                <!--</a>-->
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
+
+
+</div><!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="/assets/js/jquery.1.10.2.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!-- ace scripts -->
+
+<script src="/assets/js/ace-elements.min.js"></script>
+<script src="/assets/js/ace.min.js"></script>
+<script src="/js/kendo.all.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+
+<script th:inline="javascript">
+    var userO=/*[[${ud}]]*/ null;
+    var userNanes=/*[[${userNames}]]*/null;
+    var user=userO.userName;
+    var reMisId="";
+    var instanceId="";
+    var taskId="";
+    var taskName="";
+
+    var userCode="Basic dGlzc290OnRpc3NvdA==";//用户编码
+    var processDeId="";//流程定义id；
+    //搜索监听
+    $("#nav-search-input").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+
+            var searchValue=event.currentTarget.value;
+            if(searchValue==""){
+                swal("请在搜索框输入关键字！");
+
+            }else{
+                self.location="/fullSearch/"+searchValue;
+
+            }
+            //alert(searchValue);
+        }
+
+    });
+
+    function StartInstance(typeName){
+        $.ajax({
+            type:'post',
+            url:'api/startProInstance',//对应MisssiveReceiveController
+            async:false,
+            data:{type:typeName,userName:user},
+            beforeSend:function(req){
+                req.setRequestHeader('Authorization', $.cookie('userbase64'));
+            },
+            success:function(result){
+                processDeId=result[0];
+                instanceId=result[1];
+                taskId=result[2];
+            },
+            error:function(error){
+                console.error("start instance error ",error);
+            }
+        });
+    }
+    //新建发文流程
+    function createPublishMissive(){
+        StartInstance("发文");
+        //页面跳转收文流程
+        window.location.href="/missive/missivePublish/"+instanceId+"/"+taskId;
+    }
+    //新建收文流程
+    function createReceiveMissive(){
+        StartInstance("收文");
+        //页面跳转收文流程
+        window.location.href="/"+processDeId+"/"+instanceId+"/"+taskId;//MissvieReceiveController
+    }
+    //新建签报流程
+    function createSign(){
+        StartInstance("签报");
+        window.location.href="/missiveSign/SignMissive/"+instanceId+"/"+taskId;
+    }
+    //新建传真电报流程
+    function createFax(){
+        StartInstance("传真电报");
+        window.location.href="/FaxCable/"+taskId+"/"+instanceId;
+    }
+    //新建新闻发布流程内部
+    function createNewsPublish(){
+        StartInstance("新闻发布（内）");
+        window.location.href="/taskform/newsPublish/"+taskId+"/"+instanceId;
+    }
+    //新建新闻发布流程内部
+    function createNewsPublish2(){
+        StartInstance("新闻发布（外）");
+        window.location.href="/taskform/newsPublishExternal/"+taskId+"/"+instanceId;
+    }
+</script>
+
+
+<style type="text/css">
+    #main{
+        width:100%;
+        height:100%;
+    }
+
+    td div{
+        width:250px;
+        height:400px;
+
+        border-top-width: 10px;
+        border-radius: 4px;
+    }
+
+    #sendfile{
+        background-color:rgb(118,167,53);
+    }
+    #getfile{
+        background-color:rgb(41,116,198);
+    }
+    #readfile{
+        background-color:rgb(250,169,40);
+    }
+    #faxcable{
+        background-color:rgb(160,32,240);
+    }
+
+    a{
+        text-decoration:none;
+    }
+
+    /*img{*/
+        /*padding: 10px;*/
+        /*border: 10px;*/
+        /*border-radius: 4px;*/
+    /*}*/
+
+    .word{
+        font-family: 'Questrial', Verdana, sans-serif;
+        color:#FFFFFF;
+        margin-top: 30px;
+        font-size:20px;
+    }
+
+</style>
+
+<!-- inline scripts related to this page -->
+</body>
+</html>

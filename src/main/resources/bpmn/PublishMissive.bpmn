@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="PublishMissiveId" name="PublishMissive" isExecutable="true">
+    <documentation>发文流程</documentation>
+    <startEvent id="StartPublish" name="发文开始">
+      <documentation>开始</documentation>
+    </startEvent>
+    <userTask id="OfficeCheck" name="办公室处理" activiti:assignee="${officeCheck}"></userTask>
+    <userTask id="LeaderSign" name="领导审批" activiti:assignee="${signIssue_Person}"></userTask>
+    <exclusiveGateway id="exclusivegateway5" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow34" sourceRef="OfficeCheck" targetRef="exclusivegateway5"></sequenceFlow>
+    <sequenceFlow id="flow72" name="交由领导审批" sourceRef="exclusivegateway5" targetRef="LeaderSign">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${IsPass=="NeedSign"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow73" sourceRef="LeaderSign" targetRef="OfficeCheck"></sequenceFlow>
+    <endEvent id="endevent1" name="流程结束"></endEvent>
+    <sequenceFlow id="flow80" sourceRef="StartPublish" targetRef="OfficeCheck"></sequenceFlow>
+    <sequenceFlow id="flow81" name="结束流程" sourceRef="exclusivegateway5" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${IsPass=="End"}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PublishMissiveId">
+    <bpmndi:BPMNPlane bpmnElement="PublishMissiveId" id="BPMNPlane_PublishMissiveId">
+      <bpmndi:BPMNShape bpmnElement="StartPublish" id="BPMNShape_StartPublish">
+        <omgdc:Bounds height="35.0" width="35.0" x="225.0" y="520.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="OfficeCheck" id="BPMNShape_OfficeCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="190.0" y="630.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="LeaderSign" id="BPMNShape_LeaderSign">
+        <omgdc:Bounds height="55.0" width="105.0" x="370.0" y="713.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway5" id="BPMNShape_exclusivegateway5">
+        <omgdc:Bounds height="40.0" width="40.0" x="222.0" y="720.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="225.0" y="850.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="242.0" y="685.0"></omgdi:waypoint>
+        <omgdi:waypoint x="242.0" y="720.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow72" id="BPMNEdge_flow72">
+        <omgdi:waypoint x="262.0" y="740.0"></omgdi:waypoint>
+        <omgdi:waypoint x="370.0" y="740.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="270.0" y="720.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow73" id="BPMNEdge_flow73">
+        <omgdi:waypoint x="422.0" y="713.0"></omgdi:waypoint>
+        <omgdi:waypoint x="422.0" y="657.0"></omgdi:waypoint>
+        <omgdi:waypoint x="295.0" y="657.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow80" id="BPMNEdge_flow80">
+        <omgdi:waypoint x="242.0" y="555.0"></omgdi:waypoint>
+        <omgdi:waypoint x="242.0" y="630.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow81" id="BPMNEdge_flow81">
+        <omgdi:waypoint x="242.0" y="760.0"></omgdi:waypoint>
+        <omgdi:waypoint x="242.0" y="850.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="259.0" y="799.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
