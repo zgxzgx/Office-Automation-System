@@ -54,3 +54,7 @@ upload
 CDMASmsSendTool.exe
 pdfbox-app-1.8.9.jar
 word2pdf816.exe
+./img
+.png
+img
+src/main/resources/static/img

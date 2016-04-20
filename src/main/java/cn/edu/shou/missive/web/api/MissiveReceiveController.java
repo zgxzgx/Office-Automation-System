@@ -503,6 +503,7 @@ public class MissiveReceiveController {
         String mUndertakeArea = map.get("mUndertakeArea");
 
         String mUploadAttach = map.get("mUploadAttach");
+        String assName=map.get("nextTaskUserName");
 
         MissiveRecSeeCard mrsc = mrscr.getMissData(String.valueOf(instanceId));
         Missive missive = mrsc.getMissiveInfo();
@@ -683,7 +684,7 @@ public class MissiveReceiveController {
         String nowTime=String.valueOf(format.format(new Date()));
         if(remark!=null && !remark.equals("")) {
 
-            this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('" + taskId + "','" + nowTime + "','" + currentUser.getUserName() + "','" + taskId + "','" + instanceId + "','备注','" + remark + "')");
+            this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('" + taskId + "','" + nowTime + "','" + currentUser.getUserName() + "','" + taskId + "','" + instanceId + "','备注','" + remark + "')");
             //this.actService.addTaskComment(taskId.toString(),remark);
         }
         //阅办人签字
@@ -916,7 +917,8 @@ public class MissiveReceiveController {
             Map<String, Object> taskData = new HashMap<String, Object>();
             for (Map<String, ? extends Object> act : actVars) {
                 String assigneeVal = act.get("assignee").toString();
-                user = getUserByAssignee(assigneeVal, currentTaskUser);
+//                user = getUserByAssignee(assigneeVal, currentTaskUser);
+                user = assName;
                 taskData.put(assigneeVal, user);
                 user1 = ud.findByUserName(user);
                 //this.actService.completeTask(taskId, taskData);
@@ -930,15 +932,16 @@ public class MissiveReceiveController {
             for (Map<String, ? extends Object> act : actVars) {
                 String condition = act.get("condition").toString();
                 if (mTaskIndex.equals(condition)) {
-                      if(condition.equals("UndertakeDisposeComp")||condition.equals("EndReado")){
+                      if(condition.equals("End")){
                           this.actCont.completeTask(taskId,"",condition,"","missiveReceive",instanceId);
                       }
                     else {
                           String assigneeVal = act.get("assignee").toString();
-                          user = getUserByAssignee(assigneeVal, currentTaskUser);
+//                          user = getUserByAssignee(assigneeVal, currentTaskUser);
                           taskData.put("IsPass", condition);
-                          taskData.put(assigneeVal, user);
-                          user1 = ud.findByUserName(user);
+//                          taskData.put(assigneeVal, user);
+                          taskData.put(assigneeVal, assName);
+                          user1 = ud.findByUserName(assName);
                           this.actService.completeTask(taskId,taskData,"missiveReceive",instanceId);
                           nextTaskID=actService.getCurrentTasksByProcessInstanceId(Long.parseLong(String.valueOf(instanceId))).getId();
                       }
@@ -1002,7 +1005,7 @@ public class MissiveReceiveController {
                 }
             }
             //this.actService.completeTask(taskId, taskData);
-
+//            jdbcTemplate.execute("update oa4.act_ru_task set ASSIGNEE_='"+assName+"' where ID_="+taskId);
 
 
 

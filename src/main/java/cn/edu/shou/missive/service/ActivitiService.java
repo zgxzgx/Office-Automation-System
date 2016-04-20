@@ -390,7 +390,7 @@ public class ActivitiService {
 //                .listPage((pageNum - 1) * pageSize, pageSize);
 
         List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) order by END_TIME_ desc")
+                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) order by END_TIME_ desc")
                 .listPage((pageNum - 1) * pageSize, pageSize);
         List<TaskForm> lftDone=new ArrayList<TaskForm>();
 
@@ -412,16 +412,16 @@ public class ActivitiService {
 ////                .listPage((pageNum - 1) * pageSize, pageSize);
 //
 //        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-//                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) order by END_TIME_ desc")
+//                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) order by END_TIME_ desc")
 //                .listPage((pageNum - 1) * pageSize, pageSize);
 //        long taskTotal=this.historyService.createNativeHistoricTaskInstanceQuery()
-//                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) order by END_TIME_ desc").list().size();
+//                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) order by END_TIME_ desc").list().size();
 //        //long taskTotal = historicTaskInstanceList.size();
 //        double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);
 //        PageableHistoryTaskList result = new PageableHistoryTaskList((int)taskTotal,historicTaskInstanceList,pageNum,pageSize,(int)pageTotal);
 //        return result;
 
-//    select * from oa3.act_hi_taskinst f where f.ID_ IN (select MAX(e.ID_) from  oa3.act_hi_taskinst e where e.ASSIGNEE_='xulinlin'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) group by e.PROC_INST_ID_ )
+//    select * from oa4.act_hi_taskinst f where f.ID_ IN (select MAX(e.ID_) from  oa4.act_hi_taskinst e where e.ASSIGNEE_='xulinlin'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) group by e.PROC_INST_ID_ )
 
     //    }
     public PageableHistoryTaskList getProcessDoneByUserName(String userName,int pageSize,int pageNum){
@@ -433,20 +433,20 @@ public class ActivitiService {
 //                .listPage((pageNum - 1) * pageSize, pageSize);
 
 //        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-//                .sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select MAX(e.ID_) from  oa3.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'   and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) group by e.PROC_INST_ID_ ) order by f.END_TIME_ DESC")
+//                .sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select MAX(e.ID_) from  oa4.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'   and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) group by e.PROC_INST_ID_ ) order by f.END_TIME_ DESC")
 //                .listPage((pageNum - 1) * pageSize, pageSize);
 //        long taskTotal=this.historyService.createNativeHistoricTaskInstanceQuery()
-//                .sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select MAX(e.ID_) from  oa3.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'   and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) group by e.PROC_INST_ID_ ) order by f.END_TIME_ DESC").list().size();
+//                .sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select MAX(e.ID_) from  oa4.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'   and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) group by e.PROC_INST_ID_ ) order by f.END_TIME_ DESC").list().size();
 //        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-//                .sql("SELECT * FROM oa3.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) group by e.PROC_INST_ID_ order by e.END_TIME_ desc")
+//                .sql("SELECT * FROM oa4.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) group by e.PROC_INST_ID_ order by e.END_TIME_ desc")
 //                .listPage((pageNum - 1) * pageSize, pageSize);
 //        long taskTotal=this.historyService.createNativeHistoricTaskInstanceQuery()
-//                .sql("SELECT * FROM oa3.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) group by e.PROC_INST_ID_ order by e.END_TIME_ desc").list().size();
+//                .sql("SELECT * FROM oa4.act_hi_taskinst e where e.ASSIGNEE_='"+userName+"'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) group by e.PROC_INST_ID_ order by e.END_TIME_ desc").list().size();
         List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End' ) and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) order by END_TIME_ desc")
+                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End' ) and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) order by END_TIME_ desc")
                 .listPage((pageNum - 1) * pageSize, pageSize);
         long taskTotal=this.historyService.createNativeHistoricTaskInstanceQuery()
-                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) order by END_TIME_ desc").list().size();
+                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+userName+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) order by END_TIME_ desc").list().size();
         //long taskTotal = historicTaskInstanceList.size();
         double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);
         PageableHistoryTaskList result = new PageableHistoryTaskList((int)taskTotal,historicTaskInstanceList,pageNum,pageSize,(int)pageTotal);
@@ -456,11 +456,11 @@ public class ActivitiService {
     }
 
     public PageableHistoryTaskList getAllProcessDone(String userName,int pageSize,int pageNum){
-        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview') order by f.END_TIME_ DESC" )
+        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview') order by f.END_TIME_ DESC" )
                 .listPage((pageNum - 1) * pageSize, pageSize);
 
 
-        long taskTotal= this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview' ) order by f.END_TIME_ DESC").list().size();
+        long taskTotal= this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview' ) order by f.END_TIME_ DESC").list().size();
 
         //long taskTotal = historicTaskInstanceList.size();
         double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);
@@ -468,11 +468,11 @@ public class ActivitiService {
         return result;
     }
     public PageableHistoryTaskList getAllDepProcessDone(Long groupID,int pageSize,int pageNum){
-        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.ASSIGNEE_ IN (SELECT a.username FROM oa3.users a where group_id ='"+groupID+"') and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview') order by f.END_TIME_ DESC" )
+        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.ASSIGNEE_ IN (SELECT a.username FROM oa4.users a where group_id ='"+groupID+"') and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview') order by f.END_TIME_ DESC" )
                 .listPage((pageNum - 1) * pageSize, pageSize);
 
 
-        long taskTotal= this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_)  and f.ASSIGNEE_ IN (SELECT a.username FROM oa3.users a where group_id ='"+groupID+"')  and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview' ) order by f.END_TIME_ DESC").list().size();
+        long taskTotal= this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_)  and f.ASSIGNEE_ IN (SELECT a.username FROM oa4.users a where group_id ='"+groupID+"')  and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview' ) order by f.END_TIME_ DESC").list().size();
 
         //long taskTotal = historicTaskInstanceList.size();
         double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);
@@ -482,11 +482,11 @@ public class ActivitiService {
 
 
     public PageableHistoryTaskList getPublishMissiveList(String userName,int pageSize,int pageNum){
-        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("    select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where d.START_ACT_ID_='StartPublish' and (d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1')) order by f.END_TIME_ DESC")
+        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("    select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where d.START_ACT_ID_='StartPublish' and (d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1')) order by f.END_TIME_ DESC")
                 .listPage((pageNum - 1) * pageSize, pageSize);
 
 
-        long taskTotal= this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where d.START_ACT_ID_='StartPublish' and (d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1')) order by f.END_TIME_ DESC").list().size();
+        long taskTotal= this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where d.START_ACT_ID_='StartPublish' and (d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1')) order by f.END_TIME_ DESC").list().size();
 
         //long taskTotal = historicTaskInstanceList.size();
         double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);
@@ -540,11 +540,11 @@ public class ActivitiService {
 
 
          historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+user.getUserName()+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c))   and  PROC_INST_ID_  IN (  SELECT  b.PROC_INST_ID_ from oa3.act_hi_procinst b where b.END_ACT_ID_  IS NULL) order by END_TIME_ desc")
+                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+user.getUserName()+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c))   and  PROC_INST_ID_  IN (  SELECT  b.PROC_INST_ID_ from oa4.act_hi_procinst b where b.END_ACT_ID_  IS NULL) order by END_TIME_ desc")
                 .listPage((pageNum - 1) * pageSize, pageSize);
 
         long taskTotal = this.historyService.createNativeHistoricTaskInstanceQuery()
-                .sql("select * from oa3.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa3.act_hi_taskinst where ASSIGNEE_='"+user.getUserName()+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c))   and  PROC_INST_ID_  IN (  SELECT  b.PROC_INST_ID_ from oa3.act_hi_procinst b where b.END_ACT_ID_  IS NULL) order by END_TIME_ desc")
+                .sql("select * from oa4.act_hi_taskinst where ID_ in( SELECT max(ID_) FROM oa4.act_hi_taskinst where ASSIGNEE_='"+user.getUserName()+"'  and END_TIME_!='' and DELETE_REASON_='completed'  group by PROC_INST_ID_ ) and PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束' or b.ACT_NAME_='End') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c))   and  PROC_INST_ID_  IN (  SELECT  b.PROC_INST_ID_ from oa4.act_hi_procinst b where b.END_ACT_ID_  IS NULL) order by END_TIME_ desc")
                 .list().size();
         double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);
         PageableHistoryTaskList result = new PageableHistoryTaskList((int)taskTotal,historicTaskInstanceList,pageNum,pageSize,(int)pageTotal);
@@ -637,7 +637,7 @@ public class ActivitiService {
 
 
         List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery()
-                .sql("SELECT * FROM oa3.act_hi_taskinst e where e.ASSIGNEE_='"+username+"'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) group by e.PROC_INST_ID_ ").list();
+                .sql("SELECT * FROM oa4.act_hi_taskinst e where e.ASSIGNEE_='"+username+"'  and e.END_TIME_!='' and e.DELETE_REASON_='completed' and e.PROC_INST_ID_ NOT IN(  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) group by e.PROC_INST_ID_ ").list();
 //        List<String> result = new ArrayList<String>();
 //        for(HistoricTaskInstance task:historicTaskInstanceList)
 //        {
@@ -766,7 +766,7 @@ public class ActivitiService {
     public PageableTaskList getAllCurrentTaskList(int pageSize,int pageNum){
 
         /*List<Task>taskList=this.taskService.createNativeTaskQuery()
-                .sql("SELECT * FROM oa3.act_ru_task t order by t.create_time_ desc "
+                .sql("SELECT * FROM oa4.act_ru_task t order by t.create_time_ desc "
                 ).listPage((pageNum - 1) * pageSize, pageNum * pageSize);*/
         long taskTotal = this.taskService.createTaskQuery().active().count();
         List<Task> taskList;
@@ -780,11 +780,11 @@ public class ActivitiService {
 
         if(pageNum * pageSize>=taskTotal) {
             taskList=this.taskService.createNativeTaskQuery()
-                    .sql("SELECT * FROM oa3.act_ru_task t order by (t.description_+0) desc, t.create_time_ desc "
+                    .sql("SELECT * FROM oa4.act_ru_task t order by (t.description_+0) desc, t.create_time_ desc "
                     ).list().subList((pageNum - 1) * pageSize,new Long(taskTotal).intValue());
         }else{
             taskList=this.taskService.createNativeTaskQuery()
-                    .sql("SELECT * FROM oa3.act_ru_task t order by (t.description_+0) desc , t.create_time_ desc "
+                    .sql("SELECT * FROM oa4.act_ru_task t order by (t.description_+0) desc , t.create_time_ desc "
                     ).list().subList((pageNum - 1) * pageSize, pageNum * pageSize);
         }
         double pageTotal = Math.ceil((double)taskTotal/(double)pageSize);

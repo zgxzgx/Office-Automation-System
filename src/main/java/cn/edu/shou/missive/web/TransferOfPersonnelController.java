@@ -19,8 +19,8 @@ public class TransferOfPersonnelController {
     @RequestMapping(value = "/transferOfPer/{currentHolder}/{transferTo}")
     @ResponseBody
     public String updateMissiveHolder(Model model,@PathVariable("currentHolder") String currentHolder,@PathVariable("transferTo") String transferTo) {
-        jdbcTemplate.update("update oa3.act_ru_task SET oa3.act_ru_task.ASSIGNEE_ = '"+ transferTo + "' where oa3.act_ru_task.ASSIGNEE_ = '"+currentHolder +"'");
-        jdbcTemplate.update("update oa3.act_hi_taskinst SET oa3.act_hi_taskinst.ASSIGNEE_ = '"+ transferTo + "' where oa3.act_hi_taskinst.ASSIGNEE_ = '"+currentHolder+"'");
+        jdbcTemplate.update("update oa4.act_ru_task SET oa4.act_ru_task.ASSIGNEE_ = '"+ transferTo + "' where oa4.act_ru_task.ASSIGNEE_ = '"+currentHolder +"'");
+        jdbcTemplate.update("update oa4.act_hi_taskinst SET oa4.act_hi_taskinst.ASSIGNEE_ = '"+ transferTo + "' where oa4.act_hi_taskinst.ASSIGNEE_ = '"+currentHolder+"'");
         return "success";
     }
 }

@@ -144,9 +144,9 @@ public class displayController {
         rollbackList=getCommentList("rollback",pageNum1);
         deletedLsit=getCommentList("delete",pageNum2);
         delegatorList=getCommentList("delegator",pageNum3);
-        int totalTaskForRollback=this.jdbcTemplate.queryForInt("SELECT count(*) FROM oa3.act_hi_comment where ACTION_='rollback'");
+        int totalTaskForRollback=this.jdbcTemplate.queryForInt("SELECT count(*) FROM oa4.act_hi_comment where ACTION_='rollback'");
         int totalTaskFordeleted=getDeletedListNum();
-        int totalTaskFordelegator=this.jdbcTemplate.queryForInt("SELECT count(*) FROM oa3.act_hi_comment where ACTION_='delegator'");
+        int totalTaskFordelegator=this.jdbcTemplate.queryForInt("SELECT count(*) FROM oa4.act_hi_comment where ACTION_='delegator'");
         int totalPageForRollback=getPageTotalNum(totalTaskForRollback);
        int totalPageFordeleted=getPageTotalNum(totalTaskFordeleted);
        int totalPageFordelegator=getPageTotalNum(totalTaskFordelegator);
@@ -191,7 +191,7 @@ public class displayController {
         String faxList="";
         String LastTaskId="";
         String instantId="";
-        List faxResult=this.jdbcTemplate.queryForList("SELECT TIME_ ,TYPE_,ACTION_,USER_ID_,PROC_INST_ID_,MESSAGE_,TASK_ID_ FROM oa3.act_hi_comment  where ACTION_="+"'"+Action+"'"+" order by TIME_ desc limit ?,?",
+        List faxResult=this.jdbcTemplate.queryForList("SELECT TIME_ ,TYPE_,ACTION_,USER_ID_,PROC_INST_ID_,MESSAGE_,TASK_ID_ FROM oa4.act_hi_comment  where ACTION_="+"'"+Action+"'"+" order by TIME_ desc limit ?,?",
                 new Object[] { (currentPage * NUM_PER_PAGE - NUM_PER_PAGE), NUM_PER_PAGE });
 
         Iterator it = faxResult.iterator();
@@ -336,7 +336,7 @@ public class displayController {
     public int getDeletedListNum(){
 
 
-        List faxResult=this.jdbcTemplate.queryForList("SELECT TIME_ ,ACTION_,USER_ID_,PROC_INST_ID_,MESSAGE_,TASK_ID_ FROM oa3.act_hi_comment where ACTION_='delete'");
+        List faxResult=this.jdbcTemplate.queryForList("SELECT TIME_ ,ACTION_,USER_ID_,PROC_INST_ID_,MESSAGE_,TASK_ID_ FROM oa4.act_hi_comment where ACTION_='delete'");
         int flag=0;
 
         Iterator it = faxResult.iterator();

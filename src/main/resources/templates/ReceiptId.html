@@ -167,12 +167,12 @@
      style="position:absolute;left:5%;top:30%;height:1px;width:1px;"></div>
 
 <form id="receiveForm" style="position: absolute;">
-<!--办公室登记-->
+<!--办公室登记处理-->
 <div id="registerDiv" th:if="${#lists.contains(editControl,'registerDiv')}" class="row" style="min-width: 1200px;">
     <div class="col-xs-12 col-sm-12">
         <div class="widget-box">
             <div class="widget-header">
-                <h4>办公室登记</h4>
+                <h4>办公室登记处理</h4>
 
                     <span class="widget-toolbar">
                         <a href="#" data-action="collapse">
@@ -188,101 +188,80 @@
             </div>
             <div class="widget-body">
                 <div class="widget-main">
-                    <table>
-                        <tr style="height:45px">
-                            <td style="text-align: right;width:80px;min-width: 70px" class="blue" > 公文标题:</td>
-                            <td> <input style="width:40%;margin-left:30px;" id="missiveTitle" name="missiveTitle"
-                                        class="k-textbox" required validationMessage="请输入公文标题"/></td>
-                        </tr>
-                        <tr style="height:45px">
-                            <td style="text-align: right;width:80px;min-width: 70px" class="blue"> 公文种类:</td>
-                            <td>
-                                <select style="width:40%;margin-left:30px;" id="missiveType" name="missiveType"
-                                        required validationMessage="请选择公文种类"></select>
-                            </td>
-                        </tr>
-                        <tr style="height:45px">
-                            <td style="text-align: right;width:80px;min-width: 70px" class="blue"> 选择审核:</td>
-                            <td>
-                                <select style="width:40%;margin-left:30px;" id="selectChecker" name="taskDealPerson"
-                                        required validationMessage="请选择执行人"></select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right;width:80px;min-width: 70px" class="blue" > <div id="modifyLabel" style="display: none">修改意见:</div></td>
-                            <td>
-                                <label id="modifyContentL" style="width:900px;border:1px;margin-left:30px;"></label>
-                            </td>
-                        </tr>
+                    <div>
+                        <div class="col-xs-6">
+                            <table>
 
-                    </table>
+                                <tr >
+                                    <td style="min-width: 70px">
+                                        <label class="blue" style="float:left">
+                                            <input name="passor" value="NeedSign" type="radio" class="ace"
+                                                   onclick="$('#selectChecker').data('kendoMultiFilterMultiSelect').enable(true);">
+                                            <span class="lbl"> 领导批示</span><br>
+                                        </label>
+                                    </td>
+                                    <!--<td>-->
+                                    <!--<select style="margin-left:70px;width:200px" id="selectChecker" name="selectChecker"-->
+                                    <!--required validationMessage="执行人不能为空！"></select>-->
+                                    <!--</td>-->
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 70px">
+                                        <label class="blue" style="float:left">
+                                            <input name="passor" value="End" type="radio" class="ace"
+                                                   onclick="$('#selectChecker').data('kendoMultiFilterMultiSelect').enable(false);">
+                                            <span class="lbl"> 结束流程</span><br>
+                                        </label>
+                                    </td>
+                                </tr>
 
 
+                            </table>
+                        </div>
+                        <div class="col-xs-6">
+                            <table>
+                                <tr style="height:45px">
+                                    <td style="text-align: right;width:80px;min-width: 70px" class="blue" > 公文标题:</td>
+                                    <td> <input style="width:40%;margin-left:30px;" id="missiveTitle" name="missiveTitle"
+                                                class="k-textbox" required validationMessage="请输入公文标题"/></td>
+                                </tr>
+                                <tr style="height:45px">
+                                    <td style="text-align: right;width:80px;min-width: 70px" class="blue"> 公文种类:</td>
+                                    <td>
+                                        <select style="width:40%;margin-left:30px;" id="missiveType" name="missiveType"
+                                                required validationMessage="请选择公文种类"></select>
+                                    </td>
+                                </tr>
+                                <tr style="height:45px">
+                                    <td style="text-align: right;width:80px;min-width: 70px" class="blue"> 选择审核:</td>
+                                    <td>
+                                        <select style="width:40%;margin-left:30px;" id="selectChecker" name="taskDealPerson"
+                                                required validationMessage="请选择执行人"></select>
+                                    </td>
+                                </tr>
+
+
+
+
+
+                                <tr>
+                                    <td style="text-align: right;width:80px;min-width: 70px" class="blue" > <div id="modifyLabel" style="display: none">修改意见:</div></td>
+                                    <td>
+                                        <label id="modifyContentL" style="width:900px;border:1px;margin-left:30px;"></label>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
             </div>
         </div>
         <!-- PAGE CONTENT ENDS -->
     </div>
 </div>
-<!--办公室拟办及审核-->
-<div id="checkDiv" th:if="${#lists.contains(editControl,'checkDiv')}" class="row" style="min-width: 1200px">
-    <div class="col-xs-12 col-sm-12">
-        <div class="widget-box">
-            <div class="widget-header">
-                <h4>办公室拟办及审核</h4>
 
-                                                                        <span class="widget-toolbar">
-
-
-                                                                            <a href="#" data-action="collapse">
-                                                                                <i class="icon-chevron-up"></i>
-                                                                            </a>
-
-                                                                        </span>
-                 <span class="widget-toolbar">
-                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
-                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
-                     </span>
-            </div>
-            <div class="widget-body">
-                <div class="widget-main" style="height:200px;">
-                    <div style="width:150px;float:left">
-                        <label class="blue">
-                            <input name="passor"
-                                   onclick="$('#selectFirstLeader').data('kendoMultiFilterMultiSelect').enable(true);$('#selectDisposer').data('kendoMultiFilterMultiSelect').enable(true);$('#regModifyContent').attr('style','display:none;margin-left:160px');$('#regModifyContentT').val('  ')"
-                                   id="checkPass" checked value="CheckComp" type="radio" class="ace">
-                            <span class="lbl"> 通过审核</span>
-                        </label>
-                        <hr/>
-                        <label class="blue">
-                            <input id="modifyRegister" onclick="$('#selectFirstLeader').data('kendoMultiFilterMultiSelect').enable(false);$('#selectDisposer').data('kendoMultiFilterMultiSelect').enable(false);$('#regModifyContent').attr('style','position:absolute;top:127px;left:200px');" name="passor" value="BackRegiste" type="radio" class="ace">
-                            <span class="lbl"> 修改登记</span><br>
-                        </label>
-                        <hr/>
-
-                    </div>
-                    <div style="margin-left:180px;height:160px">
-
-                        <div id="shenhe" style="float:left">
-                            <select style="width:200px;float:left;margin-left:65px" id="selectFirstLeader"
-                                    name="taskDealPerson" required validationMessage="执行人不能为空！"></select>
-                            <select style="width:200px;margin-left:50px;float:left" id="selectDisposer"
-                                    name="taskDealPerson" required validationMessage="执行人不能为空"></select>
-
-                            <div></div>
-                        </div>
-
-                        <div style="display:none" id="regModifyContent">
-                            <label class="blue">修改意见:</label>
-                            <textarea style="resize: none;width:460px;height:105px" required validationMessage="修改意见不能为空！" name="regModifyContent"
-                                      id="regModifyContentT"> </textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <!--领导批示-->
 <div id="leaderSignDiv" th:if="${#lists.contains(editControl,'leaderSignDiv')}" style="min-width: 1200px" class="row">
     <div class="col-xs-12 col-sm-12">
@@ -315,277 +294,7 @@
         <!-- PAGE CONTENT ENDS -->
     </div>
 </div>
-<!--办公室处理-->
-<div id="officeHandler" th:if="${#lists.contains(editControl,'officeHandler')}" style="min-width: 1200px" class="row">
-    <div class="col-xs-12 col-sm-12">
-        <div class="widget-box">
-            <div class="widget-header">
-                <h4>办公室处理</h4>
 
-                                                                        <span class="widget-toolbar">
-
-
-                                                                            <a href="#" data-action="collapse">
-                                                                                <i class="icon-chevron-up"></i>
-                                                                            </a>
-
-                                                                        </span>
-                 <span class="widget-toolbar">
-                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
-                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
-                     </span>
-            </div>
-            <div class="widget-body">
-                <div class="widget-main">
-                    <table>
-                        <tr>
-                            <td style="min-width: 70px">
-                                <label class="blue" style="float:left">
-                                    <input name="passor" value="SignComp" type="radio" class="ace" checked
-                                           onclick="$('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(false);$('#selectFirstLooker').data('kendoMultiFilterMultiSelect').enable(true);"/>
-                                    <span class="lbl"> 转至阅办</span>
-                                </label>
-                            </td>
-                            <td>
-                                <select style="width:200px;margin-left:70px;float:left" id="selectFirstLooker"
-                                        name="taskDealPerson" required validationMessage="执行人不能为空！"></select>
-                                <!--<select style="width:200px;margin-left:45px;float:left" id="selectAfterLook"-->
-                                        <!--name="taskDealPerson" required validationMessage="执行人不能为空！"></select>-->
-                            </td>
-                        </tr>
-                        <tr></tr>
-                        <tr >
-                            <td style="min-width: 70px">
-                                <label class="blue" style="float:left">
-                                    <input name="passor" value="NeedSign" type="radio" class="ace"
-                                           onclick="$('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(true);$('#selectFirstLooker').data('kendoMultiFilterMultiSelect').enable(false);">
-                                    <span class="lbl"> 继续批示</span><br>
-                                </label>
-                            </td>
-                            <td>
-                                <select style="margin-left:70px;width:200px" id="selectNextLeader" name="taskDealPerson"
-                                        required validationMessage="执行人不能为空！"></select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="min-width: 70px">
-                                <label class="blue" style="float:left">
-                                    <input name="passor" value="UndertakeDisposeComp" type="radio" class="ace"
-                                           onclick="$('#selectNextLeader').data('kendoMultiFilterMultiSelect').enable(false);$('#selectFirstLooker').data('kendoMultiFilterMultiSelect').enable(false);">
-                                    <span class="lbl"> 结束流程</span><br>
-                                </label>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- PAGE CONTENT ENDS -->
-    </div>
-</div>
-<!--阅办人签字-->
-<div id="lookerSignDiv" th:if="${#lists.contains(editControl,'lookerSignDiv')}" style="min-width: 1200px" class="row">
-    <div class="col-xs-12 col-sm-12">
-        <div class="widget-box">
-            <div class="widget-header">
-                <h4>阅办人签字</h4>
-
-                                                                        <span class="widget-toolbar">
-
-
-                                                                            <a href="#" data-action="collapse">
-                                                                                <i class="icon-chevron-up"></i>
-                                                                            </a>
-
-                                                                        </span>
-                 <span class="widget-toolbar">
-                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
-                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
-                     </span>
-            </div>
-            <div class="widget-body">
-                <div class="widget-main">
-                    <div>
-                        <label class="blue" style="float:left"></label>
-
-
-                    </div>
-                </div>
-                <div class="widget-body">
-                    <div class="widget-main" style="height:145px">
-                        <table>
-                            <tr>
-                                <td>
-                                    <label class="blue" style="float:left">
-                                        <input name="passor" value="ReadoComp" checked
-                                               onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(true);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);"
-                                               type="radio" class="ace">
-                                        <span class="lbl"> 开始承办</span>
-                                    </label>
-                                </td>
-                                <td>
-                                    <select style="margin-left:70px;width:200px;float:left" id="selectFirstUndertaker"
-                                            name="taskDealPerson" required validationMessage="执行人不能为空！"></select>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="blue" style="float:left">
-                                        <input name="passor" value="NeedReado"
-                                               onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(false);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(true);"
-                                               type="radio" class="ace">
-                                        <span class="lbl"> 继续阅办</span><br>
-                                    </label>
-                                </td>
-                                <td>
-                                    <select style="margin-left:70px;width:200px" id="selectNextLooker" name="taskDealPerson"
-                                            required validationMessage="执行人不能为空！"></select>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="blue">
-                                        <input name="passor" value="EndReado" type="radio"
-                                               onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(false);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);"
-                                               class="ace">
-                                        <span class="lbl"> 结束阅办</span><br>
-                                    </label>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- PAGE CONTENT ENDS -->
-    </div>
-</div>
-<!-- 阅办后处理-->
-<div id="handlerDiv" th:if="${#lists.contains(editControl,'handlerDiv')}"  class="row" style="min-width: 1200px">
-    <div class="col-xs-12 col-sm-12">
-        <div class="widget-box">
-            <div class="widget-header">
-                <h4>阅办后处理</h4>
-
-                                                                        <span class="widget-toolbar">
-
-
-                                                                            <a href="#" data-action="collapse">
-                                                                                <i class="icon-chevron-up"></i>
-                                                                            </a>
-
-                                                                        </span>
-                 <span class="widget-toolbar">
-                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
-                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
-                     </span>
-            </div>
-            <!--<div class="widget-body">-->
-                <!--<div class="widget-main" style="height:145px">-->
-                    <!--<table>-->
-                        <!--<tr>-->
-                            <!--<td>-->
-                                      <!--<label class="blue" style="float:left">-->
-                                      <!--<input name="passor" value="ReadoComp" checked-->
-                                   <!--onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(true);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(false);"-->
-                                   <!--type="radio" class="ace">-->
-                                      <!--<span class="lbl"> 开始承办</span>-->
-                                      <!--</label>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                             <!--<select style="margin-left:70px;width:200px;float:left" id="selectFirstUndertaker"-->
-                                <!--name="taskDealPerson" required validationMessage="执行人不能为空！"></select>-->
-                            <!--</td>-->
-
-                        <!--</tr>-->
-                        <!--<tr>-->
-                            <!--<td>-->
-                                <!--<label class="blue" style="float:left">-->
-                                    <!--<input name="passor" value="NeedReado"-->
-                                           <!--onclick="$('#selectFirstUndertaker').data('kendoMultiFilterMultiSelect').enable(false);$('#selectNextLooker').data('kendoMultiFilterMultiSelect').enable(true);"-->
-                                           <!--type="radio" class="ace">-->
-                                    <!--<span class="lbl"> 继续阅办</span><br>-->
-                                <!--</label>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                                <!--<select style="margin-left:70px;width:200px" id="selectNextLooker" name="taskDealPerson"-->
-                                        <!--required validationMessage="执行人不能为空！"></select>-->
-                            <!--</td>-->
-
-                        <!--</tr>-->
-                    <!--</table>-->
-
-                <!--</div>-->
-            <!--</div>-->
-        </div>
-        <!-- PAGE CONTENT ENDS -->
-    </div>
-</div>
-<!--承办后处理-->
-<div id="undertakeDiv" th:if="${#lists.contains(editControl,'undertakeDiv')}" style="min-width: 1200px" class="row">
-    <div class="col-xs-12 col-sm-12">
-        <div class="widget-box">
-            <div class="widget-header">
-                <h4>承办后处理</h4>
-
-                                                                        <span class="widget-toolbar">
-
-
-                                                                            <a href="#" data-action="collapse">
-                                                                                <i class="icon-chevron-up"></i>
-                                                                            </a>
-
-                                                                        </span>
-                 <span class="widget-toolbar">
-                <a th:href=@{/historyProcess/{instanceId}(instanceId=${instanceId})}
-                   class="btn btn-min bigger btn-success" target="_blank"><i class="icon-check"></i>任务信息</a>
-                     </span>
-            </div>
-            <div class="widget-body">
-                <div class="widget-main">
-                    <table>
-                        <tr>
-                            <td>
-                                <label class="blue" style="float:left">
-                                    <input name="passor" value="NeedUndertakeDispose" type="radio"
-                                           onclick="$('#selectNextUndertaker').data('kendoMultiFilterMultiSelect').enable(true);"
-                                           class="ace" checked>
-                                    <span class="lbl"> 继续承办</span>
-                                </label>
-                            </td>
-                            <td>
-                                <select id="selectNextUndertaker" name="taskDealPerson"
-                                        style="width:200px;margin-left:70px;float:left" required
-                                        validationMessage="执行人不能为空！"></select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="blue">
-                                    <input name="passor" value="EndReado" type="radio"
-                                           onclick="$('#selectNextUndertaker').data('kendoMultiFilterMultiSelect').enable(false);"
-                                           class="ace">
-                                    <span class="lbl"> 结束阅办</span><br>
-                                </label>
-                            </td>
-                        </tr>
-                    </table>
-
-
-
-
-
-
-
-                </div>
-            </div>
-        </div>
-        <!-- PAGE CONTENT ENDS -->
-    </div>
-</div>
 
 <!--收文阅办卡-->
 <div style="width: 1030px;height:1660px;overflow: hidden;" id="padSignaturePic">
@@ -629,7 +338,7 @@
 
             <div>
                 <label id="missiveNums" name="missiveNums" th:unless="${#lists.contains(editControl,'missiveNum')}"
-                       style="position:absolute;font-size:20px;top:227px;left:199px;width:402px;height:45px"></label>
+                       style="position:absolute;font-size:20px;top:230px;left:199px;width:402px;height:45px"></label>
             </div>
         </div>
 
@@ -640,7 +349,7 @@
                    style="position:absolute;font-size:20px;top:227px;left:619px;width:80px;height:35px;text-align: center"
                    value="1" min="0" step="1" />
             <label id="missiveCounts" name="missiveCounts" th:unless="${#lists.contains(editControl,'missiveCount')}"
-                   style="position:absolute;font-size:20px;border-style:none;top:142px;left:619px;margin-left:40px;width:70px;height:45px"></label>
+                   style="position:absolute;font-size:20px;border-style:none;top:230px;left:619px;margin-left:20px;width:70px;height:45px"></label>
         </div>
 
         <!--紧急程度-->
@@ -656,19 +365,19 @@
             <input id="deadline" name="deadline" required validationMessage="请输入办理时限"
                    th:if="${#lists.contains(editControl,'deadline')}" style="font-size:20px;width:200px;height:30px;"/>
             <label id="deadlines" name="deadlines" th:unless="${#lists.contains(editControl,'deadline')}"
-                   style="font-size:20px;margin-left:15px;width:200px;height:30px;"></label>
+                   style="font-size:20px;margin-left:15px;margin-top: 10px;width:200px;height:30px;"></label>
         </div>
 
         <!--来文单位-->
         <div style="position:absolute;top:345px;left:270px">
             <input id="sendUnit" name="deadline" required validationMessage="请输入来文单位"
                    th:if="${#lists.contains(editControl,'sendUnit')}" style="font-size:20px;width:430px;height:30px;"/>
-            <label id="sendUnits" name="deadlines" th:unless="${#lists.contains(editControl,'sendUnit')}"
+            <label id="sendUnit" name="deadlines" th:unless="${#lists.contains(editControl,'sendUnit')}"
                    style="font-size:20px;margin-left:15px;width:430px;height:30px;"></label>
         </div>
 
         <!--领导批示-->
-        <div style="height: 599px;width: 790px;top: 415px;left: 50px;position: absolute;">
+        <div style="height: 520px;width: 783px;top: 560px;left: 55px;position: absolute;">
             <img id="leaderInstuct_img" name="leaderInstuct_img" style="width: 100%;height: 100%;border: none;"/>
         </div>
         <!--来文摘要-->
@@ -680,7 +389,7 @@
         </div>
         <label th:unless="${#lists.contains(editControl,'missiveaAbstract')}" id="missiveaAbstracts"
                name="missiveaAbstracts"
-               style="position:absolute;font-size:20px;width:790px;height:138px;top:275px;left:50px"></label>
+               style="position:absolute;font-size:20px;width:790px;height:138px;top:415px;left:55px"></label>
 
         <!--办公室拟办-->
         <div  style="position:absolute;top:585px;left:55px;" id="officeSuggestDiv" th:if="${#lists.contains(editControl,'officeSuggest')}" >
@@ -689,7 +398,7 @@
                       style="font-size:20px;width:783px;height:113px;resize: none" placeholder="请输入拟办内容..."></textarea>
         </div>
         <label th:unless="${#lists.contains(editControl,'officeSuggest')}" id="officeSuggests" name="officeSuggests"
-               style="position:absolute;top:450px;left:50px;font-size:20px;width:790px;height:115px;WORD-BREAK:break-all"></label>
+               style="position:absolute;top:585px;left:55px;font-size:20px;width:790px;height:115px;WORD-BREAK:break-all"></label>
 
 
         <!--拟办时间-->
@@ -710,17 +419,17 @@
             <!--<img id="leaderInstuct_img" name="leaderInstuct_img" style="width: 100%;height: 100%;border: none"/>-->
         <!--</div>-->
 
-        <div style="top: 640px;left: 55px;background:none;position: absolute;"id="leaderSignAreaDiv"th:if="${#lists.contains(editControl, 'leaderSignArea')}" >
+        <div style="top: 728px;left: 55px;background:none;position: absolute;"id="leaderSignAreaDiv"th:if="${#lists.contains(editControl, 'leaderSignArea')}" >
             <textarea th:if="${#lists.contains(editControl, 'leaderSignArea')}" id="leaderSignArea"
                       name="leaderSignArea"
                       style="height: 156px;width: 783px;position: absolute;background: none;resize: none;font-size: 20px;padding: 0px"></textarea>
 
         </div>
-        <label style="top: 640px;left: 50px;height: 156px;width: 790px;background:none;position: absolute;font-size: 20px" th:unless="${#lists.contains(editControl, 'leaderSignArea')}" id="leaderSignAreas"
+        <label style="top: 728px;left: 55px;height: 156px;width: 783px;background:none;position: absolute;font-size: 20px" th:unless="${#lists.contains(editControl, 'leaderSignArea')}" id="leaderSignAreas"
                    ></label>
 
         <div  th:if="${#lists.contains(editControl, 'leaderSignBtn')}"
-             style="height: 20px;width: 20px;top: 612px;left: 180px;position: absolute;">
+             style="height: 20px;width: 20px;top: 703px;left: 180px;position: absolute;">
             <input type="button" style="width:62px" id="leaderSignBtn" value="手写"
                    class="btn btn-xs btn-primary icon-edit bigger-110"
                    onclick="handSignature('leaderSignArea')">
@@ -1020,7 +729,7 @@ var codes = /*[[${exsistCodes}]]*/[];
 var taskName = /*[[${taskName}]]*/null;
 var nextTasks = /*[[${nextAvailableTasks}]]*/[];
 var userDataSource=/*[[${userDataSource}]]*/null;   //下拉用户
-
+var register=/*[[${register}]]*/null;
 var missiveTitle = "";
 var control;
 var nextTaskUserName="";
@@ -1058,22 +767,7 @@ if (version == 0)
     filePath_version = version + 1;
 else
     filePath_version = version;
-//if (missiveReceiveForm.missiveInfo != null) {
-//    if (missiveReceiveForm.missiveInfo.versions[0] != null) {
-//        if (missiveReceiveForm.missiveInfo.versions[0].attachments.length != 0) {
-//            for (var i = 0; i < missiveReceiveForm.missiveInfo.versions[0].attachments.length; i++) {
-//                if (missiveReceiveForm.missiveInfo.versions[0].attachments[i].isOriginalFil = false | missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[1] == "pdf" | missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[1] == "PDF") {
-//                    var temp = {};
-//                    temp.extension = "." + missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle.split('.')[1];//后缀
-//                    temp.name = missiveReceiveForm.missiveInfo.versions[0].attachments[i].attachmentTittle;
-//                    temp.size = 1;
-//                    initFiles.push(temp);
-//                   // fileListCreate("fileList", temp, "attachments", "filesDIV", currentEditableField);
-//                }
-//            }
-//        }
-//    }
-//}
+
 $(function ($) {
 
     if (missiveReceiveForm.missiveInfo != null) {
@@ -1117,7 +811,6 @@ $(function ($) {
 
 
 });
-
 
 
 
@@ -1397,8 +1090,8 @@ $(function () {
             $('#M_receiveNums').html(result.code);//收文号
             $('#missiveNums').html(result.missiveNumber);//文件字号
             $('#missiveCounts').html(result.fileCount);//文件份数
-            $('#sendUnits').html(result.sendUnit);//文件份数
-            $('#sendUnit').html(result.sendUnit);//文件份数
+            $('label#sendUnit').html(result.sendUnit);//文件份数
+            $('input#sendUnit').val(result.sendUnit);//文件份数
 
             //紧急程度
             if (result.urgencyLevel != null) {
@@ -1433,9 +1126,9 @@ $(function () {
                 $('#officeSuggest').html(officetodo);
             }
 
-            if ($("#selectChecker")[0] && result.taskDealer != null) {
-                $('#selectChecker').data("kendoMultiFilterMultiSelect").value(result.taskDealer.chargerCheck);
-            }
+//            if ($("#selectChecker")[0] && result.taskDealer != null) {
+//                $('#selectChecker').data("kendoMultiFilterMultiSelect").value(result.taskDealer.chargerCheck);
+//            }
             $('#officeSuggest_Month').html(result.toDoDateMonth);//办公室拟办月
             $('#officeSuggest_Months').html(result.toDoDateMonth);//办公室拟办月
             $('#officeSuggest_Day').html(result.toDoDateDay);//办公室拟办日
@@ -1669,70 +1362,60 @@ $(function () {
                     var remark=$("#remark")[0].value;
                     var sendUnit=$("#sendUnit")[0].value== undefined ? "" : $("#sendUnit").val();
 
-                    if (nextTasks != null&&taskIndex!="UndertakeDisposeComp"&&taskIndex!="UndertakeDisposeComp") {
-
-                        if(nextTasks==null){
-                            nextTaskName="继续承办";
-                            selectNextAssignee("UndertakeDisposer");
-                            $.ajax({
-                                url:'/api/getNameByUserName/'+nextTaskUserName,
-                                type:'post',
-                                async:false,
-                                success:function(result){
-                                    nextTaskAssignee=result;
-                                }
-                            });
-
-                        }
-
-                        else
-                        if (nextTasks.length == 1) {
-                            nextTaskName = nextTasks[0].name;
-                            selectNextAssignee(nextTasks[0].assignee);
-                            $.ajax({
-                                url:'/api/getNameByUserName/'+nextTaskUserName,
-                                type:'post',
-                                async:false,
-                                success:function(result){
-                                    nextTaskAssignee=result;
-                                }
-                            });
-
-                        }
-                        else {
-                            var taskIndex = $("input[name='passor']:checked").val() == undefined ? "" : $("input[name='passor']:checked").val();
-                            for (var i = 0; i < nextTasks.length; i++) {
-                                var condition = nextTasks[i].condition;
-                                if (condition == taskIndex) {
-                                    nextTaskName = nextTasks[i].name;
-
-                                    if(condition=="SignComp"){
-                                        selectNextAssignee("Reador");
-                                        nextTaskName+="\n\n转入阅办处理";
-                                    }else{
-                                        selectNextAssignee(nextTasks[i].assignee);
-                                    }
 
 
-                                    $.ajax({
-                                        url:'/api/getNameByUserName/'+nextTaskUserName,
-                                        type:'post',
-                                        async:false,
-                                        success:function(result){
-                                            nextTaskAssignee=result;
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        if(nextTaskAssignee!=""){
-                            confirmMessageText = "流程将转到 - " + nextTaskName+"\n\n处理人为 - 【"+nextTaskAssignee+"】";}
-                        else{confirmMessageText = "流程将转到 - " + nextTaskName;}
-                    }
+                     if(nextTasks!=null) {
+                         if (nextTasks.length == 1) {
+                             nextTaskName = nextTasks[0].name;
+//                             selectNextAssignee(nextTasks[0].assignee);
+                             nextTaskUserName=register;
+                             $.ajax({
+                                 url: '/api/getNameByUserName/' + nextTaskUserName,
+                                 type: 'post',
+                                 async: false,
+                                 success: function (result) {
+                                     nextTaskAssignee = result;
+                                 }
+                             });
 
-                    else {
-                        confirmMessageText = "收文流程即将结束";
-                    }
+                         }
+                         else {
+                             var taskIndex = $("input[name='passor']:checked").val() == undefined ? "" : $("input[name='passor']:checked").val();
+                             for (var i = 0; i < nextTasks.length; i++) {
+                                 var condition = nextTasks[i].condition;
+                                 if (condition == taskIndex) {
+                                     nextTaskName = nextTasks[i].name;
+
+                                     if(condition=="End")
+                                         nextTaskUserName="";
+                                     else
+                                         selectNextAssignee(nextTasks[i].assignee);
+
+
+
+                                     $.ajax({
+                                         url: '/api/getNameByUserName/' + nextTaskUserName,
+                                         type: 'post',
+                                         async: false,
+                                         success: function (result) {
+                                             nextTaskAssignee = result;
+                                         }
+                                     });
+                                 }
+                             }
+                         }
+                         if (nextTaskAssignee != "") {
+                             confirmMessageText = "流程将转到 - " + nextTaskName + "\n\n处理人为 - 【" + nextTaskUserName + "】";
+                         }
+                         else {
+//                             confirmMessageText = "流程将转到 - " + nextTaskName;
+                             confirmMessageText = "收文流程即将结束";
+                         }
+                     }
+
+//                    else {
+//                        confirmMessageText = "收文流程即将结束";
+//                    }
 
 
 
@@ -1845,7 +1528,8 @@ $(function () {
                         mUndertakeArea: undertakeArea,
                         mUploadAttach: attachFiles,
                         remark:remark,
-                        sendUnit:sendUnit
+                        sendUnit:sendUnit,
+                        nextTaskUserName:nextTaskUserName
                     };
 
                     if ($.inArray("attachments", currentEditableField) > -1 && (resultFiles.length == 0 )) {
@@ -2288,11 +1972,11 @@ function handSignature(signType){
     if (signType == "leaderSignArea") {
         openPictureSignatureWindow_missiveRecieve_leader({
             sElement:'signatureDiv',
-            sWidth:790*1.5,
-            sHeight:603*1.5,
+            sWidth:783*1.5,
+            sHeight:520*1.5,
             imgElement:'leaderInstuct_img',
-            imgWidth:790,
-            imgHeight:603,
+            imgWidth:783,
+            imgHeight:520,
             previousSign:leaderInstructImgForBankend,
             signature:userSign,
             textElement:'leaderSignArea',
@@ -2371,7 +2055,7 @@ function signaturePlace(option){
 
 function selectNextAssignee(assignVal){
 
-    if(assignVal=="Checker"){//办公室拟办及审核人
+    if(assignVal=="signIssue_Person"){//办公室拟办及审核人
         nextTaskUserName=$('#selectChecker').val()[0];
     }
     if(assignVal=="Register"){

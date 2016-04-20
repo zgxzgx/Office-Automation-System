@@ -126,7 +126,13 @@ public class templatesControl {
             model.addAttribute("instanceId", instanceid);
             model.addAttribute("taskId", taskid);
 
-
+            List<Map<String ,Object>> taskDealers=jdbc.queryForList("SELECT * FROM oa4.missive_receive_task_dealer where instance_id="+instanceid);
+            Object regist=taskDealers.get(0).get("office_regist");
+            String register;
+            if(regist==null){
+                register="";
+            }else  register=regist.toString();
+            model.addAttribute("register",register);
             String name = actService.getCurrentTask(taskid).getName();//获取当期任务名称
             String assignVal = actService.getCurrentTask(taskid).getAssignee();
             model.addAttribute("currentTaskDealer",assignVal);
@@ -144,9 +150,9 @@ public class templatesControl {
             }
 
             String remarkList="";
-            //List resultList=this.jdbcTemplate.queryForList("SELECT USER_ID_,MESSAGE_ FROM oa3.act_hi_comment where ACTION_='备注' and PROC_INST_ID_="+instanceid);
-            //List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa3.act_hi_comment as a,oa3.act_hi_taskinst as b where a.PROC_INST_ID_=b.PROC_INST_ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+instanceid);
-            List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.TASK_ID_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa3.act_hi_comment as a,oa3.act_hi_taskinst as b where a.Task_ID_=b.ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+instanceid);
+            //List resultList=this.jdbcTemplate.queryForList("SELECT USER_ID_,MESSAGE_ FROM oa4.act_hi_comment where ACTION_='备注' and PROC_INST_ID_="+instanceid);
+            //List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa4.act_hi_comment as a,oa4.act_hi_taskinst as b where a.PROC_INST_ID_=b.PROC_INST_ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+instanceid);
+            List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.TASK_ID_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa4.act_hi_comment as a,oa4.act_hi_taskinst as b where a.Task_ID_=b.ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+instanceid);
 
             Iterator it = resultList.iterator();
             while(it.hasNext()) {
@@ -226,9 +232,9 @@ public class templatesControl {
 
         User usr = this.ud.findById(currentUser.getId());
         UserFrom userFrom=mpf.userToUserForm(usr);
-        List<Map<String, Object>> userConfigList=jdbcTemplate.queryForList("SELECT value FROM oa3.user_config where name='ExternalNewsReceiver' ");
-        String userNames=userConfigList.get(0).get("value").toString();
-        model.addAttribute("userNames",userNames);
+//        List<Map<String, Object>> userConfigList=jdbcTemplate.queryForList("SELECT value FROM oa4.user_config where name='ExternalNewsReceiver' ");
+//        String userNames=userConfigList.get(0).get("value").toString();
+//        model.addAttribute("userNames",userNames);
         model.addAttribute("ud", userFrom);
         return "newInstance";
     }
@@ -286,7 +292,7 @@ public class templatesControl {
 //
 //
 ////        List<Task> tasklist =  this.actService.getCurrentTasksByUser(currentUser);
-////        List tasklist =  jdbcTemplate.queryForList("SELECT * FROM oa3.act_ru_task where ASSIGNEE_ IN (SELECT a.username FROM oa3.users a where group_id =2)");
+////        List tasklist =  jdbcTemplate.queryForList("SELECT * FROM oa4.act_ru_task where ASSIGNEE_ IN (SELECT a.username FROM oa4.users a where group_id =2)");
 //        List<TaskForm> ltfIng=mmc.getTaskFormByTaskList(currentUser);
 //
 //
@@ -479,8 +485,8 @@ public class templatesControl {
         String missiveTitle="无标题";
         String  missiveType="";
         String instanceId="";
-        int tasksNum=jdbcTemplate.queryForInt("SELECT count(*)  FROM oa3.act_hi_taskinst where ASSIGNEE_="+"'"+ currentUser1 +"'"+" and END_TIME_ >="+"'"+ nowTime1 +"'"+"and END_TIME_  <="+"'"+ nowTime2+"'");
-        List taskLists=jdbcTemplate.queryForList("SELECT * FROM oa3.act_hi_taskinst where ASSIGNEE_="+"'"+ currentUser1 +"'"+" and END_TIME_ >="+"'"+ nowTime1 +"'"+"and END_TIME_  <="+"'"+ nowTime2+"'");
+        int tasksNum=jdbcTemplate.queryForInt("SELECT count(*)  FROM oa4.act_hi_taskinst where ASSIGNEE_="+"'"+ currentUser1 +"'"+" and END_TIME_ >="+"'"+ nowTime1 +"'"+"and END_TIME_  <="+"'"+ nowTime2+"'");
+        List taskLists=jdbcTemplate.queryForList("SELECT * FROM oa4.act_hi_taskinst where ASSIGNEE_="+"'"+ currentUser1 +"'"+" and END_TIME_ >="+"'"+ nowTime1 +"'"+"and END_TIME_  <="+"'"+ nowTime2+"'");
         Iterator it=taskLists.iterator();
         while (it.hasNext()){
             Map<String,Object> taskMap=(Map) it.next();
@@ -595,10 +601,10 @@ public class templatesControl {
        Group group = usr.getGroup();
         if(group!=null) {
             Long groupid = group.getId();
-//            String sql="select * from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c))  and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid+" order by missive_publish.created_date desc  limit ?,?";
+//            String sql="select * from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c))  and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid+" order by missive_publish.created_date desc  limit ?,?";
 
-            String sql="select * from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid+" order by missive_publish.created_date desc  limit ?,?";
-//            List<Map<String,Object>> listMainSend= jdbc.queryForList("select * from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c))  and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid+
+            String sql="select * from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid+" order by missive_publish.created_date desc  limit ?,?";
+//            List<Map<String,Object>> listMainSend= jdbc.queryForList("select * from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c))  and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid+
 //                            " order by missive_publish.created_date desc limit ?,?",
 //                    new Object[] { (currentPageSend * NUM_PER_PAGE - NUM_PER_PAGE), NUM_PER_PAGE });
             List<Map<String,Object>> listMainSend= jdbc.queryForList(sql,
@@ -609,19 +615,19 @@ public class templatesControl {
 
 
             //抄送
-            String copySql="select * from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid+" order by missive_publish.created_date desc limit ?,?";
+            String copySql="select * from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid+" order by missive_publish.created_date desc limit ?,?";
             List<Map<String,Object>> listCopyTo= jdbc.queryForList(copySql,
                     new Object[] { (currentPageCopy * NUM_PER_PAGE - NUM_PER_PAGE), NUM_PER_PAGE });
-//            List<Map<String,Object>> listCopyTo= jdbc.queryForList("select * from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid+
+//            List<Map<String,Object>> listCopyTo= jdbc.queryForList("select * from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid+
 //                            " order by missive_publish.created_date desc limit ?,?",
 //                    new Object[] { (currentPageCopy * NUM_PER_PAGE - NUM_PER_PAGE), NUM_PER_PAGE });
             logger.info("getTasklistIng2 page end");
-//            int totalRowsMainSend = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c))   and  missive_publish_main_send_groups.group_id="+groupid);
-//            int totalRowsCopyTo = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa3.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa3.act_ru_task c)) and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid);
+//            int totalRowsMainSend = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c))   and  missive_publish_main_send_groups.group_id="+groupid);
+//            int totalRowsCopyTo = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id and missive_publish.processid not in (  select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_  not in(  SELECT  b.PROC_INST_ID_ from oa4.act_hi_actinst b where b.ACT_NAME_='流程结束') and d.PROC_INST_ID_ NOT IN ( SELECT distinct c.PROC_INST_ID_ FROM oa4.act_ru_task c)) and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid);
 
 
-            int totalRowsMainSend = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid);
-            int totalRowsCopyTo = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id  and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa3.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa3.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid);
+            int totalRowsMainSend = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_main_send_groups  where missive_publish.id=missive_publish_main_send_groups.missive_publish_id and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_main_send_groups.group_id="+groupid);
+            int totalRowsCopyTo = jdbc.queryForInt("select count(*) from missive_publish , missive_publish_copyto_groups  where missive_publish.id=missive_publish_copyto_groups.missive_publish_id  and missive_publish.processid in (select distinct d.PROC_INST_ID_ from oa4.act_hi_actinst d where d.PROC_INST_ID_   in(  SELECT  f.PROC_INST_ID_ from oa4.act_hi_actinst f where f.ACT_NAME_='文印室套红排版打印' or f.ACT_NAME_='拟稿处室分发' ))  and  missive_publish_copyto_groups.group_id="+groupid);
             if (totalRowsMainSend % NUM_PER_PAGE == 0) {
                 taskSendPageNum=totalRowsMainSend / NUM_PER_PAGE;
             } else {

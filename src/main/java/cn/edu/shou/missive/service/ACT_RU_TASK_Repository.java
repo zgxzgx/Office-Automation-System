@@ -1,7 +1,7 @@
 package cn.edu.shou.missive.service;
 
 import cn.edu.shou.missive.domain.ACT_RU_TASK;
-import cn.edu.shou.missive.domain.FaxCablePublish;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;

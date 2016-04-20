@@ -108,7 +108,7 @@ public class DepMissiveController {
 
 
 //        String jumpReason="";
-//        List resultList=this.jdbcTemplate.queryForList("SELECT a.ACTION_ FROM oa3.act_hi_comment as a where a.ACTION_ !='备注' and a.ACTION_ !='rollback'");
+//        List resultList=this.jdbcTemplate.queryForList("SELECT a.ACTION_ FROM oa4.act_hi_comment as a where a.ACTION_ !='备注' and a.ACTION_ !='rollback'");
 //
 //        Iterator it = resultList.iterator();
 //        while(it.hasNext()) {

@@ -213,7 +213,7 @@ public class MyMissiveController {
     public List<TaskForm> getTaskFormByTaskList(User currentUser){
         Long groupID=Long.valueOf(currentUser.getGroup().getId());
         List<TaskForm> tfs =new ArrayList<TaskForm>();
-        List tasklist =  jdbcTemplate.queryForList("SELECT * FROM oa3.act_ru_task where ASSIGNEE_ IN (SELECT a.username FROM oa3.users a where group_id ='"+groupID+"') order by CREATE_TIME_ desc ");
+        List tasklist =  jdbcTemplate.queryForList("SELECT * FROM oa4.act_ru_task where ASSIGNEE_ IN (SELECT a.username FROM oa4.users a where group_id ='"+groupID+"') order by CREATE_TIME_ desc ");
         if (tasklist != null&&tasklist.size()!=0) {
 
             Iterator it = tasklist.iterator();
@@ -852,7 +852,7 @@ public class MyMissiveController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowTime=String.valueOf(format.format(new Date()));
 
-        this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+instanceId+"','"+nowTime+"','"+currentUser.getUserName()+"','"+instanceId+"','delete','"+taskComment+"')");
+        this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+instanceId+"','"+nowTime+"','"+currentUser.getUserName()+"','"+instanceId+"','delete','"+taskComment+"')");
 
 
     }
@@ -906,7 +906,7 @@ public class MyMissiveController {
     @RequestMapping(value="/searchByword/getPublishList")
     public List<TaskForm> searchByKeyValue(@RequestParam String data,@AuthenticationPrincipal User currentUser){
 
-        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("    select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where d.START_ACT_ID_='StartPublish' and (d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1')) order by f.END_TIME_ DESC").list();
+        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("    select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where d.START_ACT_ID_='StartPublish' and (d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1')) order by f.END_TIME_ DESC").list();
 
 //        List<TaskForm> publishDone=filterTaskFormByHistroyTask(historicTaskInstanceList,data);
         List<TaskForm> publishDone = filterTaskFormByHistroyTask(historicTaskInstanceList,data);
@@ -922,7 +922,7 @@ public class MyMissiveController {
 
 
 
-        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa3.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa3.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa3.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview') order by f.END_TIME_ DESC").list();
+        List<HistoricTaskInstance> historicTaskInstanceList = this.historyService.createNativeHistoricTaskInstanceQuery().sql("select * from oa4.act_hi_taskinst f where f.ID_ IN (select max(e.ID_) from  oa4.act_hi_taskinst e group by PROC_INST_ID_) and f.PROC_INST_ID_  IN(  select  d.PROC_INST_ID_ from oa4.act_hi_procinst d where  d.END_ACT_ID_='End' or d.END_ACT_ID_='endevent1' or d.END_ACT_ID_='EndNewsReview') order by f.END_TIME_ DESC").list();
 
 
             List<TaskForm> lftDone = filterTaskFormByHistroyTask(historicTaskInstanceList,data);
@@ -948,7 +948,7 @@ public class MyMissiveController {
         String taskStartTime = String.valueOf(format.format(new Date()));
         String nowTime=String.valueOf(format.format(new Date()));
 
-        this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskID+"','"+nowTime+"','"+userId+"','"+taskId+"','"+instantId+"','rollback','"+delegator+"')");
+        this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskID+"','"+nowTime+"','"+userId+"','"+taskId+"','"+instantId+"','rollback','"+delegator+"')");
 
         return "true";
 
@@ -976,7 +976,7 @@ public class MyMissiveController {
         String taskStartTime = String.valueOf(format.format(new Date()));
         String nowTime=String.valueOf(format.format(new Date()));
 
-        this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskId+"','"+nowTime+"','"+userId+"','"+taskId+"','"+processid+"','rollback','"+delegator+"')");
+        this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskId+"','"+nowTime+"','"+userId+"','"+taskId+"','"+processid+"','rollback','"+delegator+"')");
 
         return "true";
 
@@ -993,7 +993,7 @@ public class MyMissiveController {
         String taskStartTime = String.valueOf(format.format(new Date()));
         String nowTime=String.valueOf(format.format(new Date()));
 
-        this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+processId2+"','"+nowTime+"','"+userId+"','"+taskId2+"','"+processId2+"','delete','"+deleteReason2+"')");
+        this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+processId2+"','"+nowTime+"','"+userId+"','"+taskId2+"','"+processId2+"','delete','"+deleteReason2+"')");
 
         String ss="";
         if(type2.equals("发文流程")){
@@ -1025,7 +1025,7 @@ public class MyMissiveController {
         String taskStartTime = String.valueOf(format.format(new Date()));
         String nowTime=String.valueOf(format.format(new Date()));
 
-        this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+processId+"','"+nowTime+"','"+userId+"','"+taskId1+"','"+processId+"','delete','"+deleteReason+"')");
+        this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+processId+"','"+nowTime+"','"+userId+"','"+taskId1+"','"+processId+"','delete','"+deleteReason+"')");
 
         String ss="";
         if(type.equals("发文流程")){
@@ -1081,9 +1081,9 @@ public class MyMissiveController {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String nowTime=String.valueOf(format.format(new Date()));
             String task=jumpToNode+"|"+taskName;
-           // String uu="INSERT INTO oa3.act_hi_comment(ID_,TYPE_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskId+"','"+task+"','"+nowTime+"','"+currentUser.getUserName()+"','"+taskId+"','"+instantId+"','delegator','"+delegator+"')";
-           //SELECT ID_,EXECUTION_ID_ FROM oa3.act_ru_task where PROC_INST_ID_='362533';
-            List resultList=this.jdbcTemplate.queryForList("SELECT oa3.act_ru_task.ID_ ,oa3.act_ru_task.PROC_INST_ID_  FROM oa3.act_ru_task where oa3.act_ru_task.PROC_INST_ID_="+instantId);
+           // String uu="INSERT INTO oa4.act_hi_comment(ID_,TYPE_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskId+"','"+task+"','"+nowTime+"','"+currentUser.getUserName()+"','"+taskId+"','"+instantId+"','delegator','"+delegator+"')";
+           //SELECT ID_,EXECUTION_ID_ FROM oa4.act_ru_task where PROC_INST_ID_='362533';
+            List resultList=this.jdbcTemplate.queryForList("SELECT oa4.act_ru_task.ID_ ,oa4.act_ru_task.PROC_INST_ID_  FROM oa4.act_ru_task where oa4.act_ru_task.PROC_INST_ID_="+instantId);
             //String runId= resultList.get(0);
             //String runProId=resultList.get(1);
             String runId;
@@ -1094,17 +1094,17 @@ public class MyMissiveController {
                 runId=userMap.get("ID_").toString();
                 runProId=userMap.get("PROC_INST_ID_").toString();
                 if(!runId.equals(runProId)){
-                    this.jdbcTemplate.update("update oa3.act_ru_task SET oa3.act_ru_task.EXECUTION_ID_ = '"+instantId+"' where oa3.act_ru_task.PROC_INST_ID_="+instantId);
+                    this.jdbcTemplate.update("update oa4.act_ru_task SET oa4.act_ru_task.EXECUTION_ID_ = '"+instantId+"' where oa4.act_ru_task.PROC_INST_ID_="+instantId);
                 }
             }
 
 
 
-           this.jdbcTemplate.update("update oa3.act_ru_execution SET oa3.act_ru_execution.IS_ACTIVE_ = 0 where oa3.act_ru_execution.PROC_INST_ID_="+instantId);
+           this.jdbcTemplate.update("update oa4.act_ru_execution SET oa4.act_ru_execution.IS_ACTIVE_ = 0 where oa4.act_ru_execution.PROC_INST_ID_="+instantId);
 
-           this.jdbcTemplate.update("update oa3.act_ru_execution SET oa3.act_ru_execution.ACT_ID_ = '"+jumpTo+"',oa3.act_ru_execution.IS_ACTIVE_ = 1 where oa3.act_ru_execution.PROC_INST_ID_=oa3.act_ru_execution.ID_ and oa3.act_ru_execution.PROC_INST_ID_="+instantId);
+           this.jdbcTemplate.update("update oa4.act_ru_execution SET oa4.act_ru_execution.ACT_ID_ = '"+jumpTo+"',oa4.act_ru_execution.IS_ACTIVE_ = 1 where oa4.act_ru_execution.PROC_INST_ID_=oa4.act_ru_execution.ID_ and oa4.act_ru_execution.PROC_INST_ID_="+instantId);
 
-            this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TYPE_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskId+"','"+task+"','"+nowTime+"','"+currentUser.getUserName()+"','"+taskId+"','"+instantId+"','delegator','"+delegator+"')");
+            this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TYPE_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskId+"','"+task+"','"+nowTime+"','"+currentUser.getUserName()+"','"+taskId+"','"+instantId+"','delegator','"+delegator+"')");
 
         } catch (Exception e) {
             e.printStackTrace();

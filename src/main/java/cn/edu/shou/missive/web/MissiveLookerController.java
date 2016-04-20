@@ -66,7 +66,7 @@ public class MissiveLookerController {
             int taskIngPagesNum=1;
 
             List<Task> result2= this.taskService.createNativeTaskQuery()
-                    .sql("SELECT * FROM oa3.act_ru_task t order by t.create_time_ desc " ).list();
+                    .sql("SELECT * FROM oa4.act_ru_task t order by t.create_time_ desc " ).list();
             // PageableTaskList result = this.actService.getAllCurrentTaskList(10, pageNum);//待办的任务
             List<TaskForm> ltfIng=new ArrayList<TaskForm>();
             ltfIng = getTaskFormByTask(result2);

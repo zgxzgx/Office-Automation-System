@@ -158,9 +158,9 @@ public class MissivePublishController {
 //        }
 //        int maxVN= Integer.parseInt(Collections.max(mvnum).toString());
         String remarkList="";
-        //List resultList=this.jdbcTemplate.queryForList("SELECT TIME_,USER_ID_,MESSAGE_ FROM oa3.act_hi_comment where ACTION_='备注' and PROC_INST_ID_="+intanceid);
-        //List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa3.act_hi_comment as a,oa3.act_hi_taskinst as b where a.PROC_INST_ID_=b.PROC_INST_ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+intanceid);
-        List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.TASK_ID_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa3.act_hi_comment as a,oa3.act_hi_taskinst as b where a.Task_ID_=b.ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+intanceid);
+        //List resultList=this.jdbcTemplate.queryForList("SELECT TIME_,USER_ID_,MESSAGE_ FROM oa4.act_hi_comment where ACTION_='备注' and PROC_INST_ID_="+intanceid);
+        //List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa4.act_hi_comment as a,oa4.act_hi_taskinst as b where a.PROC_INST_ID_=b.PROC_INST_ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+intanceid);
+        List resultList=this.jdbcTemplate.queryForList("SELECT a.MESSAGE_,a.TASK_ID_,a.USER_ID_ , b.NAME_,a.TIME_ FROM oa4.act_hi_comment as a,oa4.act_hi_taskinst as b where a.Task_ID_=b.ID_ and a.ACTION_='备注' and a.PROC_INST_ID_="+intanceid);
 //        for(int i=0;i<resultList.size();i++){
 //            if(i==0){
 //                remarkList=resultList.get(i).toString();
@@ -271,9 +271,9 @@ public class MissivePublishController {
         }
         model.addAttribute("secretLevelDataSource",secretLevelDataSource);
 
-        //List<String> uu=jdbcTemplate.query("'SELECT * FROM oa3.act_hi_comment where PROC_INST_ID_=('+intanceid+')'");
-        //List<String> uu=jdbcTemplate.query("'SELECT * FROM oa3.act_hi_comment where PROC_INST_ID_='+intanceid+')'");
-       //List<String> uu=jdbcTemplate.execute("SELECT * FROM oa3.act_hi_comment where PROC_INST_ID_=('"+intanceid+"')");
+        //List<String> uu=jdbcTemplate.query("'SELECT * FROM oa4.act_hi_comment where PROC_INST_ID_=('+intanceid+')'");
+        //List<String> uu=jdbcTemplate.query("'SELECT * FROM oa4.act_hi_comment where PROC_INST_ID_='+intanceid+')'");
+       //List<String> uu=jdbcTemplate.execute("SELECT * FROM oa4.act_hi_comment where PROC_INST_ID_=('"+intanceid+"')");
 
         //model.addAttribute("remark",);
 
@@ -335,7 +335,7 @@ public class MissivePublishController {
             ,@Param("drafter") String drafter    //拟稿人
             ,@Param("composeUser") String composeUser  //排版人
             ,@Param("dep_LeaderCheck") String dep_LeaderCheck  //处(室)领导核稿
-            ,@Param("dep_LeaderCheck_img") String dep_LeaderCheck_img
+//            ,@Param("dep_LeaderCheck_img") String dep_LeaderCheck_img
             ,@Param("dep_LeaderCheck_Base30") String dep_LeaderCheck_Base30
             ,@Param("dep_LeaderCheckJS_img") String dep_LeaderCheckJS_img
             ,@Param("dep_LeaderCheckJS_Base30") String dep_LeaderCheckJS_Base30
@@ -348,7 +348,7 @@ public class MissivePublishController {
             ,@Param("printCount") int printCount  //打印份数
             ,@Param("CheckReader") String CheckReader  ////校对人
             ,@Param("Printer") String Printer  ////校对人Printer
-            ,@Param("Gov_info_attr") int Gov_info_attr  ////政府信息属性
+//            ,@Param("Gov_info_attr") int Gov_info_attr  ////政府信息属性
             ,@Param("appendTittle") String appendTittle  ////附件标题
             ,@Param("appendName") String appendName  ////附件内容
             ,@Param("appendPath") String appendPath  ////附件内容
@@ -384,7 +384,7 @@ public class MissivePublishController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowTime=String.valueOf(format.format(new Date()));
         if(!remark.equals("")){
-            this.jdbcTemplate.execute("INSERT INTO oa3.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskID+"','"+nowTime+"','"+UserName+"','"+taskID+"','"+instanceID+"','备注','"+remark+"')");
+            this.jdbcTemplate.execute("INSERT INTO oa4.act_hi_comment(ID_,TIME_,USER_ID_,TASK_ID_,PROC_INST_ID_,ACTION_,MESSAGE_) VALUES ('"+taskID+"','"+nowTime+"','"+UserName+"','"+taskID+"','"+instanceID+"','备注','"+remark+"')");
 
         }
 
@@ -738,7 +738,7 @@ public class MissivePublishController {
         tempDep_LeaderCheckUser=ur.findByUserName(dep_LeaderCheck);
         tempMissivePublish.setDep_LeaderCheckUser(tempDep_LeaderCheckUser);
         tempdep_LeaderCheckCommentContent.setBase30url(dep_LeaderCheck_Base30);
-        tempdep_LeaderCheckCommentContent.setImageurl(dep_LeaderCheck_img);
+//        tempdep_LeaderCheckCommentContent.setImageurl(dep_LeaderCheck_img);
         tempdep_LeaderCheckCommentContent.setJsignatureBase30url(dep_LeaderCheckJS_Base30);
         tempdep_LeaderCheckCommentContent.setJsignatureImageurl(dep_LeaderCheckJS_img);
         tempdep_LeaderCheckCommentContent.setContentText(dep_LeaderCheck_Content);
@@ -768,7 +768,7 @@ public class MissivePublishController {
             tempMissivePublish.setPrinter(tempPrinter);
         }
 
-        tempMissivePublish.setGov_info_attr(Gov_info_attr);
+//        tempMissivePublish.setGov_info_attr(Gov_info_attr);
         tempMissivePublish.setMissiveTittle(Tittle);
         tempMissivePublish.setAttachmentTittle(appendTittle);
         tempMissivePublish.setDep_LeaderCheckUserSuggestion(dep_LeaderCheckSuggestion);

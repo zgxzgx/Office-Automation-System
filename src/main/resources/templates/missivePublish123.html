@@ -149,37 +149,61 @@
     </div>
     <div class="widget-body" style="min-width:1015px;">
         <div class="widget-main">
-            <form id="validatorForm" action="" >
+            <form id="validatorForm" action="">
                 <div class="row" style="width: 100%; display: inline-block">
-                    <div class="col-xs-4">
-                        <div id="activitiOptionDiv" class="hide" >
-                            <div id="activitiOption" class="control-group" style="margin-left: 40px;" >
-                                <label id="activitiOption_lable" class="control-label bolder blue"
-                                       style="width: 300px;text-align: left;"></label>
-                                <div></div>
-                            </div>
+                    <div id="activitiOptionDiv" class="hide" >
+                        <div id="activitiOption" class="control-group" style="margin-left: 40px;">
+                            <label id="activitiOption_lable" class="control-label bolder blue"
+                                   style="width: 300px;text-align: left;"></label>
+                            <div></div>
                         </div>
                     </div>
-                    <div id="validatorDIV" class="col-xs-8" style="padding-top: 20px;">
-                        <div >
+                    <div id="validatorDIV" class="col-xs-12" style="padding-top: 20px;">
+                        <div class="col-xs-6">
                             <div th:class="${#lists.contains(currentEditableField,'MissiveID')}?'':'hide'">
                                 <label for="MissiveID" class="control-label bolder blue vali_lable" style="margin-top: -5px">公文编号:
                                     &nbsp;&nbsp;</label>
                                 <!--<input id="MissiveID" name="MissiveID" class="vali_input" onchange="missiveNumChanged()" style="height: 34px;"-->
                                        <!--data-required-msg="请填写公文号"/>-->
                                 <div style=" width: 500px;text-align: justify;">
-                                    <label class="control-label bolder blue " for="MissiveID">东预</label>
-                                    <input class="vali_input" data-required-msg="请填写公文号" id="MissiveID" name="MissiveID"
+                                    <label class="control-label bolder blue " for="MissiveID">海东</label>
+                                    <input class="vali_input" data-required-msg="请填写公文号" id="MissiveID" name="MissiveID" value="人"
                                            onchange="missiveNumChanged()"
                                            style="height: 34px;width: 80px;text-align: center;margin-left: 10px;margin-right: 10px;"/>
+                                    <!--</select>-->
 
+                                    <label class="control-label bolder blue " for="MissiveID2">(</label>
+
+                                    <input class="vali_input" data-required-msg="请填写公文号" id="MissiveID2"
+                                           name="MissiveID2" onchange="missiveNumChanged()"
+                                           style="height: 34px;width: 75px;text-align: center;margin-left: 10px;margin-right: 10px;">
+
+                                    <label class="control-label bolder blue " for="MissiveID3">)</label>
+
+                                    <input class="vali_input" data-required-msg="请填写公文号" id="MissiveID3"
+                                           name="MissiveID3" onchange="missiveNumChanged()"
+                                           style="height: 34px;width: 60px;text-align: center;margin-left: 10px;margin-right: 10px;">
+
+                                    <label class="control-label bolder blue " for="MissiveID3">号</label>
                                 </div>
                                 <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"
                                       data-for="MissiveID" role="alert" style="display: none;"><span
                                         class="k-icon k-warning"> </span> 请填写公文号</span>
-
+                                <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"
+                                      data-for="MissiveID2" role="alert" style="display: none;"><span
+                                        class="k-icon k-warning"> </span> 请填写公文号</span>
+                                <span class="k-widget k-tooltip k-tooltip-validation k-invalid-msg"
+                                      data-for="MissiveID3" role="alert" style="display: none;"><span
+                                        class="k-icon k-warning"> </span> 请填写公文号</span>
+                                <!--<span class="k-invalid-msg" data-for="MissiveID"></span>-->
                             </div>
-
+                            <!--<div th:class="${#lists.contains(currentEditableField,'secretLevel')}?'':'hide'">-->
+                                <!--<label for="secretLevel" class="control-label bolder blue vali_lable">公文密级:-->
+                                    <!--&nbsp;&nbsp;</label>-->
+                                <!--<input id="secretLevel" class="vali_dropdown" name="secretLevel"-->
+                                       <!--data-required-msg="请选择密级">-->
+                                <!--<span class="k-invalid-msg" data-for="secretLevel"></span>-->
+                            <!--</div>-->
                             <div th:class="${#lists.contains(currentEditableField,'missiveType')}?'':'hide'">
                                 <label for="missiveType" class="control-label bolder blue vali_lable">公文类型:
                                     &nbsp;&nbsp;</label>
@@ -187,7 +211,14 @@
                                        data-required-msg="请选择公文类型"/>
                                 <span class="k-invalid-msg" data-for="missiveType"></span>
                             </div>
-
+                            <div th:class="${#lists.contains(currentEditableField,'signIssue_Person')}?'':'hide'"
+                                 style="display: flex">
+                                <label id="signIssue_Person_Name" for="signIssue_Person"
+                                       class="control-label bolder blue vali_lable">签发用户: &nbsp;&nbsp;</label>
+                                <select id="signIssue_Person" name="signIssue_Person" class="vali_select"
+                                        data-required-msg="请选择签发用户"></select>
+                                <span class="k-invalid-msg" data-for="signIssue_Person"></span>
+                            </div>
                             <div th:class="${#lists.contains(currentEditableField,'counterSign_Person')}?'':'hide'"
                                  style="display: flex">
                                 <label id="counterSign_Person_Name" for="counterSign_Person"
@@ -225,14 +256,6 @@
                                        class="control-label bolder blue vali_lable">抄送(外): &nbsp;&nbsp;</label>
                                 <input id="copyTo" name="copyTo" class="vali_input" onchange="copyToChange()" style="margin-left: 3px;height: 34px;"/>
                                 <span class="k-invalid-msg" data-for=""></span>
-                            </div>
-                            <div th:class="${#lists.contains(currentEditableField,'signIssue_Person')}?'':'hide'"
-                                 style="display: flex">
-                                <label id="signIssue_Person_Name" for="signIssue_Person"
-                                       class="control-label bolder blue vali_lable">签发用户: &nbsp;&nbsp;</label>
-                                <select id="signIssue_Person" name="signIssue_Person" class="vali_select"
-                                        data-required-msg="请选择签发用户"></select>
-                                <span class="k-invalid-msg" data-for="signIssue_Person"></span>
                             </div>
                             <div th:class="${#lists.contains(currentEditableField,'composeUser')}?'hide':'hide'"
                                  style="display: flex">
@@ -282,8 +305,43 @@
                                 <span class="k-invalid-msg" data-for="Printer"></span>
                             </div>
 
+                            <div id="GOVatrrDIV"
+                                 th:class="${#lists.contains(currentEditableField,'initiativePublic')}?'':'hide'"
+                                 style="padding-top: 5px">
+                                <label class="control-label bolder blue vali_lable">政府信息属性: &nbsp;&nbsp;</label>
 
-                            <div style="margin-left: 43px" th:class="${#lists.contains(currentEditableField,'missiveTittle')}?'':'hide'">
+                                <div></div>
+                                <div class="radio" style="margin-top: 10px">
+                                    <label>
+                                        <input th:Disabled="${#lists.contains(currentEditableField,'initiativePublic')}?false:true"
+                                               id="GOV1" name="GOV_attr" type="radio" class="ace"
+                                               onclick="GovAttrClick()">
+                                        <span class="lbl"> 主动公开</span>
+                                    </label>
+                                </div>
+
+                                <div class="radio" style="margin-top: 10px">
+                                    <label>
+                                        <input th:Disabled="${#lists.contains(currentEditableField,'applyForPublic')}?false:true"
+                                               id="GOV2" name="GOV_attr" type="radio" class="ace"
+                                               onclick="GovAttrClick()">
+                                        <span class="lbl"> 依申请公开</span>
+                                    </label>
+                                </div>
+                                <div class="radio" style="margin-top: 10px">
+                                    <label>
+                                        <input th:Disabled="${#lists.contains(currentEditableField,'forbiddenPublic')}?false:true"
+                                               id="GOV3" name="GOV_attr" type="radio" class="ace"
+                                               onclick="GovAttrClick()">
+                                        <span class="lbl"> 不予以公开</span>
+                                    </label>
+                                </div>
+                                <span class="k-invalid-msg" data-for="GOV_attr"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+
+                            <div th:class="${#lists.contains(currentEditableField,'missiveTittle')}?'':'hide'">
                                 <label class="control-label bolder blue" for="missiveTittle">标题:
                                     &nbsp;&nbsp;</label><br/>
                                 <textarea
@@ -293,7 +351,7 @@
                                         data-required-msg="标题不能为空"></textarea>
                                 <span class="k-invalid-msg" data-for="missiveTittle"></span>
                             </div>
-                            <div  style="margin-left: 43px" th:class="${#lists.contains(currentEditableField,'appendTittle')}?'':'hide'">
+                            <div th:class="${#lists.contains(currentEditableField,'appendTittle')}?'':'hide'">
                                 <label class="control-label bolder blue" for="appendTittle">附件标题:
                                     &nbsp;&nbsp;</label><br/>
                                 <textarea
@@ -304,32 +362,7 @@
                             </div>
                             <span class="k-invalid-msg" data-for="appendTittle"></span>
 
-
                         </div>
-                        <!--<div >-->
-
-                            <!--<div th:class="${#lists.contains(currentEditableField,'missiveTittle')}?'':'hide'">-->
-                                <!--<label class="control-label bolder blue" for="missiveTittle">标题:-->
-                                    <!--&nbsp;&nbsp;</label><br/>-->
-                                <!--<textarea-->
-                                        <!--th:Disabled="${#lists.contains(currentEditableField,'missiveTittle')}?false:true"-->
-                                        <!--id="missiveTittle" class="vali_textarea" name="missiveTittle"-->
-                                        <!--onchange="missiveTittletextChange()" style="height: 80px;width: 400px;"-->
-                                        <!--data-required-msg="标题不能为空"></textarea>-->
-                                <!--<span class="k-invalid-msg" data-for="missiveTittle"></span>-->
-                            <!--</div>-->
-                            <!--<div th:class="${#lists.contains(currentEditableField,'appendTittle')}?'':'hide'">-->
-                                <!--<label class="control-label bolder blue" for="appendTittle">附件标题:-->
-                                    <!--&nbsp;&nbsp;</label><br/>-->
-                                <!--<textarea-->
-                                        <!--th:Disabled="${#lists.contains(currentEditableField,'appendTittle')}?false:true"-->
-                                        <!--id="appendTittle" class="vali_textarea" name="appendTittle"-->
-                                        <!--onchange="appendTittletextChange()" style="height: 80px;width: 400px;"-->
-                                        <!--data-required-msg="附件标题不能为空"></textarea>-->
-                            <!--</div>-->
-                            <!--<span class="k-invalid-msg" data-for="appendTittle"></span>-->
-
-                        <!--</div>-->
                     </div>
 
                         <div class="hr hr-double hr-dotted hr18"></div>
@@ -365,28 +398,36 @@
     <img th:src=@{/api/bgPng/small/missivePublish/{instanceID}(instanceID=${instanceID})}
          th:if="${hasBgPng}"
          style="float:left;margin-top:-100px;left:-12px;width:1030px;height:1460px"/>
-    <div style="width:891px;height:1260px;margin-left:70px;margin-top:100px;background-image: url('/img/missivePublish.png');z-index:-1;background-size:contain;background-repeat:no-repeat;">
+    <div style="width:891px;height:1260px;margin-left:70px;margin-top:100px;background-image: url('/img/missivePublish_small.png');z-index:-1;background-size:contain;background-repeat:no-repeat;">
         <div id="missiveForm"
              style="position:absolute;width:891px;height:1260px;">
+            <!--<div id="missiveBackGFromPAD" style="width:891px;height:1260px;-->
+            <!--background-size:contain;background-repeat:no-repeat;position: absolute">-->
+            <!--</div>-->
 
 
 
-            <div style="height: 30px;width: 26px;top: 158px;position: absolute;left: 170px;text-align: center;">
+            <div style="height: 30px;width: 26px;top: 112px;position: absolute;left: 156px;text-align: center;">
                 <label style="color: red;font-size: 19px;" id="MissiveID_lable"></label>
             </div>
-
-            <div style="height: 40px;width: 100px;top: 158px;left: 468px;position: absolute;">
+            <div style="height: 30px;width: 53px;top: 112px;position: absolute;left: 188px;text-align: center;">
+                <label id="MissiveID_lable2" style="font-size: 21px"></label>
+            </div>
+            <div style="height: 30px;width: 43px;top: 112px;position: absolute;left: 248px;text-align: center;">
+                <label id="MissiveID_lable3" style="font-size: 21px"></label>
+            </div>
+            <div style="height: 40px;width: 100px;top: 113px;left: 468px;position: absolute;">
                 <label id="secretLevel_lable" style="font-size: 21px" ></label>
             </div>
-            <div style="height: 40px;width: 100px;top: 158px;left: 685px;position: absolute;">
+            <div style="height: 40px;width: 100px;top: 112px;left: 708px;position: absolute;">
                 <label id="missiveType_lable" style="font-size: 21px"></label>
             </div>
             <!--签发place-->
-            <div style="height: 458px;width: 825px;top: 220px;left: 39px;position: absolute;">
+            <div style="height: 458px;width: 825px;top: 155px;left: 33px;position: absolute;">
                 <img id="signIssue_img"
                      style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none;"/>
             </div>
-            <div style="height: 128px;width: 391px;top: 220px;left: 39px;background:none;position: absolute;font-size: 19px;"
+            <div style="height: 189px;width: 410px;top: 192px;left: 33px;background:none;position: absolute;font-size: 19px;"
                  id="signIssue_ContentDiv">
                 <textarea th:Disabled="${#lists.contains(currentEditableField,'signIssue_Content')}?false:true"
                           id="signIssue_Content"
@@ -396,7 +437,7 @@
 
             </div>
             <div th:if="${#lists.contains(currentEditableField, 'signIssue_SignBtn')}"
-                 style="height: 20px;width: 20px;top: 195px;left: 120px;position: absolute;">
+                 style="height: 20px;width: 20px;top: 164px;left: 108px;position: absolute;">
                 <button id="signIssue_SignBtn" class="btn btn-xs btn-primary"
                         onclick="handSignature('signIssue')">
                     <i class="icon-edit bigger-110"></i>
@@ -408,7 +449,7 @@
                 <!--<img id="counterSign_img"-->
                      <!--style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none"/>-->
             <!--</div>-->
-            <div style="height: 128px;width: 410px;top: 220px;left: 432px;background:none;position: absolute;font-size: 19px;"
+            <div style="height: 189px;width: 410px;top: 192px;left: 448px;background:none;position: absolute;font-size: 19px;"
                  id="counterSign_ContentDiv">
             <!--<div style="height: 458px;width: 825px;top: 192px;left: 33px;background:none;position: absolute;font-size: 19px;"-->
                      <!--id="counterSign_ContentDiv">-->
@@ -419,7 +460,7 @@
                        id="counterSign_ContentL" style="font-size: 21px"></label>
             </div>
             <div th:if="${#lists.contains(currentEditableField, 'counterSign_SignBtn')}"
-                 style="height: 20px;width: 20px;top: 195px;left: 516px;position: absolute;">
+                 style="height: 20px;width: 20px;top: 164px;left: 516px;position: absolute;">
                 <button id="counterSign_SignBtn" class="btn btn-xs btn-primary"
                         onclick="handSignature('counterSign')">
                     <i class="icon-edit bigger-110"></i>
@@ -430,32 +471,32 @@
             <div style="height: 40px;width: 410px;top: 386px;left: 103px;position: absolute;">
                 <!--<select th:Disabled="${#lists.contains(currentEditableField,'mainSend_Person')}?false:true" id="mainSend_Person" style="width: 330px;"></select>-->
             </div>
-            <div style="top: 405px;left: 50px;position: absolute;">
+            <div style="top: 450px;left: 68px;position: absolute;">
                 <label id="mainSend_Person_lable" style="word-wrap: break-word;width: 355px;font-size: 21px;"></label>
             </div>
-            <
+            <!--郑小罗 2014/12/25 添加接收主送外单位label-->
             <div style="top: 500px;left: 68px;position: absolute;">
                 <label id="mainSend_lable" style="word-wrap: break-word;width: 355px;font-size: 21px;"></label>
             </div>
             <div style="height: 40px;width: 410px;top: 386px;left: 508px;position: absolute;font-size: 21px;">
                 <!--<select th:Disabled="${#lists.contains(currentEditableField,'copyTo_Person')}?false:true" id="copyTo_Person" style="width: 330px;"></select>-->
             </div>
-            <div style="top: 405px;left: 440px;position: absolute;font-size:21px;">
+            <div style="top: 450px;left: 478px;position: absolute;font-size:21px;">
                 <label id="copyTo_Person_lable" style="word-wrap: break-word;width: 355px;font-size: 21px;"></label>
             </div>
-
+            <!--郑小罗 2014/12/25 添加接收抄送外单位label-->
             <div style="top: 500px;left: 478px;position: absolute;">
                 <label id="copyTo_lable" style="word-wrap: break-word;width: 355px;font-size: 21px;"></label>
             </div>
             <!---->
-            <div style="height: 35px;width: 210px;top: 487px;left: 199px;position: absolute;">
-                <label id="sponsorUnit" style="width: 210px;font-size: 21px;"></label>
+            <div style="height: 35px;width: 280px;top: 618px;left: 148px;position: absolute;">
+                <label id="sponsorUnit" style="width: 280px;font-size: 21px;"></label>
             </div>
-            <div style="height: 35px;width: 210px;top: 539px;left: 199px;position: absolute;">
-                <label id="drafter" style="width: 210px;font-size: 21px;/* border: solid */"></label>
+            <div style="height: 35px;width: 280px;top: 665px;left: 133px;position: absolute;">
+                <label id="drafter" style="width: 280px;font-size: 21px;/* border: solid */"></label>
             </div>
-            <div style="height: 35px;width: 210px;top: 589px;left: 199px;position: absolute;">
-                <label id="phoneNum" style="width: 210px;font-size: 21px;"></label>
+            <div style="height: 35px;width: 280px;top: 715px;left: 113px;position: absolute;">
+                <label id="phoneNum" style="width: 280px;font-size: 21px;"></label>
             </div>
             <div style="height: 35px;width: 280px;top: 760px;left: 113px;position: absolute;">
                 <label id="composeUser_lable" style="width: 280px;font-size: 21px;"></label>
@@ -466,18 +507,18 @@
             </div>
 
             <!--处室领导签字--><!--th:if="${#lists.contains(currentEditableField, 'dep_LeaderCheck_btn')}"-->
-            <!--<div th:if="${#lists.contains(currentEditableField, 'dep_LeaderCheck_btn')}"  style="height: 20px;width: 20px;top: 616px;left: 755px;position: absolute;">-->
-                <!--<button class="btn btn-xs btn-primary" id="dep_LeaderCheck_btn" onclick="handSignature('dep_LeaderCheck')">-->
-                    <!--<i class="icon-edit bigger-110"></i>-->
-                    <!--手写-->
-                <!--</button>-->
-            <!--</div>-->
-            <!--<div style="height: 44px;width: 150px;top: 607px;left: 596px;background:none;position: absolute;">-->
-                <!--<img id="dep_LeaderCheck_img" style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none"/>-->
-            <!--</div>-->
-            <div style="height: 44px;width: 150px;top: 485px;left: 610px;background:none;position: absolute;" id="dep_LeaderCheck_ContentDiv">
+            <div th:if="${#lists.contains(currentEditableField, 'dep_LeaderCheck_btn')}"  style="height: 20px;width: 20px;top: 616px;left: 755px;position: absolute;">
+                <button class="btn btn-xs btn-primary" id="dep_LeaderCheck_btn" onclick="handSignature('dep_LeaderCheck')">
+                    <i class="icon-edit bigger-110"></i>
+                    手写
+                </button>
+            </div>
+            <div style="height: 44px;width: 150px;top: 607px;left: 596px;background:none;position: absolute;">
+                <img id="dep_LeaderCheck_img" style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none"/>
+            </div>
+            <div style="height: 44px;width: 150px;top: 607px;left: 596px;background:none;position: absolute;" id="dep_LeaderCheck_ContentDiv">
                 <textarea th:Disabled="${#lists.contains(currentEditableField,'dep_LeaderCheck_Content')}?false:true"
-                          id="dep_LeaderCheck_Content" style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none;padding-top: 3px;font-size: 21px;"></textarea>
+                          id="dep_LeaderCheck_Content" style="width: 100%;height: 100%;position: absolute;margin:0px;padding:0px;background: none;padding-top: 14px;font-size: 21px;"></textarea>
 
             </div>
             <!--处室领导签字-->
@@ -485,7 +526,7 @@
             <div style="height: 35px;width: 270px;top: 665px;left: 573px;position: absolute;">
                 <label id="officeCheck_lable" style="width: 270px;font-size: 21px;"></label>
             </div>
-            <div style="height: 35px;width: 80px;top: 588px;left: 610px;position: absolute;">
+            <div style="height: 35px;width: 80px;top: 712px;left: 558px;position: absolute;">
                 <!--<input th:Disabled="${#lists.contains(currentEditableField,'printCount')}?false:true" id="printCount" style="width: 80px;">-->
                 <label id="printCount_lable" style="width: 270px;font-size: 21px;"></label>
             </div>
@@ -493,24 +534,47 @@
                 <label id="CheckReader_lable" style="width: 280px;font-size: 21px;"></label>
             </div>
 
+
+            <!--公开属性-->
+            <div style="height: 22px;width: 22px;top: 813px;left: 213px;position: absolute;z-index: 1">
+                <label>
+                    <input id="initiativePublic" name="form-field-checkbox" type="checkbox" class="ace ace-checkbox-2"
+                           onclick="checkboxChange('initiativePublic', 'applyForPublic','forbiddenPublic')"/>
+                    <span class="lbl" style="width: 105px;height:25px"></span>
+                </label>
+            </div>
+            <div style="height: 22px;width: 22px;top: 813px;left: 456px;position: absolute;z-index:1">
+                <label>
+                    <input id="applyForPublic" name="form-field-checkbox" type="checkbox"  class="ace ace-checkbox-2"
+                           onclick="checkboxChange('applyForPublic','initiativePublic','forbiddenPublic')"/>
+                    <span class="lbl" style="width: 125px;height:25px"></span>
+                </label>
+            </div>
+            <div style="height: 22px;width: 22px;top: 862px;left: 213px;position: absolute;z-index:1">
+                <label>
+                    <input id="forbiddenPublic" name="form-field-checkbox" type="checkbox" class="ace ace-checkbox-2"
+                           onclick="checkboxChange('forbiddenPublic','applyForPublic','initiativePublic')"/>
+                    <span class="lbl" style="width: 105px;height:25px"></span>
+                </label>
+            </div>
             <div style="height: 135px;width: 620px;top: 798px;left: 206px;position: absolute;z-index:3">
 
             </div>
             <!--标题-->
-            <div style="height: 113px;width: 770px;top: 710px;left: 45px;position: absolute;">
+            <div style="height: 113px;width: 770px;top: 980px;left: 83px;position: absolute;">
                         <pre style="background: none;border: none">
-                        <label id="missiveTittle_lable" style="word-wrap: break-word;width: 770px;font-size: 21px;"></label>
+                        <label id="missiveTittle_lable" style="word-wrap: break-word;width: 740px;font-size: 21px;"></label>
                         </pre>
                 <!--<textarea th:Disabled="${#lists.contains(currentEditableField,'missiveTittle')}?false:true" id="missiveTittle" style="width: 100%;height: 100%;position: absolute;;"></textarea>-->
             </div>
             <!--附件标题-->
-            <div style="height: 113px;width: 770px;top: 856px;left: 45px;position: absolute;">
+            <div style="height: 75px;width: 770px;top: 1130px;left: 83px;position: absolute;">
                         <pre style="background: none;border: none">
                         <label id="appendTittle_lable" style="word-wrap: break-word;width: 740px;font-size: 21px;"></label>
                         </pre>
             </div>
             <div class="hr hr-double hr-dotted hr18" style="margin-top: 1240px"></div>
-            <div  style="height:200px; width: 450px;top: 1280px;left: 30px;position: absolute;" >
+            <div  style="height:200px; width: 450px;top: 1250px;left: 30px;position: absolute;" >
                 <label class="control-label bolder blue"  >备注:</label>
                 <label id="remarkLbl" th:text="${remarkList}">备注:</label><br/>
                 <label class="control-label bolder blue">添加备注：</label>
@@ -664,7 +728,7 @@
                     <input id="composeUserF" name="composeUser"/>
 
                     <input id="dep_LeaderCheckF" name="dep_LeaderCheck"/>
-                    <!--<input id="dep_LeaderCheck_imgF" name="dep_LeaderCheck_img"/>-->
+                    <input id="dep_LeaderCheck_imgF" name="dep_LeaderCheck_img"/>
                     <input id="dep_LeaderCheck_ContentF" name="dep_LeaderCheck_Content"/>
 
                     <input id="officeCheckF" name="officeCheck"/>
@@ -861,12 +925,12 @@
     }
     function missiveNumChanged() {
         var tMissiveID=document.getElementById("MissiveID");   //$("#MissiveID")[0].value;
-
+        if(tMissiveID!="请选择..."){
             $("#MissiveID_lable")[0].innerHTML = $("#MissiveID")[0].value;//
+        }
 
-
-//        $("#MissiveID_lable2")[0].innerHTML = $("#MissiveID2")[0].value;//
-//        $("#MissiveID_lable3")[0].innerHTML = $("#MissiveID3")[0].value;//
+        $("#MissiveID_lable2")[0].innerHTML = $("#MissiveID2")[0].value;//
+        $("#MissiveID_lable3")[0].innerHTML = $("#MissiveID3")[0].value;//
     }
     function missiveTittletextChange() {
         $("#missiveTittle_lable")[0].innerHTML = $("#missiveTittle")[0].value;
@@ -1152,7 +1216,7 @@ $(function ($) {// //----------------------页面初始化----------------------
         control="counterSign_Content";
         control = new ContextMenu();
         control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
-        // control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
+       // control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
         control.addSeparator();
         control.addtitle="counterSign";
         control.register("counterSign_ContentDiv");
@@ -1164,7 +1228,7 @@ $(function ($) {// //----------------------页面初始化----------------------
         control = "signIssue_Content";
         control = new ContextMenu();
         control.addItem("save", "插入短语", itemAlert, "/img/text2.png");
-        //  control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
+      //  control.addItem("insert", "插入签名", itemAlert, "/img/signup.png");
         control.addSeparator();
         control.addtitle = "signIssue";
         control.register("signIssue_ContentDiv");
@@ -1251,8 +1315,33 @@ $(function ($) {// //----------------------页面初始化----------------------
     var mainSendGroupDataSource = cloneObject(groupDataSource);
     var copyToGroupDataSource = cloneObject(groupDataSource);
     var value_DataSource = cloneObject(valueDataSource);
+//    var missiveTypeDataSource = missiveTypeDataSource;
+//    var secretLevelDataSource = new kendo.data.DataSource({
+//        transport: {
+//            read: {
+//                herders: {
+//                    "Authorization": $.cookie("userbase64")
+//                },
+//                url: "/api/missive/secretlevel/getsecretlevel",
+//                dataType: "json"
+//            }
+//        }
+//    });
 
 
+
+//    $("#MissiveID").kendoDropDownList({
+////            valuePrimitive: true,
+//        optionLabel: "请选择...",
+//        dataTextField: "value",
+//        dataValueField: "id",
+////            value:3,
+//        dataSource: missiveIdDataSource
+////        change: function (e) {
+////            $("#MissiveID_lable")[0].textContent = this.text();
+////        }
+//
+//    });
 
 
     $("#missiveType").kendoDropDownList({
@@ -1268,8 +1357,16 @@ $(function ($) {// //----------------------页面初始化----------------------
 
     });
 
-
-    $("#signIssue_Person").kendoMultiFilterMultiSelect({
+//    $("#secretLevel").kendoDropDownList({
+//
+//        dataTextField: "secretLevelName",
+//        dataValueField: "id",
+//        dataSource: secretLevelDataSource,
+//        change: function (e) {
+//            $("#secretLevel_lable")[0].textContent = this.text();
+//        }
+//    });
+      $("#signIssue_Person").kendoMultiFilterMultiSelect({
         placeholder: "未选择签发用户...",
         dataTextField: "name",
         dataValueField: "userName",
@@ -1306,7 +1403,7 @@ $(function ($) {// //----------------------页面初始化----------------------
         filter: "contains",
         searchFilters: ["name","userName","abrev","abbrev","abbrevName","groupName"],
 //            autoBind: false,
-        //  maxSelectedItems: 1,
+      //  maxSelectedItems: 1,
         dataSource: mainSendGroupDataSource,
         tagTemplate: '#: groupName #',
         change: function (e) {
@@ -1511,19 +1608,19 @@ $(function ($) {// //----------------------页面初始化----------------------
 
     });
     $("#taskName_lable")[0].textContent = taskName;
-//    $("#activitiOption_lable")[0].textContent = taskName + "处理(必选)";
+    $("#activitiOption_lable")[0].textContent = taskName + "处理(必选)";
 
-//    for (var i = 0; i < currentEditableField.length; i++) {
-//        if (currentEditableField[i].endWith("_Suggestion")) {
-//            try {
-////                var bordernonedivid=currentEditableField[i].endWith("_Suggestion");
-//                $("#" + currentEditableField[i])[0].style.border = "none";
-//            }
-//            catch (e) {
-//            }
-//        }
-//
-//    }
+    for (var i = 0; i < currentEditableField.length; i++) {
+        if (currentEditableField[i].endWith("_Suggestion")) {
+            try {
+//                var bordernonedivid=currentEditableField[i].endWith("_Suggestion");
+                $("#" + currentEditableField[i])[0].style.border = "none";
+            }
+            catch (e) {
+            }
+        }
+
+    }
     textAreaUsable("signIssue_Content", currentEditableField);
     textAreaUsable("counterSign_Content", currentEditableField);
     textAreaUsable("dep_LeaderCheck_Content",currentEditableField);
@@ -1595,20 +1692,20 @@ $(function ($) {// //----------------------页面初始化----------------------
         signIssue_Content = missiviPublishForm.signIssueContent.contentText.replace(/<br>/g, "\n");//签发内容textArea
     }
     /*if (missiviPublishForm.counterSignUsers != null) {//会签人员
-     try {
-     for (var i = 0; i < missiviPublishForm.counterSignUsers.length; i++) {
-     counterSign_Person.push(missiviPublishForm.counterSignUsers[i].userName);
-     }
-     }
-     catch (e) {
-     try {
-     counterSign_Person.push(missiviPublishForm.counterSignUsers.userName);
-     }
-     catch (e) {
-     console.log(e)
-     }
-     }
-     }//会签内容end*/
+        try {
+            for (var i = 0; i < missiviPublishForm.counterSignUsers.length; i++) {
+                counterSign_Person.push(missiviPublishForm.counterSignUsers[i].userName);
+            }
+        }
+        catch (e) {
+            try {
+                counterSign_Person.push(missiviPublishForm.counterSignUsers.userName);
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+    }//会签内容end*/
 
 
     if (missiviPublishForm.counterSignContent != null) {//
@@ -1623,7 +1720,7 @@ $(function ($) {// //----------------------页面初始化----------------------
 
     //====主送and抄送
 
-
+    //郑小罗 2014/12/25 添加主送、抄送外单位
     if(missiviPublishForm.mainSend!=null){
         mainSend=missiviPublishForm.mainSend;
     }
@@ -1778,14 +1875,14 @@ $(function ($) {// //----------------------页面初始化----------------------
         composeUserlable = missiviPublishForm.composeUser.name;
     }
 
-//    if (missiviPublishForm.gov_info_attr != 0) {
-//        GovInfoAttr = missiviPublishForm.gov_info_attr;//公开属性
-//    }
+    if (missiviPublishForm.gov_info_attr != 0) {
+        GovInfoAttr = missiviPublishForm.gov_info_attr;//公开属性
+    }
     if (missiviPublishForm.missiveTittle != null) {
-        missiveTittle = missiviPublishForm.missiveTittle.replace(/<br>/g, "\n");
+        missiveTittle = missiviPublishForm.missiveTittle.replace(/<br>/g, "\n");//公开属性
     }
     if (missiviPublishForm.attachmentTittle != null) {
-        appendTittle = missiviPublishForm.attachmentTittle.replace(/<br>/g, "\n");
+        appendTittle = missiviPublishForm.attachmentTittle.replace(/<br>/g, "\n");//公开属性
     }
     if (missiviPublishForm.dep_LeaderCheckUserSuggestion != null) {
         dep_LeaderCheckSuggestion = missiviPublishForm.dep_LeaderCheckUserSuggestion.replace(/<br>/g, "\n");
@@ -1794,17 +1891,75 @@ $(function ($) {// //----------------------页面初始化----------------------
         officeCheckSuggestion = missiviPublishForm.officeCheckUserSuggestion.replace(/<br>/g, "\n");
     }
 
-
+//        if(missiviPublishForm.backgroudImage!=null){
+//            BackImageURLFromPAD=missiviPublishForm.backgroudImage;//BackImageFromPAD
+//        }
+    //missiveBackGFromPAD
     //-----------------------------数据绑定------------------------------>
     var temp_MissiveID="";
     temp_MissiveID=MissiveID;
+    var temp_MissiveIDArray=[];
 
+    var temp_MissiveID2="";
+    var temp_MissiveID3="";
+    if(temp_MissiveID!=""&&temp_MissiveID!=null){
+        temp_MissiveIDArray=temp_MissiveID.split("|");
+        temp_MissiveID=temp_MissiveIDArray[0];
+        temp_MissiveID2=temp_MissiveIDArray[1];
+        temp_MissiveID3=temp_MissiveIDArray[2];
+    }
+    $(document).ready(function() {
+        //初始化dropdownlist
+    var missiveNumTypeDropDownList = $("#MissiveID").kendoDropDownList({
+//            valuePrimitive: true,
+        optionLabel: "请选择...",
+        dataTextField: "value",
+        dataValueField: "value",
+//            value:3,
+        dataSource: missiveIdDataSource
+//        change: function (e) {
+//            $("#MissiveID_lable")[0].textContent = this.text();
+//        }
+    });
+        //绑定dropDownlist选择值
 
+       $("#MissiveID").data("kendoDropDownList").value(temp_MissiveID);
+       // missiveNumTypeDropDownList.value(temp_MissiveID);
+});
 
+//    var missiveIDList=document.getElementById("MissiveID");
+//    //var missiveIDList=missiveIdDataSource;
+//    for(var i=0;i <missiveIDList.options.length;i++)
+//    {
+//        if(missiveIDList.options[i].value == temp_MissiveID)
+//        {
+//            missiveIDList.options[i].selected = true;
+//            break;
+//        }
+//    }
+
+   // $("#MissiveID")[0].value = temp_MissiveID;//
+//    var numModel=kendo.observable({
+//        selectedMissive: "temp_MissiveID"
+//
+//    });
+//        kendo.bind($("#MissiveID"), numModel);
+
+    //$("#MissiveID")[0].data("kendoDropDownList").value=temp_MissiveID;
+    //$("#MissiveID")[0].data("kendoDropDownList").text(temp_MissiveID);
+    $("#MissiveID2")[0].value = temp_MissiveID2;//
+    $("#MissiveID3")[0].value = temp_MissiveID3;//
+    if(temp_MissiveID!="请选择..."){
+        $("#MissiveID_lable")[0].innerHTML = temp_MissiveID;//
+    }
     $("#MissiveID_lable")[0].innerHTML = temp_MissiveID;//
+    $("#MissiveID_lable2")[0].innerHTML = temp_MissiveID2;//
+    $("#MissiveID_lable3")[0].innerHTML = temp_MissiveID3;//
 
-
-
+//    var dropdownlistsecretLevel = $("#secretLevel").data("kendoDropDownList");
+//    dropdownlistsecretLevel.value(secretLevel);
+//    $("#secretLevel_lable")[0].textContent = secretLevel_lable;
+//
 
     var dropdownlistmissiveType = $("#missiveType").data("kendoDropDownList");
     dropdownlistmissiveType.value(missiveType);
@@ -1873,18 +2028,18 @@ $(function ($) {// //----------------------页面初始化----------------------
 //    multiselectCheckReader.value([CheckReader]);
 //    $("#CheckReader_lable")[0].textContent = CheckReaderlable;
 
-//    if (GovInfoAttr == 1) {//-----------------------//政府公开属性
-//        $("#initiativePublic")[0].checked = true;
-//        $("#GOV1")[0].checked = true;
-//    }
-//    else if (GovInfoAttr == 2) {
-//        $("#applyForPublic")[0].checked = true;
-//        $("#GOV2")[0].checked = true;
-//    }
-//    else if (GovInfoAttr == 3) {
-//        $("#forbiddenPublic")[0].checked = true;
-//        $("#GOV3")[0].checked = true;
-//    }
+    if (GovInfoAttr == 1) {//-----------------------//政府公开属性
+        $("#initiativePublic")[0].checked = true;
+        $("#GOV1")[0].checked = true;
+    }
+    else if (GovInfoAttr == 2) {
+        $("#applyForPublic")[0].checked = true;
+        $("#GOV2")[0].checked = true;
+    }
+    else if (GovInfoAttr == 3) {
+        $("#forbiddenPublic")[0].checked = true;
+        $("#GOV3")[0].checked = true;
+    }
 
     $("#missiveTittle")[0].value = missiveTittle;//标题
     $("#missiveTittle_lable")[0].textContent = missiveTittle;
@@ -2143,7 +2298,7 @@ if (activitiNextStepInfo != null) {
                                     $("#" + val)[0].setAttribute("required", true);
 //                            $("#" + val)[0].removeAttribute("required");
                                     $("#" + val)[0].parentNode.parentNode.className = "";
-//                                    $("#" + val)[0].parentNode.parentNode.parentNode.className = "col-xs-6";
+                                    $("#" + val)[0].parentNode.parentNode.parentNode.className = "col-xs-6";
                                 }
 //
 //                                $("#" + val)[0].setAttribute("required", true);
@@ -2555,7 +2710,7 @@ function submitAllClick() {
             counterSignmultiselectvalues += counterSignmultiselectvalue[i] + "|";
         }
 
-//        var dep_LeaderCheck_imgValue= $("#dep_LeaderCheck_img")[0].src;//图片
+        var dep_LeaderCheck_imgValue= $("#dep_LeaderCheck_img")[0].src;//图片
         var dep_LeaderCheck_ContentValue= $("#dep_LeaderCheck_Content")[0].value.replace(/\n/g,"<br>");//content
 
         var mainSendmultiselect = $("#mainSend_Person").data("kendoMultiFilterMultiSelect");//主送
@@ -2566,7 +2721,7 @@ function submitAllClick() {
             mainSendmultiselectvalues += mainSendmultiselectvalue[i] + "|";
         }
 
-//        console.log("mainSendmultiselectvalues",mainSendmultiselectvalues);
+        console.log("mainSendmultiselectvalues",mainSendmultiselectvalues);
 
         var copyTomultiselect = $("#copyTo_Person").data("kendoMultiFilterMultiSelect");//抄送
         var copyTomultiselectvalue = copyTomultiselect.value();
@@ -2580,7 +2735,7 @@ function submitAllClick() {
 
         //郑小罗 2014/12/25 添加主送、抄送外单位信息
         var mainSend=$("#mainSend")[0].value;
-//        console.log("mainSend",mainSend);
+        console.log("mainSend",mainSend);
         var copyTo=$("#copyTo")[0].value;
 
         var missiveTypemultiselect = $("#missiveType").data("kendoDropDownList");//公文类型
@@ -2588,6 +2743,18 @@ function submitAllClick() {
 
 
         var missiveIDValue1 = $("#MissiveID")[0].value;//公文号
+        console.log($("#MissiveID").data("kendoDropDownList").value())
+        var missiveIDValue2 = $("#MissiveID2")[0].value;//公文号
+        var missiveIDValue3 = $("#MissiveID3")[0].value;//公文号
+        var missiveIDValue;
+        if(missiveIDValue1!="请选择"&&missiveIDValue2!=""&&missiveIDValue3!=""){
+            missiveIDValue=missiveIDValue1+"|"+missiveIDValue2+"|"+missiveIDValue3;
+        }else{
+            missiveIDValue="";
+        }
+
+        console.log("missiveIDValue is ",missiveIDValue);
+        //var secretLevelValue = $("#secretLevel")[0].value;//密级
 
         var signIssue_imgValue = $("#signIssue_img")[0].src;//签发图片
         var signIssue_ContentValue = $("#signIssue_Content")[0].value.replace(/\n/g, "<br>");//签发content
@@ -2637,16 +2804,16 @@ function submitAllClick() {
         var PrinterValue = Printermultiselect.value()[0];
 
 
-//        var govPublicValue = 0;//政府公开属性
-//        if ($("#initiativePublic")[0].checked) {
-//            govPublicValue = 1
-//        }
-//        else if ($("#applyForPublic")[0].checked) {
-//            govPublicValue = 2
-//        }
-//        else if ($("#forbiddenPublic")[0].checked) {
-//            govPublicValue = 3
-//        }
+        var govPublicValue = 0;//政府公开属性
+        if ($("#initiativePublic")[0].checked) {
+            govPublicValue = 1
+        }
+        else if ($("#applyForPublic")[0].checked) {
+            govPublicValue = 2
+        }
+        else if ($("#forbiddenPublic")[0].checked) {
+            govPublicValue = 3
+        }
 
         var missiveTittleValue = $("#missiveTittle")[0].value.replace(/\n/g, "<br>");//标题
         var appendTittleValue = $("#appendTittle")[0].value.replace(/\n/g, "<br>");//附件标题
@@ -2682,7 +2849,7 @@ function submitAllClick() {
         $("#UserNameF").val(currentUsername);
         $("#instanceIDF").val(instanceID);
         $("#taskIDF").val(taskID);
-        $("#missiveNumF").val(missiveIDValue1);
+        $("#missiveNumF").val(missiveIDValue);
         //$("#secretLevelF").val(secretLevelValue);
         $("#typeNameF").val(missiveTypeMultiselectvalue);
         $("#docFilePathF").val("NONE");
@@ -2708,14 +2875,14 @@ function submitAllClick() {
         $("#composeUserF").val(composeUserValue);
         $("#dep_LeaderCheckF").val(dep_LeaderValue);
 
-//        $("#dep_LeaderCheck_imgF").val(dep_LeaderCheck_imgValue);
+        $("#dep_LeaderCheck_imgF").val(dep_LeaderCheck_imgValue);
         $("#dep_LeaderCheck_ContentF").val(dep_LeaderCheck_ContentValue);
 
         $("#officeCheckF").val(officeCheckValue);
         $("#printCountF").val(printCountNumericTextBoxvalue);
         $("#CheckReaderF").val(checkReaderValue);
         $("#PrinterF").val(PrinterValue);
-//        $("#Gov_info_attrF").val(govPublicValue);
+        $("#Gov_info_attrF").val(govPublicValue);
         $("#appendTittleF").val(appendTittleValue);
         $("#appendNameF").val(attachmentNames);
         $("#appendPathF").val(attachmentPaths);
@@ -2730,8 +2897,8 @@ function submitAllClick() {
         $("#printingSignatureF").val(printingSignaturevalue);
 
 //            $("#activitiVariablesF").val(variablesString);
-        if (taskName=="办公室审核及编号"&&missiveIDValue1 != ""&&missiveIDValue1 != null&&missiveIDValue1 != "||" && ($.inArray(missiveIDValue1, missiveNumUsed) > -1)) {
-            swal({title: "公文号不可用", text: "公文号{ " + missiveIDValue1 + " }已经被占用，请确认您的公文号", type: "error"});
+        if (taskName=="办公室审核及编号"&&missiveIDValue != ""&&missiveIDValue != null&&missiveIDValue != "||" && ($.inArray(missiveIDValue, missiveNumUsed) > -1)) {
+            swal({title: "公文号不可用", text: "公文号{ " + missiveIDValue + " }已经被占用，请确认您的公文号", type: "error"});
         }else if ($.inArray("attachments", currentEditableField) > -1 && (resultFiles.length == 0 )) {
             swal({title: "失败!", text: '请上传附件!!!', type: "error", timer: 10000 });
 
@@ -2739,7 +2906,7 @@ function submitAllClick() {
         else validateData();//验证数据信息
     }
     catch (e) {
-//        console.log(e)
+        console.log(e)
     }
 //    console.log(2);
 }

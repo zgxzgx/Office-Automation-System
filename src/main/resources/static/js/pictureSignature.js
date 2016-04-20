@@ -362,7 +362,8 @@ function openPictureSignatureWindow_missiveRecieve_leader(option) {
             "height":signElementHeight,
             "background-image":"url(/img/missiveReceive_sign_bg.png)",
             "background-repeat":"no-repeat"
-            ,"background-size":810*height_scale+"px "+603*height_scale+"px"
+//            ,"background-size":810*height_scale+"px "+603*height_scale+"px"
+            ,"background-size":783*height_scale+"px "+520*height_scale+"px"
             ,"background-position-x":(-8)*height_scale+"px"
 
         }
